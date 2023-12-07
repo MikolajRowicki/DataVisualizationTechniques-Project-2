@@ -1,0 +1,12 @@
+Analiza plików tekstowych pisanych w Wordzie, językach programowania, notatniku, itd.
+1. W plikach Wordowych - analiza interpunkcji (przecinków, kropek, złożoności zdań (na podstawie stosunku liczby kropek do liczby przecinków))
+2. W skryptach języków programowania - jakie odstępy dana osoba zostawia między metodami, jak stawia nawiasy, klamerki, czy dużo komentuje, jak długie pisze klasy, ilość słów w linii, jak długie nazwy zmiennych
+3. W MATLAB-ie, czy pisane są komentarze na początku funkcji (jak długie), czy ktoś pisze średniki na końcu, spacje pomiędzy znakami operacji matematycznych.
+4. Analiza zmian stylu pisania na przestrzeni czasu.
+5. Związki między różnymi statystykami (np. czy osoba, która pisze długie nazwy zmiennych, pisze też długie zdania).
+6. Analiza wiadomości w Messengerze, pod względem interpunkcji, jak długie bloki tekstu ktoś pisze * (jak starczy czasu)
+7. Ciekawostki - najczęściej używane słowa, najdłuższe słowa.
+
+WORD - Małgosia,
+Java - Sebatian,
+MATLAB - Mikołaj
