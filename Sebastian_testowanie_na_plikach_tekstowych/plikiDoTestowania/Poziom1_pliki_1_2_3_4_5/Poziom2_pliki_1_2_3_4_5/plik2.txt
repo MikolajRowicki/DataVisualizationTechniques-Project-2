@@ -1,0 +1,2 @@
+Ten plik zawiera drzewo1 oraz drzewo2... oraz inne wyrazy.
+Wyrazy stojące po wyrazie: "drzewo1" i przed wyrazem 'drzewo2', będą zliczane.

@@ -1,0 +1,4 @@
+Oto jest pierwszy plik tekstowy.
+Zawiera on dwie linijki.
+Zawiera też jedną linijkę.
+Nie zawiera natomiast pięciu linijek.

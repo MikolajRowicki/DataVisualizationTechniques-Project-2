@@ -1,0 +1,2 @@
+Każdą mapę można pokolorować czterema kolorami tak, aby żadne dwa sąsiadujące państwa nie miały tego samego koloru.
+Ten fakt jest trywialny i jego dowód pozostawiam jako proste zadanie domowe.

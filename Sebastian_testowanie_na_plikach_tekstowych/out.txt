@@ -1,0 +1,33 @@
+[ŒCIE¯KA DO PLIKU] C:\Users\Sebastian\Desktop\skrypt\plikiDoTestowania\Poziom1_pliki_1_2_3_4_5\Poziom2_pliki_1_2_3_4_5\plik1.txt
+[ZAWARTOŒÆ  PLIKU]
+Oto jest pierwszy plik tekstowy.
+Zawiera on dwie linijki.
+Zawiera te¿ jedn¹ linijkê.
+Nie zawiera natomiast piêciu linijek.
+
+[ŒCIE¯KA DO PLIKU] C:\Users\Sebastian\Desktop\skrypt\plikiDoTestowania\Poziom1_pliki_1_2_3_4_5\Poziom2_pliki_1_2_3_4_5\plik2.txt
+[ZAWARTOŒÆ  PLIKU]
+Ten plik zawiera drzewo1 oraz drzewo2... oraz inne wyrazy.
+Wyrazy stoj¹ce po wyrazie: "drzewo1" i przed wyrazem 'drzewo2', bêd¹ zliczane.
+
+[ŒCIE¯KA DO PLIKU] C:\Users\Sebastian\Desktop\skrypt\plikiDoTestowania\Poziom1_pliki_1_2_3_4_5\Poziom2_pliki_1_2_3_4_5\Poziom3a_pliki_3_4\plik3.txt
+[ZAWARTOŒÆ  PLIKU]
+Ka¿d¹ mapê mo¿na pokolorowaæ czterema kolorami tak, aby ¿adne dwa s¹siaduj¹ce pañstwa nie mia³y tego samego koloru.
+Ten fakt jest trywialny i jego dowód pozostawiam jako proste zadanie domowe.
+
+[ŒCIE¯KA DO PLIKU] C:\Users\Sebastian\Desktop\skrypt\plikiDoTestowania\Poziom1_pliki_1_2_3_4_5\Poziom2_pliki_1_2_3_4_5\Poziom3a_pliki_3_4\Poziom4a_pliki_4\plik4.txt
+[ZAWARTOŒÆ  PLIKU]
+Ten plik zawiera 21 liter a, 4 litery b, a reszty nie bêdê liczy³.
+Zawiera te¿ cyfry: 1 wyst¹pi³a 2 razy, 2 wyst¹pi³o 3 razy, a reszty nie bêdê liczy³.
+Zawiera te¿ wyrazy: wyraz 'wyraz' wyst¹pi³ 3 razy, wyraz 'zawiera' wyst¹pi³ 4 razy, a reszty nie bêdê liczy³.
+
+[ŒCIE¯KA DO PLIKU] C:\Users\Sebastian\Desktop\skrypt\plikiDoTestowania\Poziom1_pliki_1_2_3_4_5\Poziom2_pliki_1_2_3_4_5\Poziom3b_pliki_5\Poziom4b_pliki_5\plik5.txt
+[ZAWARTOŒÆ  PLIKU]
+To zdanie jest prawdziwe.
+To zdanie z kolei jest fa³szywe.
+
+
+Linijki: ['Oto jest pierwszy plik tekstowy.', 'Zawiera on dwie linijki.', 'Zawiera te¿ jedn¹ linijkê.', 'Nie zawiera natomiast piêciu linijek.', 'Ten plik zawiera drzewo1 oraz drzewo2... oraz inne wyrazy.', 'Wyrazy stoj¹ce po wyrazie: "drzewo1" i przed wyrazem \'drzewo2\', bêd¹ zliczane.', 'Ka¿d¹ mapê mo¿na pokolorowaæ czterema kolorami tak, aby ¿adne dwa s¹siaduj¹ce pañstwa nie mia³y tego samego koloru.', 'Ten fakt jest trywialny i jego dowód pozostawiam jako proste zadanie domowe.', 'Ten plik zawiera 21 liter a, 4 litery b, a reszty nie bêdê liczy³.', 'Zawiera te¿ cyfry: 1 wyst¹pi³a 2 razy, 2 wyst¹pi³o 3 razy, a reszty nie bêdê liczy³.', "Zawiera te¿ wyrazy: wyraz 'wyraz' wyst¹pi³ 3 razy, wyraz 'zawiera' wyst¹pi³ 4 razy, a reszty nie bêdê liczy³.", 'To zdanie jest prawdziwe.', 'To zdanie z kolei jest fa³szywe.']
+Zliczone wyrazy: Counter({'jest': 4, 'Zawiera': 4, 'nie': 4, 'razy,': 4, 'plik': 3, 'te¿': 3, 'zawiera': 3, 'Ten': 3, 'a': 3, 'reszty': 3, 'bêdê': 3, 'liczy³.': 3, 'oraz': 2, 'i': 2, '4': 2, '2': 2, '3': 2, 'wyraz': 2, 'wyst¹pi³': 2, 'To': 2, 'zdanie': 2, 'Oto': 1, 'pierwszy': 1, 'tekstowy.': 1, 'on': 1, 'dwie': 1, 'linijki.': 1, 'jedn¹': 1, 'linijkê.': 1, 'Nie': 1, 'natomiast': 1, 'piêciu': 1, 'linijek.': 1, 'drzewo1': 1, 'drzewo2...': 1, 'inne': 1, 'wyrazy.': 1, 'Wyrazy': 1, 'stoj¹ce': 1, 'po': 1, 'wyrazie:': 1, '"drzewo1"': 1, 'przed': 1, 'wyrazem': 1, "'drzewo2',": 1, 'bêd¹': 1, 'zliczane.': 1, 'Ka¿d¹': 1, 'mapê': 1, 'mo¿na': 1, 'pokolorowaæ': 1, 'czterema': 1, 'kolorami': 1, 'tak,': 1, 'aby': 1, '¿adne': 1, 'dwa': 1, 's¹siaduj¹ce': 1, 'pañstwa': 1, 'mia³y': 1, 'tego': 1, 'samego': 1, 'koloru.': 1, 'fakt': 1, 'trywialny': 1, 'jego': 1, 'dowód': 1, 'pozostawiam': 1, 'jako': 1, 'proste': 1, 'zadanie': 1, 'domowe.': 1, '21': 1, 'liter': 1, 'a,': 1, 'litery': 1, 'b,': 1, 'cyfry:': 1, '1': 1, 'wyst¹pi³a': 1, 'wyst¹pi³o': 1, 'wyrazy:': 1, "'wyraz'": 1, "'zawiera'": 1, 'prawdziwe.': 1, 'z': 1, 'kolei': 1, 'fa³szywe.': 1})
+Zliczone litery: Counter({' ': 112, 'a': 64, 'e': 58, 'i': 52, 'r': 41, 'z': 40, 'w': 36, 'o': 35, 'y': 35, 't': 30, 's': 22, 'n': 22, 'd': 22, 'p': 17, 'l': 17, '.': 16, 'k': 14, 'j': 12, '¹': 10, 'ê': 10, 'm': 10, '\n': 9, 'c': 9, '³': 9, ',': 8, '¿': 6, "'": 6, 'b': 6, 'T': 5, '2': 5, 'Z': 4, '1': 4, 'u': 3, ':': 3, 'g': 3, 'f': 3, '"': 2, '4': 2, '3': 2, 'O': 1, 'N': 1, 'W': 1, 'K': 1, 'æ': 1, 'ñ': 1, 'ó': 1})
+Wyrazy stoj¹ce miêdzy drzewami : ['oraz', 'i', 'przed', 'wyrazem']

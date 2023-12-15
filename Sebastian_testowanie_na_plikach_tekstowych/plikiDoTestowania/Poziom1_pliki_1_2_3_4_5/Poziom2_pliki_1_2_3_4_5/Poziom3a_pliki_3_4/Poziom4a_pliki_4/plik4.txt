@@ -1,0 +1,3 @@
+Ten plik zawiera 21 liter a, 4 litery b, a reszty nie będę liczył.
+Zawiera też cyfry: 1 wystąpiła 2 razy, 2 wystąpiło 3 razy, a reszty nie będę liczył.
+Zawiera też wyrazy: wyraz 'wyraz' wystąpił 3 razy, wyraz 'zawiera' wystąpił 4 razy, a reszty nie będę liczył.
