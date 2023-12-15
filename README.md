@@ -17,7 +17,7 @@ Second project for Data Visualization Techniques course for Data Science studies
   </tr>
   <tr>
     <td rowspan="2">Word</td>
-    <td rowspan="2"></td>
+    <td rowspan="2">Złośoność zdań, ...</td>
     <td rowspan="2"></td>
     <td rowspan="2">Wybrane</td>
   </tr>
@@ -25,7 +25,7 @@ Second project for Data Visualization Techniques course for Data Science studies
   </tr>
   <tr>
     <td rowspan="2">Java</td>
-    <td rowspan="2"></td>
+    <td rowspan="2">Wielkość odstępów między linijkami, ...</td>
     <td rowspan="2"></td>
     <td rowspan="2">Wybrane</td>
   </tr>
