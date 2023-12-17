@@ -1,0 +1,42 @@
+Element;Count_Sebastian
+==;18
+private;70
+public;147
+protected;24
+abstract;9
+final;8
+static;28
+default;2
+void;50
+byte;9
+short;0
+int;84
+long;1
+float;0
+double;0
+boolean;10
+char;0
+String;72
+class;46
+enum;3
+interface;6
+annotation;4
+extends;21
+new;45
+if;57
+else;25
+return;32
+throw;14
+throws;3
+import;84
+catch;25
+package;33
+Brak odstepu;66140
+Liczba linijek odstepu;2024
+2 linijki odstepu;317
+1 linijka odstepu;1218
+3 linijki odstepu;21
+4 linijki odstepu;16
+5 linijki odstepu;1
+1 linijki odstepu;30
+10 linijki odstepu;1
