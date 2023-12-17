@@ -105,7 +105,8 @@ def main():
                          "Ilość myslnikow": count_myslnik(folder_path + el),
                          "Ilość dwukropkow": count_dwukropek(folder_path + el),
                          "Ilość pozostałych znaków": count_others(folder_path + el),
-                         "Złożoność zdań": zlozonosc_zdan(folder_path + el)})
+                         "Złożoność zdań": zlozonosc_zdan(folder_path + el),
+                        "Najdłuższe słowo": znajdz_najdluzsze_slowo(folder_path + el)})
     df = pd.DataFrame(data)
     # df.to_csv("aaa")
 
