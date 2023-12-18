@@ -1,0 +1,99 @@
+,Imie,Data utworzenia pliku,Rozszerzenie,Nazwa pliku,Ilosc linii,Uzyte pakiety,Stosunek zakomentowanych linii,Liczba unikalnych stworzonych zmiennych,Srednia zlozonosc zmiennej w pliku,Ilosc pustych linii
+0,Malgosia,2023-03-02,R,introduction_to_R.R,56.0,[],0.14285714285714285,3.0,1.0,22.0
+1,Malgosia,2023-03-08,R,kartka_nr2.R,125.0,[],0.112,29.0,1.1379310344827587,27.0
+2,Malgosia,2023-03-02,R,lkjhg.R,22.0,[],0.0,2.0,1.0,3.0
+3,Malgosia,2023-03-21,R,wejściówka.R,23.0,[],0.0,8.0,1.0,6.0
+4,Malgosia,2023-03-02,R,zadania_2.R,35.0,[],0.02857142857142857,5.0,1.0,5.0
+5,Malgosia,2023-03-03,R,01.R,65.0,[],0.015384615384615385,7.0,1.0,32.0
+6,Malgosia,2023-03-03,R,02.R,11.0,[],0.09090909090909091,4.0,1.0,1.0
+7,Malgosia,2023-03-03,R,introduction_to_R.R,56.0,[],0.14285714285714285,3.0,1.0,22.0
+8,Malgosia,2023-05-29,R,PDU_Pd4.R,357.0,"['dplyr', 'leaflet', 'htmlwidgets', 'maps', 'ggplot2', 'gganimate', 'gifski', 'transformr', 'geosphere']",0.1568627450980392,26.0,1.4230769230769231,97.0
+9,Malgosia,2023-05-29,R,potemzmienei.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales']",0.12408759124087591,44.0,1.0,48.0
+10,Malgosia,2023-05-29,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,55.0,['htmlwidgets'],0.01818181818181818,6.0,1.0,14.0
+11,Malgosia,2023-05-29,R,ShinyAppJakZmeniaSieLiczbaLotow.R,43.0,['rsconnect'],0.023255813953488372,5.0,1.0,12.0
+12,Malgosia,2023-05-29,R,server.R,26.0,['shiny'],0.34615384615384615,2.0,1.0,7.0
+13,Malgosia,2023-05-29,R,ui.R,29.0,['shiny'],0.3103448275862069,0.0,,5.0
+14,Malgosia,2023-05-29,R,server.R,30.0,['rsconnect'],0.43333333333333335,2.0,1.0,6.0
+15,Malgosia,2023-05-29,R,ui.R,35.0,[],0.3142857142857143,1.0,1.0,4.0
+16,Malgosia,2023-03-21,R,gyuv.R,5.0,"['""nycflights13""']",0.0,0.0,,1.0
+17,Malgosia,2023-05-29,R,KodDoWykresow.R,223.0,"['tidyr', 'tidyverse', 'dplyr', 'ggplot2', 'data.table', 'RColorBrewer', 'leaflet']",0.04484304932735426,47.0,1.0,54.0
+18,Malgosia,2023-05-29,R,PDUPrzewoznicyTrasy.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales']",0.12408759124087591,44.0,1.0,48.0
+19,Malgosia,2023-05-29,R,PDU_Pd4.R,357.0,"['dplyr', 'leaflet', 'htmlwidgets', 'maps', 'ggplot2', 'gganimate', 'gifski', 'transformr', 'geosphere']",0.1568627450980392,26.0,1.4230769230769231,97.0
+20,Malgosia,2023-05-29,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,46.0,[],0.021739130434782608,5.0,1.0,13.0
+21,Malgosia,2023-05-29,R,ShinyAppJakZmeniaSieLiczbaLotow.R,45.0,[],0.06666666666666667,5.0,1.0,12.0
+22,Malgosia,2023-06-07,R,PDUPrzewoznicyTrasy.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales', 'dplyr']",0.12408759124087591,44.0,1.0,47.0
+23,Malgosia,2023-06-07,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,46.0,[],0.021739130434782608,5.0,1.0,13.0
+24,Malgosia,2023-06-07,R,ShinyAppJakZmeniaSieLiczbaLotow.R,47.0,"['shiny', 'gganimate', 'ggplot2']",0.06382978723404255,5.0,1.0,11.0
+25,Malgosia,2023-05-29,R,demo.R,18.0,"['shiny', 'leaflet', 'dplyr', 'rsconnect']",0.0,4.0,1.0,7.0
+26,Malgosia,2023-05-29,R,server.R,40.0,[],0.05,5.0,1.0,9.0
+27,Malgosia,2023-05-29,R,ui.R,8.0,[],0.0,0.0,,0.0
+28,Malgosia,2023-06-06,R,demo.R,,,,,,
+29,Malgosia,2023-06-07,R,PDUPrzewoznicyTrasy.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales', 'dplyr']",0.12408759124087591,44.0,1.0,47.0
+30,Malgosia,2023-06-07,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,46.0,[],0.021739130434782608,5.0,1.0,13.0
+31,Malgosia,2023-06-07,R,ShinyAppJakZmeniaSieLiczbaLotow.R,45.0,[],0.06666666666666667,5.0,1.0,12.0
+32,Malgosia,2023-06-07,R,PDUPrzewoznicyTrasy.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales', 'dplyr']",0.12408759124087591,44.0,1.0,47.0
+33,Malgosia,2023-06-07,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,46.0,[],0.021739130434782608,5.0,1.0,13.0
+34,Malgosia,2023-06-07,R,ShinyAppJakZmeniaSieLiczbaLotow.R,45.0,[],0.06666666666666667,5.0,1.0,12.0
+35,Malgosia,2023-06-07,R,PDUPrzewoznicyTrasy.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales', 'dplyr']",0.12408759124087591,44.0,1.0,47.0
+36,Malgosia,2023-06-07,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,46.0,[],0.021739130434782608,5.0,1.0,13.0
+37,Malgosia,2023-06-07,R,ShinyAppJakZmeniaSieLiczbaLotow.R,45.0,[],0.06666666666666667,5.0,1.0,12.0
+38,Malgosia,2023-06-07,R,PDUPrzewoznicyTrasy.R,274.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales', 'dplyr']",0.12408759124087591,44.0,1.0,47.0
+39,Malgosia,2023-06-07,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,46.0,[],0.021739130434782608,5.0,1.0,13.0
+40,Malgosia,2023-06-07,R,ShinyAppJakZmeniaSieLiczbaLotow.R,45.0,[],0.06666666666666667,5.0,1.0,12.0
+41,Malgosia,2023-05-21,R,LollipopTotalneOpozenienie.R,27.0,"['dplyr', 'gganimate', 'ggplot2']",0.2222222222222222,2.0,1.0,3.0
+42,Malgosia,2023-05-11,R,samolociki.R,12.0,"['""dplyr""']",0.0,3.0,1.3333333333333333,3.0
+43,Malgosia,2023-05-21,R,WordCloudMonopolNaLotniskach.R,23.0,['wordcloud2'],0.13043478260869565,1.0,1.0,5.0
+44,Malgosia,2023-05-21,R,WykresLiniowyIloscLotow.R,60.0,['shiny'],0.16666666666666666,6.0,1.0,14.0
+45,Malgosia,2023-05-11,R,zadanka.R,53.0,"['""dplyr""']",0.0,24.0,1.0,18.0
+46,Malgosia,2023-05-22,R,server.R,31.0,['shiny'],0.3870967741935484,2.0,1.0,9.0
+47,Malgosia,2023-05-22,R,ui.R,33.0,['shiny'],0.36363636363636365,0.0,,5.0
+48,Malgosia,2023-04-05,R,Malgorzata_Mokwa_327296_PD3.R,485.0,[],0.27010309278350514,46.0,1.434782608695652,78.0
+49,Malgosia,2023-04-05,R,zadanie1.R,59.0,"['""sqldf""', '""dplyr""', '""data.table""']",0.2542372881355932,7.0,1.0,9.0
+50,Malgosia,2023-04-07,R,zadanie2.R,77.0,"['""sqldf""', '""dplyr""', '""data.table""']",0.12987012987012986,7.0,1.0,22.0
+51,Malgosia,2023-04-07,R,Zadanie3.R,79.0,"['""sqldf""', '""dplyr""', '""data.table""']",0.1518987341772152,8.0,1.0,15.0
+52,Malgosia,2023-04-08,R,zadanie4.R,105.0,"['""sqldf""', '""dplyr""', '""data.table""']",0.08571428571428572,12.0,1.0,23.0
+53,Malgosia,2023-04-10,R,zadanie5.R,83.0,"['""sqldf""', '""dplyr""', '""data.table""']",0.07228915662650602,12.0,1.0,17.0
+54,Malgosia,2023-05-15,R,fikumiku.R,176.0,"['""dplyr""', 'ggplot2', 'gganimate', 'gapminder', 'gapminder', 'gganimate', 'gifski']",0.17613636363636365,18.0,1.0,59.0
+55,Malgosia,2023-05-17,R,wesrdgthfy.R,69.0,"['ggplot2', 'devtools', 'streamgraph']",0.10144927536231885,5.0,1.0,17.0
+56,Malgosia,2023-05-17,R,wykres1.R,57.0,"['gapminder', 'gapminder', 'gganimate', 'gifski', '', 'ggplot2']",0.14035087719298245,5.0,1.2,14.0
+57,Malgosia,2023-05-17,R,server.R,24.0,[],0.4166666666666667,1.0,1.0,6.0
+58,Malgosia,2023-05-17,R,ui.R,33.0,['shiny'],0.36363636363636365,0.0,,5.0
+59,Malgosia,2023-05-17,R,server.R,28.0,"['shiny', 'datasets']",0.42857142857142855,1.0,1.0,6.0
+60,Malgosia,2023-05-17,R,ui.R,34.0,['shiny'],0.35294117647058826,0.0,,7.0
+61,Malgosia,2023-05-16,R,server.R,16.0,[],0.625,0.0,,4.0
+62,Malgosia,2023-05-16,R,ui.R,26.0,['shiny'],0.15384615384615385,0.0,,5.0
+63,Malgosia,2023-05-17,R,server.R,29.0,"['shiny', 'ggplot2']",0.3793103448275862,3.0,1.0,4.0
+64,Malgosia,2023-05-17,R,ui.R,32.0,[],0.28125,0.0,,5.0
+65,Malgosia,2023-05-11,R,samolocikiZadanie.R,156.0,"['""dplyr""']",0.22435897435897437,16.0,1.125,35.0
+66,Malgosia,2023-05-22,R,CofanieCzas.R,33.0,[],0.24242424242424243,3.0,1.0,1.0
+67,Malgosia,2023-05-22,R,dlaOli.R,25.0,[],0.04,3.0,1.0,6.0
+68,Malgosia,2023-05-22,R,LollipopOpoznienieLata.R,121.0,[],0.17355371900826447,11.0,1.0,23.0
+69,Malgosia,2023-05-22,R,OfertaTrasNaPrzestrzeniLat.R,105.0,[],0.0380952380952381,13.0,1.0,29.0
+70,Malgosia,2023-05-22,R,ShinyAppJacyPrzeowznicyNaJakichTrasach.R,55.0,['htmlwidgets'],0.01818181818181818,6.0,1.0,14.0
+71,Malgosia,2023-05-22,R,ShinyAppJakZmeniaSieLiczbaLotow.R,40.0,[],0.025,5.0,1.0,11.0
+72,Malgosia,2023-05-22,R,wczytanieDanych.R,276.0,"['dplyr', 'gganimate', 'ggplot2', 'shiny', 'gifski', 'hrbrthemes', 'scales']",0.05434782608695652,45.0,1.0,55.0
+73,Malgosia,2023-05-24,R,Wnioski.R,80.0,[],0.25,6.0,1.0,29.0
+74,Malgosia,2023-11-15,R,scd.R,363.0,"['ggplot2', 'maps', 'mapdata', 'dplyr', 'leaflet', 'geojsonio', 'sf', 'spData']",0.18732782369146006,28.0,1.4285714285714286,107.0
+75,Malgosia,2023-11-23,R,zadanie domowe.R,40.0,"['ggplot2', 'dplyr', 'ggthemes']",0.0,2.0,1.0,8.0
+76,Malgosia,2023-10-12,R,Exc1.R,68.0,"['dplyr', 'tidyverse', 'forcats']",0.11764705882352941,6.0,1.3333333333333333,13.0
+77,Malgosia,2023-10-19,R,HW1_tasks.R,230.0,"['tidyr', 'dplyr', 'stringr']",0.1608695652173913,25.0,1.88,51.0
+78,Malgosia,2023-10-15,R,HW1_tasks.R,230.0,"['tidyr', 'dplyr', 'stringr']",0.1608695652173913,25.0,1.88,51.0
+79,Malgosia,2023-10-19,R,lab3.R,147.0,"['SmarterPoland', 'ggplot2', 'dplyr']",0.29931972789115646,1.0,2.0,38.0
+80,Malgosia,2023-11-09,R,lab5.R,167.0,"['ggplot2', 'dplyr', 'SmarterPoland', 'patchwork', 'ggrepel']",0.1437125748502994,8.0,1.375,48.0
+81,Malgosia,2023-11-21,R,zad3.R,86.0,"['ggplot2', 'maps', 'mapdata', 'dplyr', 'leaflet', 'leaflet.extras']",0.09302325581395349,14.0,1.2857142857142858,19.0
+82,Malgosia,2023-11-23,R,lab7.R,284.0,"['plotly', 'dplyr']",0.11267605633802817,16.0,1.9375,54.0
+83,Malgosia,2023-11-30,R,lab08.R,0.0,[],,0.0,,0.0
+84,Malgosia,2023-12-07,R,app.R,72.0,"['shiny', 'palmerpenguins', 'ggplot2', 'plotly', 'bslib', 'dplyr']",0.0,6.0,1.0,22.0
+85,Malgosia,2023-11-30,R,app.R,60.0,['ggplot2'],0.38333333333333336,5.0,1.0,10.0
+86,Malgosia,2023-12-07,R,app.R,51.0,['shiny'],0.3137254901960784,5.0,1.0,9.0
+87,Malgosia,2023-11-30,R,app.R,77.0,['shiny'],0.16883116883116883,5.0,1.0,21.0
+88,Malgosia,2023-12-13,R,Labb.R,100.0,"['shiny', 'dplyr', 'ggplot2', 'dplyr', 'ggrepel', 'shinycssloaders', 'PogromcyDanych']",0.0,7.0,1.1428571428571428,17.0
+89,Malgosia,2023-12-11,R,zadanie_domowe4.R,74.0,"['dplyr', 'plotly', 'forcats']",0.13513513513513514,4.0,1.5,8.0
+90,Malgosia,2023-11-06,R,copy.R,121.0,['ggplot2'],0.03305785123966942,12.0,1.5,28.0
+91,Malgosia,2023-11-06,R,grafika.R,13.0,['ggplot2'],0.0,3.0,2.0,5.0
+92,Malgosia,2023-11-06,R,kraje.R,39.0,['extrafont'],0.10256410256410256,2.0,1.5,7.0
+93,Malgosia,2023-10-23,R,odpowiedzi_na_pytania.R,96.0,[],0.052083333333333336,12.0,1.5833333333333333,22.0
+94,Malgosia,2023-10-20,R,project.R,53.0,['dplyr'],0.09433962264150944,5.0,1.0,13.0
+95,Malgosia,2023-10-22,R,projekt1_MM.R,162.0,"['dplyr', 'stringr', 'tidyr', 'ggplot2', 'wordcloud2', 'htmlwidgets', 'extrafont']",0.024691358024691357,30.0,1.9333333333333333,33.0
+96,Malgosia,2023-11-06,R,przymiotniki.R,101.0,[],0.04950495049504951,17.0,1.9411764705882353,28.0
+97,Malgosia,2023-11-07,R,zadanie domowe.R,40.0,"['ggplot2', 'dplyr', 'ggthemes']",0.0,2.0,1.0,8.0
