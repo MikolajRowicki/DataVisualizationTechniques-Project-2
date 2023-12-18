@@ -4,8 +4,8 @@
 2,Mikolaj,m,func (2).m,86,4,1,0,function,1,20.75,1,1
 3,Mikolaj,m,func.m,92,4,1,0,trygonometrycznej,1,22.25,1,1
 4,Mikolaj,m,ilorazr.m,306,11,4,0,interpolacyjnego,4,26.90909090909091,3,3
-5,Mikolaj,m,lab3.m,1508,74,53,8,"pochodnaTable(x,@func,@pochodnaD,@pochodnaP,n);",51,19.37837837837838,18,13
-6,Mikolaj,m,lab4.m,1737,75,34,13,"pie3([1,2,3,4,1,2,3,4,5])",16,22.16,33,26
+5,Mikolaj,m,lab3.m,1508,74,53,8,"pochodnaTable(x,@func,@pochodnaD,@pochodnaP,n);",51,19.37837837837838,4,13
+6,Mikolaj,m,lab4.m,1737,75,34,13,"pie3([1,2,3,4,1,2,3,4,5])",16,22.16,23,26
 7,Mikolaj,m,main (2).m,1025,48,15,17,"[1,2,3,4,5,6,7,8,9,10];",5,20.354166666666668,16,16
 8,Mikolaj,m,main.m,553,30,12,9,Banachiewicza-Cholesky-ego,3,17.433333333333334,6,9
 9,Mikolaj,m,metodaHalleya.m,2154,56,25,4,"(wartosciDrugiejPochodnej(a,y).*(wartosciWielomianu(a,y)./",23,37.482142857142854,13,18
@@ -18,7 +18,7 @@
 16,Mikolaj,m,rekurencyjneWspolczynnikiPierwszejPochodnej.m,1283,32,16,2,"rekurencyjneWspolczynnikiPierwszejPochodnej(x,n)",14,39.125,6,6
 17,Mikolaj,m,rekurencyjneWspolczynnikiWielomianu.m,1168,34,16,4,"rekurencyjneWspolczynnikiWielomianu(x,",14,33.38235294117647,6,6
 18,Mikolaj,m,rozklad.m,1900,51,21,13,Banachiewicza-Cholesky-ego,3,36.27450980392157,10,11
-19,Mikolaj,m,skryptTestujacy.m,6199,166,86,41,"[0,1,2,5,10,50,100,1000,10000,10000000];",7,36.3433734939759,46,39
+19,Mikolaj,m,skryptTestujacy.m,6199,166,86,41,"[0,1,2,5,10,50,100,1000,10000,10000000];",7,36.3433734939759,39,39
 20,Mikolaj,m,sorIteration.m,1092,22,10,2,"[previousIteration(:,2:end),",10,48.68181818181818,5,6
 21,Mikolaj,m,sorMethod.m,2658,90,4,22,numberOfIterations(numberOfIterations,2,28.544444444444444,22,30
 22,Mikolaj,m,sprawdzBlad.m,2871,64,25,12,"resultMatrix(:,3),resultMatrix(:,4),resultMatrix(:,",23,43.875,18,23
@@ -26,7 +26,7 @@
 24,Mikolaj,m,szeregLn.m,597,12,7,0,"repmat((0:1:Nmax-1)',",7,48.833333333333336,3,3
 25,Mikolaj,m,szeregLnPlot.m,789,28,4,3,colormap(parula(Nmax));,2,27.178571428571427,14,17
 26,Mikolaj,m,szeregSin.m,491,23,4,5,"yaprox_mat(k+1,:)=((-1)^k).*(x.^(2*k+1))/factorial(2*k+1);",4,20.391304347826086,4,8
-27,Mikolaj,m,test.m,2795,84,55,11,"dependenceOfTheNumberOfIterationsOnOmega(subDiagonal,mainDiagonal,",8,32.273809523809526,49,18
+27,Mikolaj,m,test.m,2795,84,55,11,"dependenceOfTheNumberOfIterationsOnOmega(subDiagonal,mainDiagonal,",8,32.273809523809526,12,18
 28,Mikolaj,m,wartosciDrugiejPochodnej.m,1560,36,22,3,"rekurencyjneWspolczynnikiDrugiejPochodnej(x,",20,42.361111111111114,5,5
 29,Mikolaj,m,wartosciPierwszejPochodnej.m,1581,36,22,3,"rekurencyjneWspolczynnikiPierwszejPochodnej(x,",20,42.94444444444444,5,5
 30,Mikolaj,m,wartosciWielomianu.m,1463,36,21,4,"rekurencyjneWspolczynnikiWielomianu(x,",19,39.666666666666664,5,5

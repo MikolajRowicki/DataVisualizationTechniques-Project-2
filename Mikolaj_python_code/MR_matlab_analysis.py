@@ -133,7 +133,7 @@ def count_lines_with_semicolon_and_conditions(matlab_file_path):
     for line in lines:
 
         # Check conditions for valid lines
-        if line.strip().endswith(';'):
+        if line.strip().endswith(';') and not line.startswith('%'):
             lines_with_semicolon += 1
         if not line.isspace() and not line.startswith(('%', 'end', 'function', 'if', 'for')):
             lines_that_should_have_semicolon += 1
