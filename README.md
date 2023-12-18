@@ -3,8 +3,6 @@ Second project for Data Visualization Techniques course for Data Science studies
 
 ## Wybrane statystyki
 
-### Word
-
 ### Java
 - zliczanie operatorów porządku
 - zliczanie wyrazów charakterystycznych dla javy
@@ -13,4 +11,11 @@ Second project for Data Visualization Techniques course for Data Science studies
 - cudzysłowy
 - najdłuższy wyraz
 
-### MATLAB
+### Word
+- ilość słów w tekście
+- data powstania pliku
+- analiza interpunkcji: ilość poszczególnych znaków interpunkcyjnych
+- najdłuższy wyraz w tekście
+- określenie średniej złożonosci zdań jako stosunek ilości przecinków do ilości zdań
+
+### Matlab
