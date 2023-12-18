@@ -1,5 +1,10 @@
 import os
 import codecs
+import pandas as pd
+import pathlib
+import datetime
+from statistics import mean
+
 
 
 def get_matlab_code_stats(matlab_file_path):
@@ -136,6 +141,7 @@ def count_lines_with_semicolon_and_conditions(matlab_file_path):
     return lines_with_semicolon, lines_that_should_have_semicolon
 
 
+
 def main():
     # Example usage
     s = ")"
@@ -166,6 +172,38 @@ def main():
     print(f"The number of lines in the MATLAB code is: {num_lines}.")
     print(f"The number of commented lines in the MATLAB code is: {commentslines}.")
     print(f"The number of empty lines in the MATLAB code is: {emptylines}.")
+
+    imie = "Mikolaj"
+    folder_path = "data"
+    sciezki_do_plikow = list(pathlib.Path(folder_path).rglob('*.m'))
+    data = []
+    if os.path.exists(folder_path) and os.path.isdir(folder_path):
+        for el in sciezki_do_plikow:
+            s = ")"
+            length, num_lines, commentslines, emptylines = get_matlab_code_stats(el)
+            longest_word = find_longest_word(el)
+            equal_sign_count, equal_sign_with_spaces_count = count_equal_sign_occurrences(el, s)
+            characters_per_line = mean(get_characters_per_line(el))
+
+            first_comment_length = get_length_of_first_comment(el)
+
+            lines_with_semicolon, lines_that_should_have_semicolon = count_lines_with_semicolon_and_conditions(
+                el)
+            data.append({"Imie": imie,
+                         "Rozszerzenie": "m",
+                         "Nazwa pliku": el.name,
+                         "Liczba znaków:": length,
+                         "Liczba wierszy": num_lines,
+                         "Laczna dlugosc komentarzy": commentslines,
+                         "Liczba pustych linii": emptylines,
+                         "Najdłuższe słowo": longest_word,
+                         "Długośc pierwszego komentarza": first_comment_length,
+                         "Srednia liczba znaków w wierszu": characters_per_line,
+                         "Liczba wierszy zakonczonych srednikiem": lines_with_semicolon,
+                         "Liczba wierszy, ktore powinny sie konczyc srednikiem": lines_that_should_have_semicolon})
+    df = pd.DataFrame(data)
+    print(df)
+    df.to_csv("Mikolaj_matlab.csv")
 
 
 if __name__ == "__main__":
