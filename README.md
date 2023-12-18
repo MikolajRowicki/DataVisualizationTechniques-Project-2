@@ -13,4 +13,4 @@ Second project for Data Visualization Techniques course for Data Science studies
 - cudzysłowy
 - najdłuższy wyraz
 
-### MTLAB
+### MATLAB
