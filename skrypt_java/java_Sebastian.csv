@@ -32,11 +32,17 @@ import;84
 catch;25
 package;33
 Brak odstepu;66140
-Liczba linijek odstepu;2024
+Liczba linijek odstepu;2022
 2 linijki odstepu;317
 1 linijka odstepu;1218
-3 linijki odstepu;21
+3 linijki odstepu;22
 4 linijki odstepu;16
-5 linijki odstepu;1
 1 linijki odstepu;30
 10 linijki odstepu;1
+liczba_znakow_w_komantarzu_w_linii;1659
+liczba_komentarzy_w_linii;64
+liczba_znakow_w_komentarzu_w_bloku;2086
+liczba_komentarzy_w_bloku;17
+liczba_cudzyslowow_apostrofowych;538
+liczba_cudzyslowow_pojedynczych;75
+najdluzszy_wyraz;UstawWatrosciWszystkichPolLliczbowychNaMinusJedenLubPolaZProduktamiNaBOMBKI

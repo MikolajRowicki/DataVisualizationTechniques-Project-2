@@ -97,6 +97,54 @@ def stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku, licznik):
         licznik[f"{ilosc_odstepow_po_kolei} linijki odstepu"] += 1
     return licznik
 
+def stworz_statystyki_komentarzy(tekst_z_pliku, licznik):
+    liczba_znakow_w_komantarzu_w_linii = 0
+    liczba_komentarzy_w_linii = 0
+    for linia in tekst_z_pliku.splitlines():
+        for i in range(1, len(linia)):
+            if linia[i] == '/' and linia[i-1] == '/':
+                liczba_komentarzy_w_linii += 1
+                liczba_znakow_w_komantarzu_w_linii += len(linia[i+1:])
+                if '\n' in linia[i+1:]:
+                    liczba_znakow_w_komantarzu_w_linii -= 1
+    licznik['liczba_znakow_w_komantarzu_w_linii'] += liczba_znakow_w_komantarzu_w_linii
+    licznik['liczba_komentarzy_w_linii'] += liczba_komentarzy_w_linii
+    liczba_znakow_w_komentarzu_w_bloku = 0
+    liczba_komentarzy_w_bloku = 0
+    for i in range(1, len(tekst_z_pliku)):
+        if tekst_z_pliku[i-1] == '/' and tekst_z_pliku[i] == '*':
+            liczba_komentarzy_w_bloku += 1
+            j = i+2
+            while tekst_z_pliku[j-1] != '*' and tekst_z_pliku[j] != '/':
+                if tekst_z_pliku[j] == '\n':
+                    liczba_znakow_w_komentarzu_w_bloku -= 1
+                liczba_znakow_w_komentarzu_w_bloku += 1
+                j += 1
+    licznik['liczba_znakow_w_komentarzu_w_bloku'] += liczba_znakow_w_komentarzu_w_bloku
+    licznik['liczba_komentarzy_w_bloku'] += liczba_komentarzy_w_bloku
+    return licznik
+
+def stworz_statystyki_cudzyslowow(tekst_z_pliku, licznik):
+    liczba_cudzyslowow_apostrofowych = 0
+    liczba_cudzyslowow_pojedynczych = 0
+    for znak in tekst_z_pliku:
+        if znak == '"':
+            liczba_cudzyslowow_apostrofowych += 1
+        elif znak == "'":
+            liczba_cudzyslowow_pojedynczych += 1
+    licznik['liczba_cudzyslowow_apostrofowych'] += liczba_cudzyslowow_apostrofowych
+    licznik['liczba_cudzyslowow_pojedynczych'] += liczba_cudzyslowow_pojedynczych
+    return licznik
+
+def znajdz_najdluzszy_wyraz(licznik_wyrazow):
+    najdluzszy_wyraz = ''
+    for wyraz in licznik_wyrazow:
+        if not re.search("[\"'@\\/<>()\[\]!$%\^&*\-+=~`?;:{},.\0-9]", wyraz):
+            if len(wyraz) > len(najdluzszy_wyraz):
+                najdluzszy_wyraz = wyraz
+                print(najdluzszy_wyraz)
+    return najdluzszy_wyraz
+
 def replace_all(repls, str):
     return re.sub('|'.join(re.escape(key) for key in repls.keys()), lambda k: repls[k.group(0)], str)
 
@@ -116,6 +164,8 @@ def main():
     licznik_wyrazow = Counter()
     licznik_znakow = Counter()
     licznik_ilosci_linii_odstepu = Counter()
+    statystyki_komentarzy = Counter()
+    licznik_cudzyslowow = Counter()
 
     # # Tworzy plik tekstowy zawierający wybrane statystyki
     with open(f'{sciezka_do_miejsca_zapisu_plikow}/out.txt', 'w') as out:
@@ -129,8 +179,11 @@ def main():
                 licznik_wyrazow = stworz_licznik_wyrazow(tekst_z_pliku, licznik_wyrazow)
                 licznik_znakow = stworz_licznik_znakow(tekst_z_pliku, licznik_znakow)
                 licznik_ilosci_linii_odstepu = stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku, licznik_ilosci_linii_odstepu)
+                statystyki_komentarzy = stworz_statystyki_komentarzy(tekst_z_pliku, statystyki_komentarzy)
+                licznik_cudzyslowow = stworz_statystyki_cudzyslowow(tekst_z_pliku, licznik_cudzyslowow)
         licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze = stworz_licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze(licznik_wyrazow)
         licznik_wyrazow_java = stworz_licznik_wyrazow_java(licznik_wyrazow)
+        najdluzszy_wyraz = znajdz_najdluzszy_wyraz(licznik_wyrazow)
 
         # # Wypisuje do pliku tekstowego zawartości list i liczników
         # out.write(f"Linijki: {lista_linii}\n\n")
@@ -139,6 +192,9 @@ def main():
         out.write(f"Operatory porządku: {licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze}\n\n")
         out.write(f"Wybrane wyrazy: {licznik_wyrazow_java}\n\n")
         out.write(f"Liczba linii odstępu: {licznik_ilosci_linii_odstepu}\n\n")
+        out.write(f"Statystyki komenatarzy: {statystyki_komentarzy}\n\n")
+        out.write(f"Liczba cudzysłowów: {licznik_cudzyslowow}\n\n")
+        out.write(f"Najdłuższy wyraz: {najdluzszy_wyraz}\n\n")
 
 
         # # Zapisywanie danych do pliku java_[IMIĘ].csv
@@ -150,6 +206,11 @@ def main():
                 csv_out.write(f'{element};{licznik_wyrazow_java[element]}\n')
             for element in licznik_ilosci_linii_odstepu:
                 csv_out.write(f'{element};{licznik_ilosci_linii_odstepu[element]}\n')
+            for element in statystyki_komentarzy:
+                csv_out.write(f'{element};{statystyki_komentarzy[element]}\n')
+            for element in licznik_cudzyslowow:
+                csv_out.write(f'{element};{licznik_cudzyslowow[element]}\n')
+            csv_out.write(f'najdluzszy_wyraz;{najdluzszy_wyraz}')
 
         # # Łączenie wszystkich plików java_[IMIĘ].csv w jeden plik java.csv
         # # imie2 i imie3 do zmiany przy łączeniu ramek danych w jedną
