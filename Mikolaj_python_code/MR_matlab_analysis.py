@@ -52,7 +52,7 @@ def find_longest_word(matlab_file_path):
     return longest_word
 
 
-def count_equal_sign_occurrences(matlab_file_path, string):
+def count_equal_sign_occurrences(matlab_file_path):
     # Check if the file exists
     if not os.path.exists(matlab_file_path):
         print(f"Error: File {matlab_file_path} not found.")
@@ -62,13 +62,18 @@ def count_equal_sign_occurrences(matlab_file_path, string):
     with open(matlab_file_path, 'r', encoding='utf-8', errors='ignore') as file:
         matlab_code = file.read()
 
-    # Count occurrences of "="
-    equal_sign_count = matlab_code.count(string)
+    # Count occurrences
+    list_of_strings = ["+", "-", "*", "/", ")", "("]
+    total_number_of_strings = 0
+    for i in list_of_strings:
+        total_number_of_strings += matlab_code.count(i)
 
-    # Count occurrences of "=" surrounded by two spaces
-    equal_sign_with_spaces_count = matlab_code.count(" " + string + " ")
+    # Count occurrences surrounded by two spaces
+    total_number_of_occurences_with_two_spaces = 0
+    for i in list_of_strings:
+        total_number_of_occurences_with_two_spaces += matlab_code.count(" " + i + " ")
 
-    return equal_sign_count, equal_sign_with_spaces_count
+    return total_number_of_strings, total_number_of_occurences_with_two_spaces
 
 
 def get_characters_per_line(matlab_file_path):
@@ -148,7 +153,7 @@ def main():
     matlab_file_path = 'data/dokladneWartosci.m'
     length, num_lines, commentslines, emptylines = get_matlab_code_stats(matlab_file_path)
     longest_word = find_longest_word(matlab_file_path)
-    equal_sign_count, equal_sign_with_spaces_count = count_equal_sign_occurrences(matlab_file_path, s)
+    equal_sign_count, equal_sign_with_spaces_count = count_equal_sign_occurrences(matlab_file_path)
     characters_per_line = get_characters_per_line(matlab_file_path)
 
     first_comment_length = get_length_of_first_comment(matlab_file_path)
@@ -179,12 +184,15 @@ def main():
     data = []
     if os.path.exists(folder_path) and os.path.isdir(folder_path):
         for el in sciezki_do_plikow:
-            s = ")"
             length, num_lines, commentslines, emptylines = get_matlab_code_stats(el)
             longest_word = find_longest_word(el)
-            equal_sign_count, equal_sign_with_spaces_count = count_equal_sign_occurrences(el, s)
-            characters_per_line = mean(get_characters_per_line(el))
-
+            sign_count, sign_with_spaces_count = count_equal_sign_occurrences(el)
+            characters_per_line = get_characters_per_line(el)
+            mean_characters_per_line = mean(characters_per_line)
+            too_long_lines = 0
+            for line in characters_per_line:
+                if line > 75:
+                    too_long_lines += 1
             first_comment_length = get_length_of_first_comment(el)
 
             lines_with_semicolon, lines_that_should_have_semicolon = count_lines_with_semicolon_and_conditions(
@@ -198,9 +206,12 @@ def main():
                          "Liczba pustych linii": emptylines,
                          "Najdłuższe słowo": longest_word,
                          "Długośc pierwszego komentarza": first_comment_length,
-                         "Srednia liczba znaków w wierszu": characters_per_line,
+                         "Srednia liczba znaków w wierszu":mean_characters_per_line,
                          "Liczba wierszy zakonczonych srednikiem": lines_with_semicolon,
-                         "Liczba wierszy, ktore powinny sie konczyc srednikiem": lines_that_should_have_semicolon})
+                         "Liczba wierszy, ktore powinny sie konczyc srednikiem": lines_that_should_have_semicolon,
+                         "Liczba operatorów: +, -, *, /, ), (": sign_count,
+                         "Liczba operatoro otoczonych spacjami" : sign_with_spaces_count,
+                         "Liczba zbyt długich linii" : too_long_lines})
     df = pd.DataFrame(data)
     print(df)
     df.to_csv("Mikolaj_matlab.csv")
