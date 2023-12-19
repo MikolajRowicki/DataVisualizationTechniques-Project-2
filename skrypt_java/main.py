@@ -181,91 +181,88 @@ def znajdz_najdluzszy_wyraz(tekst_z_pliku):
 # def replace_all(repls, str):
 #     return re.sub('|'.join(re.escape(key) for key in repls.keys()), lambda k: repls[k.group(0)], str)
 
+
+
 def main():
 
     # # ----------------------------------------------------------------------
     # # Ścieżki, z których korzysta program
     # # To należy zmienić
-<<<<<<< HEAD
-    sciezka_do_folderu_z_plikami_java = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java/data'
+    # sciezka_do_folderu_z_plikami_java = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java/data'
+    # sciezka_do_miejsca_zapisu_plikow = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java/Mikolaj'
+    # imie = 'Mikolaj'
+    #
+    # # # Tworzy listę ścieżek do wszystkich plików od podanej ścieżki, mających dane rozszerzenie
+    # sciezki_do_plikow = list(pathlib.Path(sciezka_do_folderu_z_plikami_java).rglob('*.java'))
+    #
+    # # # Listy i liczniki, w których będą przechowywane aliczane statystyki
+    # lista_linii = []
+    # licznik_wyrazow = Counter()
+    # licznik_znakow = Counter()
+    # licznik_ilosci_linii_odstepu = Counter()
+    # statystyki_komentarzy = Counter()
+    # licznik_cudzyslowow = Counter()
+    #
+    # # # Tworzy plik tekstowy zawierający wybrane statystyki
+    # with open(f'{sciezka_do_miejsca_zapisu_plikow}/out.txt', 'w') as out:
+    #     for sciezka_do_pliku in sciezki_do_plikow:
+    #         with open(sciezka_do_pliku, 'r', encoding='utf-8') as plik:
+    #             tekst_z_pliku = plik.read()
+    #             # out.write(f"[ŚCIEŻKA DO PLIKU] {sciezka_do_pliku}\n[ZAWARTOŚĆ  PLIKU]\n{tekst_z_pliku}\n\n")
+    #
+    #             # # Zapełnia utworzone listy i liczniki
+    #             lista_linii = stworz_liste_linii(tekst_z_pliku)
+    #             licznik_wyrazow = stworz_licznik_wyrazow_java(tekst_z_pliku)
+    #             licznik_znakow = stworz_licznik_znakow(tekst_z_pliku)
+    #             licznik_ilosci_linii_odstepu = stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku)
+    #             statystyki_komentarzy = stworz_statystyki_komentarzy(tekst_z_pliku)
+    #             licznik_cudzyslowow = stworz_statystyki_cudzyslowow(tekst_z_pliku)
+    #     licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze = stworz_licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze(licznik_wyrazow)
+    #     licznik_wyrazow_java = stworz_licznik_wyrazow_java(licznik_wyrazow)
+    #     najdluzszy_wyraz = znajdz_najdluzszy_wyraz(licznik_wyrazow)
+    #
+    #     # # Wypisuje do pliku tekstowego zawartości list i liczników
+    #     # out.write(f"Linijki: {lista_linii}\n\n")
+    #     # out.write(f"Zliczone wyrazy: {licznik_wyrazow}\n\n")
+    #     # out.write(f"Zliczone litery: {licznik_znakow}\n\n")
+    #     out.write(f"Operatory porządku: {licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze}\n\n")
+    #     out.write(f"Wybrane wyrazy: {licznik_wyrazow_java}\n\n")
+    #     out.write(f"Liczba linii odstępu: {licznik_ilosci_linii_odstepu}\n\n")
+    #     out.write(f"Statystyki komenatarzy: {statystyki_komentarzy}\n\n")
+    #     out.write(f"Liczba cudzysłowów: {licznik_cudzyslowow}\n\n")
+    #     out.write(f"Najdłuższy wyraz: {najdluzszy_wyraz}\n\n")
+    #
+    #
+    #     # # Zapisywanie danych do pliku java_[IMIĘ].csv
+    #     with open(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie}.csv', 'w') as csv_out:
+    #         csv_out.write(f'Element;Count_{imie}\n')
+    #         for element in licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze:
+    #             csv_out.write(f'{element};{licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze[element]}\n')
+    #         for element in licznik_wyrazow_java:
+    #             csv_out.write(f'{element};{licznik_wyrazow_java[element]}\n')
+    #         for element in licznik_ilosci_linii_odstepu:
+    #             csv_out.write(f'{element};{licznik_ilosci_linii_odstepu[element]}\n')
+    #         for element in statystyki_komentarzy:
+    #             csv_out.write(f'{element};{statystyki_komentarzy[element]}\n')
+    #         for element in licznik_cudzyslowow:
+    #             csv_out.write(f'{element};{licznik_cudzyslowow[element]}\n')
+    #         csv_out.write(f'najdluzszy_wyraz;{najdluzszy_wyraz}')
+    #
+    #     # Łączenie wszystkich plików java_[IMIĘ].csv w jeden plik java.csv
+    #     # imie2 i imie3 do zmiany przy łączeniu ramek danych w jedną
+    #     # imie2 = imie
+    #     # imie3 = imie
+    #     # with open(f'{sciezka_do_miejsca_zapisu_plikow}/java.csv', 'w') as csv_out:
+    #     #     df1 = pd.read_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie}.csv', sep=';')
+    #     #     df2 = pd.read_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie2}.csv', sep=';')
+    #     #     df3 = pd.read_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie3}.csv', sep=';')
+    #     #     pd.merge(pd.merge(df1, df2, on='Element', how='outer'), df3, on='Element', how='outer').\
+    #     #         to_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java.csv', sep=';', index=False)
+
+
+    sciezka_do_folderu_z_plikami_java = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java/Java_data'
     sciezka_do_miejsca_zapisu_plikow = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java/Mikolaj'
     imie = 'Mikolaj'
-
-    # # Tworzy listę ścieżek do wszystkich plików od podanej ścieżki, mających dane rozszerzenie
-    sciezki_do_plikow = list(pathlib.Path(sciezka_do_folderu_z_plikami_java).rglob('*.java'))
-
-    # # Listy i liczniki, w których będą przechowywane aliczane statystyki
-    lista_linii = []
-    licznik_wyrazow = Counter()
-    licznik_znakow = Counter()
-    licznik_ilosci_linii_odstepu = Counter()
-    statystyki_komentarzy = Counter()
-    licznik_cudzyslowow = Counter()
-
-    # # Tworzy plik tekstowy zawierający wybrane statystyki
-    with open(f'{sciezka_do_miejsca_zapisu_plikow}/out.txt', 'w') as out:
-        for sciezka_do_pliku in sciezki_do_plikow:
-            with open(sciezka_do_pliku, 'r', encoding='utf-8') as plik:
-                tekst_z_pliku = plik.read()
-                # out.write(f"[ŚCIEŻKA DO PLIKU] {sciezka_do_pliku}\n[ZAWARTOŚĆ  PLIKU]\n{tekst_z_pliku}\n\n")
-
-                # # Zapełnia utworzone listy i liczniki
-                lista_linii = stworz_liste_linii(tekst_z_pliku, lista_linii)
-                licznik_wyrazow = stworz_licznik_wyrazow(tekst_z_pliku, licznik_wyrazow)
-                licznik_znakow = stworz_licznik_znakow(tekst_z_pliku, licznik_znakow)
-                licznik_ilosci_linii_odstepu = stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku, licznik_ilosci_linii_odstepu)
-                statystyki_komentarzy = stworz_statystyki_komentarzy(tekst_z_pliku, statystyki_komentarzy)
-                licznik_cudzyslowow = stworz_statystyki_cudzyslowow(tekst_z_pliku, licznik_cudzyslowow)
-        licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze = stworz_licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze(licznik_wyrazow)
-        licznik_wyrazow_java = stworz_licznik_wyrazow_java(licznik_wyrazow)
-        najdluzszy_wyraz = znajdz_najdluzszy_wyraz(licznik_wyrazow)
-
-        # # Wypisuje do pliku tekstowego zawartości list i liczników
-        # out.write(f"Linijki: {lista_linii}\n\n")
-        # out.write(f"Zliczone wyrazy: {licznik_wyrazow}\n\n")
-        # out.write(f"Zliczone litery: {licznik_znakow}\n\n")
-        out.write(f"Operatory porządku: {licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze}\n\n")
-        out.write(f"Wybrane wyrazy: {licznik_wyrazow_java}\n\n")
-        out.write(f"Liczba linii odstępu: {licznik_ilosci_linii_odstepu}\n\n")
-        out.write(f"Statystyki komenatarzy: {statystyki_komentarzy}\n\n")
-        out.write(f"Liczba cudzysłowów: {licznik_cudzyslowow}\n\n")
-        out.write(f"Najdłuższy wyraz: {najdluzszy_wyraz}\n\n")
-
-
-        # # Zapisywanie danych do pliku java_[IMIĘ].csv
-        with open(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie}.csv', 'w') as csv_out:
-            csv_out.write(f'Element;Count_{imie}\n')
-            for element in licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze:
-                csv_out.write(f'{element};{licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze[element]}\n')
-            for element in licznik_wyrazow_java:
-                csv_out.write(f'{element};{licznik_wyrazow_java[element]}\n')
-            for element in licznik_ilosci_linii_odstepu:
-                csv_out.write(f'{element};{licznik_ilosci_linii_odstepu[element]}\n')
-            for element in statystyki_komentarzy:
-                csv_out.write(f'{element};{statystyki_komentarzy[element]}\n')
-            for element in licznik_cudzyslowow:
-                csv_out.write(f'{element};{licznik_cudzyslowow[element]}\n')
-            csv_out.write(f'najdluzszy_wyraz;{najdluzszy_wyraz}')
-
-        # Łączenie wszystkich plików java_[IMIĘ].csv w jeden plik java.csv
-        # imie2 i imie3 do zmiany przy łączeniu ramek danych w jedną
-        # imie2 = imie
-        # imie3 = imie
-        # with open(f'{sciezka_do_miejsca_zapisu_plikow}/java.csv', 'w') as csv_out:
-        #     df1 = pd.read_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie}.csv', sep=';')
-        #     df2 = pd.read_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie2}.csv', sep=';')
-        #     df3 = pd.read_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java_{imie3}.csv', sep=';')
-        #     pd.merge(pd.merge(df1, df2, on='Element', how='outer'), df3, on='Element', how='outer').\
-        #         to_csv(f'{sciezka_do_miejsca_zapisu_plikow}/java.csv', sep=';', index=False)
-
-
-
-
-
-=======
-    sciezka_do_folderu_z_plikami_java = 'C:/Users/Sebastian/Desktop/Semestr 3/Zaawansowane programowanie obiektowe i funkcyjne/Laboratorium'
-    sciezka_do_miejsca_zapisu_plikow = 'C:/Users/Sebastian/Desktop/Semestr 3/Techniki wizualizacji danych/Projekt/PRO_2/skrypt_java'
-    imie = 'Sebastian'
     # # ----------------------------------------------------------------------
     # # Tworzy listę ścieżek do wszystkich plików od podanej ścieżki, mających dane rozszerzenie
     sciezki_do_plikow = list(pathlib.Path(sciezka_do_folderu_z_plikami_java).rglob('*.java'))
@@ -291,7 +288,6 @@ def main():
         df = pd.DataFrame(data)
         df.to_csv(f"{sciezka_do_miejsca_zapisu_plikow}/{imie}_java.csv", sep=',')
     # # ----------------------------------------------------------------------
->>>>>>> 3a894a34fa857fde36c27e6792f848d9b289a35a
 
 if __name__ == '__main__':
     main()
