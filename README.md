@@ -4,6 +4,8 @@ Second project for Data Visualization Techniques course for Data Science studies
 ## Wybrane statystyki
 
 ### Java
+- nazwa pliku, data utworzenia, ostatniej modefiakcji
+- liczba linii, wyrazów, znaków
 - zliczanie operatorów porządku
 - zliczanie wyrazów charakterystycznych dla javy
 - ilość linii odstępu

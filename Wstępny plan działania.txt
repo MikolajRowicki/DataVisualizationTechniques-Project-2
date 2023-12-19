@@ -10,3 +10,11 @@ Analiza plików tekstowych pisanych w Wordzie, językach programowania, notatnik
 WORD - Małgosia,
 Java - Sebatian,
 MATLAB - Mikołaj
+
+W aplikacji podział ze względu na rozszerzenia plików, potem użytkownik wybiera dla jakich osób chciałby zwizualizować dane, tło związane kolorystycznie z danym rozszerzeniem. Zakładka ogólne, zawierająca podsumowanie.
+- scatterplot, który na osi czasu będzie pokazywał daty utworzenia / modyfikacji plików, ze względu na poszczególne osoby,
+w ogólnej zakładce scaterrplot dla jednej osoby i wszystkich rozszerzeń oznaczonych kolorami
+- mapa słów, pokazująca, które słowa są najpopularniejsze.
+- wykres kolumnowy, który zlicza, ile komentarzy, kto pisze, różne dane liczbowe.
+- heatmapa, która pokazuje zależność np. liczby komentarzy od ich łącznej długości.
+- ciekawostka, najdłuższe słowo w javie, wordzie
