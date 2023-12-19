@@ -1,0 +1,51 @@
+Element;Count_Mikolaj_x;Count_Mikolaj_y;Count_Mikolaj
+==;96;96;96
+<=;20;20;20
+>=;8;8;8
+<;5;5;5
+private;245;245;245
+public;1037;1037;1037
+protected;228;228;228
+abstract;82;82;82
+final;38;38;38
+static;146;146;146
+default;7;7;7
+void;307;307;307
+byte;82;82;82
+short;0;0;0
+int;417;417;417
+long;12;12;12
+float;0;0;0
+double;83;83;83
+boolean;86;86;86
+char;1;1;1
+String;187;187;187
+class;312;312;312
+enum;19;19;19
+interface;20;20;20
+annotation;1;1;1
+extends;165;165;165
+new;328;328;328
+if;518;518;518
+else;37;37;37
+return;393;393;393
+throw;20;20;20
+throws;46;46;46
+import;663;663;663
+catch;21;21;21
+package;334;334;334
+Brak odstepu;224816;224816;224816
+Liczba linijek odstepu;9442;9442;9442
+2 linijki odstepu;1199;1199;1199
+1 linijka odstepu;6598;6598;6598
+1 linijki odstepu;314;314;314
+3 linijki odstepu;37;37;37
+4 linijki odstepu;4;4;4
+5 linijki odstepu;1;1;1
+liczba_znakow_w_komantarzu_w_linii;2336;2336;2336
+liczba_komentarzy_w_linii;94;94;94
+liczba_znakow_w_komentarzu_w_bloku;0;0;0
+liczba_komentarzy_w_bloku;0;0;0
+liczba_cudzyslowow_apostrofowych;1134;1134;1134
+liczba_cudzyslowow_pojedynczych;4;4;4
+najdluzszy_wyraz;MAKSYMALNE_WYZWALAJACE_POLOZENIE_UCHWYTU_DO_WYCZEPIENIA;MAKSYMALNE_WYZWALAJACE_POLOZENIE_UCHWYTU_DO_WYCZEPIENIA;MAKSYMALNE_WYZWALAJACE_POLOZENIE_UCHWYTU_DO_WYCZEPIENIA
