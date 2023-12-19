@@ -2,7 +2,7 @@ import os
 import codecs
 import pandas as pd
 import pathlib
-import datetime
+from datetime import datetime
 from statistics import mean
 
 
@@ -119,6 +119,12 @@ def get_length_of_first_comment(matlab_file_path):
             break
 
     return first_comment_length
+def data_modyfikacji_pliku(sciezka):
+    if os.path.exists(sciezka):
+        timestamp = os.path.getmtime(sciezka)
+        date = datetime.fromtimestamp(timestamp)
+        return date.strftime('%Y-%m-%d')
+    return None
 
 
 def count_lines_with_semicolon_and_conditions(matlab_file_path):
@@ -140,7 +146,7 @@ def count_lines_with_semicolon_and_conditions(matlab_file_path):
         # Check conditions for valid lines
         if line.strip().endswith(';') and not line.startswith('%'):
             lines_with_semicolon += 1
-        if not line.isspace() and not line.startswith(('%', 'end', 'function', 'if', 'for')):
+        if not line.isspace() and not line.lstrip().startswith(('%', 'end', 'function', 'if', 'for')):
             lines_that_should_have_semicolon += 1
 
     return lines_with_semicolon, lines_that_should_have_semicolon
@@ -198,6 +204,7 @@ def main():
             lines_with_semicolon, lines_that_should_have_semicolon = count_lines_with_semicolon_and_conditions(
                 el)
             data.append({"Imie": imie,
+                         "Data modyfikacji": data_modyfikacji_pliku(el),
                          "Rozszerzenie": "m",
                          "Nazwa pliku": el.name,
                          "Liczba znaków:": length,
