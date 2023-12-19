@@ -121,9 +121,6 @@ def stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku):
         else:
             if ilosc_odstepow_po_kolei == 0:
                 licznik["Brak odstepu"] += 1
-            elif ilosc_odstepow_po_kolei == 1:
-                licznik[f"{ilosc_odstepow_po_kolei} linijka odstepu"] += 1
-                ilosc_odstepow_po_kolei = 0
             else:
                 licznik[f"{ilosc_odstepow_po_kolei} linijki odstepu"] += 1
                 ilosc_odstepow_po_kolei = 0
@@ -215,7 +212,7 @@ def main():
                              **{"Najdluzszy_wyraz": znajdz_najdluzszy_wyraz(tekst_z_pliku)},
                              **stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku)))
         df = pd.DataFrame(data)
-        df.to_csv(f"{sciezka_do_miejsca_zapisu_plikow}/{imie}_java.csv", sep=';')
+        df.to_csv(f"{sciezka_do_miejsca_zapisu_plikow}/{imie}_java.csv", sep=',')
     # # ----------------------------------------------------------------------
 
 if __name__ == '__main__':
