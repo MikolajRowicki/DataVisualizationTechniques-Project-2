@@ -58,22 +58,21 @@ def count_equal_sign_occurrences(matlab_file_path):
         print(f"Error: File {matlab_file_path} not found.")
         return None
 
+    list_of_strings = ["+","-" "*", "/", "=", ":", "./", ".*", "<=", ">=", "<", ">", "||", "&&", "~="]
+    total_number_of_occurences = 0
+    total_number_of_occurences_with_two_spaces = 0
+
     # Read the content of the MATLAB file
     with open(matlab_file_path, 'r', encoding='utf-8', errors='ignore') as file:
-        matlab_code = file.read()
+        for line in file:
+            for string in list_of_strings:
+                if string != "<=" and string != ">=" and string != "~=" and string != "./" and string != ".*":
+                    total_number_of_occurences += line.strip().count(string)
+                if string == "<=" or string == ">=":
+                    total_number_of_occurences -= line.strip().count(string)
+                total_number_of_occurences_with_two_spaces += line.strip().count(" " + string + " ")
 
-    # Count occurrences
-    list_of_strings = ["+", "-", "*", "/", ")", "("]
-    total_number_of_strings = 0
-    for i in list_of_strings:
-        total_number_of_strings += matlab_code.count(i)
-
-    # Count occurrences surrounded by two spaces
-    total_number_of_occurences_with_two_spaces = 0
-    for i in list_of_strings:
-        total_number_of_occurences_with_two_spaces += matlab_code.count(" " + i + " ")
-
-    return total_number_of_strings, total_number_of_occurences_with_two_spaces
+    return total_number_of_occurences, total_number_of_occurences_with_two_spaces
 
 
 def get_characters_per_line(matlab_file_path):
@@ -144,9 +143,9 @@ def count_lines_with_semicolon_and_conditions(matlab_file_path):
     for line in lines:
 
         # Check conditions for valid lines
-        if line.strip().endswith(';') and not line.startswith('%'):
+        if line.strip().endswith(';') and not line.lstrip().startswith('%'):
             lines_with_semicolon += 1
-        if not line.isspace() and not line.lstrip().startswith(('%', 'end', 'function', 'if', 'for')):
+        if not line.isspace() and not line.lstrip().startswith(('%', 'end', 'function', 'if', 'for', 'else')) and not line.strip().endswith("..."):
             lines_that_should_have_semicolon += 1
 
     return lines_with_semicolon, lines_that_should_have_semicolon
@@ -216,8 +215,8 @@ def main():
                          "Srednia liczba znaków w wierszu":mean_characters_per_line,
                          "Liczba wierszy zakonczonych srednikiem": lines_with_semicolon,
                          "Liczba wierszy, ktore powinny sie konczyc srednikiem": lines_that_should_have_semicolon,
-                         "Liczba operatorów: +, -, *, /, ), (": sign_count,
-                         "Liczba operatoro otoczonych spacjami" : sign_with_spaces_count,
+                         "Liczba operatorów: +, -, *, /, =, :, ./, .*": sign_count,
+                         "Liczba operatorow otoczonych spacjami" : sign_with_spaces_count,
                          "Liczba zbyt długich linii" : too_long_lines})
     df = pd.DataFrame(data)
     print(df)
