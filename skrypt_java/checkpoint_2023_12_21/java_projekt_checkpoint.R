@@ -8,6 +8,7 @@ library(shinydashboard)
 library(shinyjs)
 library(rlang)
 library(plotly)
+library(dashboardthemes)
 
 # Przygotowywane danych --------------------------------------------------------
 df1 <- read.csv("Sebastian_java.csv")
@@ -127,11 +128,101 @@ server <- function(input, output, session) {
            "Sebastian: ", Sebastian_txt)
     
   })
+  # Zmiana stylu ---------------------------------------------------------------
+  # observeEvent(input$navbarID, {
+  #   if(input$menu == "Word"){
+  #     theme_word <- theme_java
+  #   } else {
+  #     session$sendCustomMessage("background-color", "red")
+  #   }
+  # })
 }
+
+# Styl -------------------------------------------------------------------------
+theme_java <- shinyDashboardThemeDIY(
+  appFontFamily = "FuturaMedium"
+  ,appFontColor = "white"
+    ,primaryFontColor = "#434C5E"
+    ,infoFontColor = "#434C5E"
+    ,successFontColor = "#434C5E"
+    ,warningFontColor = "#434C5E"
+    ,dangerFontColor = "#434C5E"
+  ,bodyBackColor = "#232323" 
+    ,logoBackColor = "#151515" 
+  ,headerButtonBackColor = "#151515"
+    ,headerButtonIconColor = "#D8DEE9"
+    ,headerButtonBackColorHover = "#fc0703"
+    ,headerButtonIconColorHover = "#151515" 
+    ,headerBackColor = "#151515"
+    ,headerBoxShadowColor = ""
+  ,headerBoxShadowSize = "0px 0px 0px"
+  ,sidebarBackColor = "#151515"
+    ,sidebarPadding = 0
+  ,sidebarMenuBackColor = "transparent"
+  ,sidebarMenuPadding = 5
+  ,sidebarMenuBorderRadius = 5
+  ,sidebarShadowRadius = "" 
+  ,sidebarShadowColor = "0px 0px 0px"
+  ,sidebarUserTextColor = "#D8DEE9"
+  ,sidebarSearchBackColor = "#4C566A"
+    ,sidebarSearchIconColor = "#151515"
+    ,sidebarSearchBorderColor = "#4C566A"
+  ,sidebarTabTextColor = "#ECEFF4"
+    ,sidebarTabTextSize = 14
+  ,sidebarTabBorderStyle = "none"
+  ,sidebarTabBorderColor = "#000000"
+    ,sidebarTabBorderWidth = 0
+  ,sidebarTabBackColorSelected = "#fc0703"
+    ,sidebarTabTextColorSelected = "#000000" 
+    ,sidebarTabRadiusSelected = "20px" 
+  ,sidebarTabBackColorHover = "#fc0703"
+    ,sidebarTabTextColorHover = "#000000"
+    ,sidebarTabBorderStyleHover = "none"
+  ,sidebarTabBorderColorHover = "none"
+  ,sidebarTabBorderWidthHover = 0
+  ,sidebarTabRadiusHover = "20px" 
+  ,boxBackColor = "#232323" 
+    ,boxBorderRadius = 5
+  ,boxShadowSize = "0px 0px 0px"
+  ,boxShadowColor = ""
+  ,boxTitleSize = 18
+  ,boxDefaultColor = "#232323"
+    ,boxPrimaryColor = "#232323"
+    ,boxInfoColor = "#232323"
+    ,boxSuccessColor = "#232323"
+    ,boxWarningColor = "#232323"
+    ,boxDangerColor = "#232323"
+  ,tabBoxTabColor = "#151515"
+    ,tabBoxTabTextSize = 16
+  ,tabBoxTabTextColor = "#151515"
+    ,tabBoxTabTextColorSelected = "#151515"
+    ,tabBoxBackColor = "#BF616A"
+    ,tabBoxHighlightColor = "#4C566A"
+    ,tabBoxBorderRadius = 5 
+  ,buttonBackColor = "#151515"
+    ,buttonTextColor = "#2E3440"
+    ,buttonBorderColor = "#2E3440"
+    ,buttonBorderRadius = 5
+  ,buttonBackColorHover = "#151515"
+    ,buttonTextColorHover = "#232323"
+    ,buttonBorderColorHover = "#2E3440"
+  ,textboxBackColor = "#151515" 
+    ,textboxBorderColor = "#fc0703" 
+    ,textboxBorderRadius = 5
+  ,textboxBackColorSelect = "#151515"
+    ,textboxBorderColorSelect = "#03a1fc"
+  ,tableBackColor = "#151515"
+    ,tableBorderColor = "#2E3440"
+    ,tableBorderTopSize = 1
+  ,tableBorderRowSize = 1
+)
 
 # Tworzenie UI -----------------------------------------------------------------
 app_ui <- dashboardPage(
-  dashboardHeader(title = "Prototyp"),
+  dashboardHeader(
+    title = "Prototyp",
+    titleWidth = 250
+    ),
   dashboardSidebar(
     sidebarMenu(id = "menu", sidebarMenuOutput("menu"),
                 menuItem("Java", tabName = "Java"),
@@ -148,6 +239,25 @@ app_ui <- dashboardPage(
     width = 250
   ),
   dashboardBody(
+    theme_java,
+    # tags$head(
+    #   tags$style(
+    #     HTML('
+    #       #shiny-tab-Java h1 {
+    #         background-color: red;
+    #         color: white;
+    #       }
+    #       #shiny-tab-Word h2 {
+    #         background-color: blue;
+    #         color: red;
+    #       }
+    #       #shiny-tab-MATLAB h3 {
+    #         background-color: yellow;
+    #         color: red;
+    #       }
+    #     ')
+    #   )
+    # ),
     tabItems(
       tabItem(
         tabName = "Java",
@@ -188,16 +298,22 @@ app_ui <- dashboardPage(
                    )
                  )
         )
+        # ,tags$h1('')
       ),
       tabItem(
         tabName = "Word"
+        # ,tags$h2('')
       ),
       tabItem(
         tabName = "MATLAB"
+        # ,tags$h3('')
       )
-    )
+    ),
+    
   )
 )
+
+
 
 
 shinyApp(app_ui, server)
