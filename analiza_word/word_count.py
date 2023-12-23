@@ -90,10 +90,10 @@ def data_utworzenia_pliku(docx_path):
 
 
 def main():
-    folder_path = "C:\\Users\\HP\\PycharmProjects\\skrypty\\word_pliki"
+    folder_path = "C:\\Semestr 3\\TWD\\Projekt 2\\DataVisualizationTechniques-Project-2\\analiza_word\\data"
     sciezki_do_plikow = list(pathlib.Path(folder_path).rglob('*.docx'))
 
-    imie = "Malgosia"
+    imie = "Mikolaj"
     data = []
 
     if os.path.exists(folder_path) and os.path.isdir(folder_path):
@@ -114,7 +114,7 @@ def main():
                          "Najdluzsze slowo": znajdz_najdluzsze_slowo(el)})
     df = pd.DataFrame(data)
     # print(df)
-    df.to_csv("Malgosia-word.csv")
+    df.to_csv("Mikolaj-word.csv")
 
 
 if __name__ == "__main__":
