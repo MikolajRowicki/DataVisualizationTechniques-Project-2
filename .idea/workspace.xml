@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe891861-bc39-4212-8e00-8a1a5f749acb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analiza_word/Mikolaj-word.csv" beforeDir="false" afterPath="$PROJECT_DIR$/analiza_word/Mikolaj-word.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/analiza_word/word_count.py" beforeDir="false" afterPath="$PROJECT_DIR$/analiza_word/word_count.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
