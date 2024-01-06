@@ -319,6 +319,7 @@ server <- function(input, output, session) {
     
     if ("Mikołaj" %in% input$imiona) {
       mikolaj_matlab_filtered <-  mikolaj_matlab %>% 
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.)
                   / (sum(Liczba.wierszy) - sum(Liczba.pustych.linii))) %>% 
         mutate(Imie = "Mikołaj")
@@ -335,6 +336,7 @@ server <- function(input, output, session) {
     
     if ("Sebastian" %in% input$imiona) {
       sebastian_matlab_filtered <-  sebastian_matlab %>% 
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.) 
                   / (sum(Liczba.wierszy) - sum(Liczba.pustych.linii))) %>% 
         mutate(Imie = "Sebastian")
@@ -352,6 +354,7 @@ server <- function(input, output, session) {
     
     if ("Małgosia" %in% input$imiona) {
       malgosia_matlab_filtered <-  malgosia_matlab %>% 
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.)
                   / (sum(Liczba.wierszy) - sum(Liczba.pustych.linii))) %>% 
         mutate(Imie = "Małgosia")
