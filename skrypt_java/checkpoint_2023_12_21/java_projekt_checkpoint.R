@@ -51,7 +51,7 @@ server <- function(input, output, session) {
       theme_bw() +
       labs(
         x = "Osoba",
-        y = "Średnia liczba komentarzów w linii na plik"
+        y = "Średnia liczba komentarzy w linii na plik"
       )
   })
   # Wykres 3 -------------------------------------------------------------------
