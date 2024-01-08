@@ -580,6 +580,46 @@ app_ui <- dashboardPage(
       ),
       tabItem(
         tabName = "Word"
+        
+        fluidRow(
+          column(
+            width = 12,
+            plotOutput("wykres1_1")
+          )
+          
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            plotOutput("wykres1_2")
+          )
+          
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            plotOutput("wykres1_3")
+          )
+          
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            selectInput("zmienna",
+                        "Wybierz Imię",
+                        zmienne),
+            plotOutput("wykres2")
+          )
+          
+        ),
+        fluidRow(
+          column(
+            width = 12,
+            checkboxGroupInput("wybor_zmiennych", "Wybierz Imię (Imiona)", choices = c("Malgosia", "Mikolaj", "Sebastian")),
+            plotOutput("wykres3")
+          )
+          
+        )
         # ,tags$h2('')
       ),
       tabItem(
