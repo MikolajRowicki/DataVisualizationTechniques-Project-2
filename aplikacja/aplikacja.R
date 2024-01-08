@@ -144,6 +144,182 @@ server <- function(input, output, session) {
            "Sebastian: ", Sebastian_txt)
     
   })
+
+    # WORD -----------------------------------------------------------------------
+  # word - wykres tworzenia plikow ---------------------------------------------
+  #word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres1.csv")
+  output$wykres1_1 <- renderPlot({
+    
+    word11 <- word_wykres1 %>% 
+      filter(Imie == "Malgosia")
+    word11$year <- as.integer(word11$year)
+    word11$month <- as.integer(word11$month)
+    word11 <- word11 %>% 
+      arrange(month)%>% 
+      arrange(year)
+    word11$data <- as.Date(paste(word11$year, word11$month, "01", sep = "-"), format = "%Y-%m-%d")
+      
+      #filter(data >= input$data[1], data <= input$data[2])
+    ggplot(word11, aes(data, y = n)) +
+      geom_col(color = "#d11a05", fill = "#d11a05", width = 22)+
+      labs(title = "Pliki Word Małgosi",
+           x = "Czas",
+           y = "Ilość") +
+      scale_y_continuous(breaks = seq(0, round(max(word11$n)), by = 2)) +
+      theme_minimal() +
+      theme(
+        axis.ticks.x = element_blank(),
+        plot.background = element_rect(fill = "transparent"),
+        panel.background = element_rect(fill = "transparent"),
+        panel.grid.major = element_line(size = 0.3, color = "#fc0703"),
+        panel.grid.minor = element_blank(),#31322e
+        plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#f33721"),
+        axis.title = element_text(family = "Consolas", size = 16, color = "#ff7355"),
+        axis.text.x = element_text(size = 14, color = "#ff7355"),
+        axis.text.y = element_text(size = 14, color = "#ff7355")
+
+      )
+    
+   
+    
+  }, bg = "transparent")
+  
+  output$wykres1_2 <- renderPlot({
+    
+    word11 <- word_wykres1 %>% 
+      filter(Imie == "Sebastian")
+    word11$year <- as.integer(word11$year)
+    word11$month <- as.integer(word11$month)
+    word11 <- word11 %>% 
+      arrange(month)%>% 
+      arrange(year)
+    word11$data <- as.Date(paste(word11$year, word11$month, "01", sep = "-"), format = "%Y-%m-%d")
+    
+    #filter(data >= input$data[1], data <= input$data[2])
+    ggplot(word11, aes(data, y = n)) +
+      geom_col(color = "#db5b1e", fill = "#db5b1e", width = 22)+
+      labs(title = "Pliki Word Sebastiana",
+           x = "Czas",
+           y = "Ilość") +
+      scale_y_continuous(breaks = seq(0, round(max(word11$n)), by = 2)) +
+      theme_minimal() +
+      theme(
+        axis.ticks.x = element_blank(),
+        panel.grid.major = element_line(size = 0.3, color = "#af400b"),
+        panel.grid.minor = element_blank(),#31322e
+        plot.background = element_rect(fill = "transparent"),
+        panel.background = element_rect(fill = "transparent"),
+        plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#f97638"),
+        axis.title = element_text(family = "Consolas", size = 16, color = "#ff8839"),
+        axis.text.x = element_text(size = 14, color = "#ff8839"),
+        axis.text.y = element_text(size = 14, color = "#ff8839")
+        
+      )
+    
+    
+    
+  }, bg = "transparent")
+  
+  output$wykres1_3 <- renderPlot({
+    
+    word11 <- word_wykres1 %>% 
+      filter(Imie == "Mikolaj")
+    word11$year <- as.integer(word11$year)
+    word11$month <- as.integer(word11$month)
+    word11 <- word11 %>% 
+      arrange(month)%>% 
+      arrange(year)
+    word11$data <- as.Date(paste(word11$year, word11$month, "01", sep = "-"), format = "%Y-%m-%d")
+    
+    #filter(data >= input$data[1], data <= input$data[2])
+    ggplot(word11, aes(data, y = n)) +
+      geom_col(color = "#f5cc24", fill = "#f5cc24", width = 22)+
+      labs(title = "Pliki Word Mikołaja",
+           x = "Czas",
+           y = "Ilość") +
+      scale_y_continuous(breaks = seq(0, round(max(word11$n)), by = 2)) +
+      theme_minimal() +
+      theme(
+        axis.ticks.x = element_blank(),
+        panel.grid.major = element_line(size = 0.3, color = "#daa519"),
+        panel.grid.minor = element_blank(),#31322e
+        panel.background = element_rect(fill = "transparent"), 
+        plot.background = element_rect(fill = "transparent", color = NA), 
+        plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#f8da0a"),
+        axis.title = element_text(family = "Consolas", size = 16, color = "#fbe464"),
+        axis.text.x = element_text(size = 14, color = "#fbe464"),
+        axis.text.y = element_text(size = 14, color = "#fbe464")
+        
+      )
+    
+    
+    
+  }, bg = "transparent")
+  
+  # word - analiza interpunkcji ------------------------------------------------
+  #word_wykres2 <- read.csv(".//przygotowane_ramki_danych_do_wykresow_word//word_wykres2.csv")
+  output$wykres2 <- renderPlot({
+    
+    word_wykres2 %>% 
+      select(-X) %>% 
+      pivot_longer(cols = -Imie, names_to = "Kolumna", values_to = "Wartosc") %>% 
+      filter(Imie == input$zmienna) %>% 
+      ggplot(aes(x = reorder(Kolumna, -Wartosc), y = Wartosc)) +
+      geom_col(fill = "#fc0703") +
+      labs(
+        title = "Interpunkcja - word",
+        x = "Znaki Interpunkcjne",
+        y = "Ilość"
+      ) +
+      theme_minimal() +
+      theme(
+        panel.grid.major = element_line(size = 0.5, color = "#66685f", linety = 'dashed'),
+        panel.grid.minor = element_blank(),#31322e
+        plot.title = element_text(family = "Consolas", size = 23, hjust = 0.5, colour = "#ff9a64"),
+        axis.title = element_text(family = "Consolas", size = 16, color = "#ff9a64"),
+        axis.text.x = element_text(size = 14, color = "#ff9a64"),
+        axis.text.y = element_text(size = 14, color = "#ff9a64"),
+        axis.title.x = element_text(vjust = -1),
+        axis.ticks.x = element_blank()
+      )
+    
+    
+  }, bg = "transparent")
+  
+  
+  # word - zaleznosc miedzy kropkami / przecinkami ... -------------------------
+  #word_wykres3 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres3.csv")
+  
+  output$wykres3 <- renderPlot({
+    
+    word_wykres3 %>% 
+      filter(Imie == input$wybor_zmiennych) %>% 
+      filter(Ilosc.kropek < 100) %>% 
+      ggplot(aes(x = Ilosc.kropek, y = Ilosc.przecinkow, size = Ilosc.słow., color = Imie)) +
+      geom_point() +
+      scale_color_manual(values = c("Malgosia" = "#fc0000", "Sebastian" = "#ff8c00", Mikolaj = "#fff200")) +
+      theme(#panel.background = element_rect(fill = "white"),
+            panel.grid.major = element_line(size = 0.5, color = "#66685f", linety = 'dashed'),
+            panel.grid.minor = element_blank(),#31322e
+            plot.title = element_text(family = "Consolas", size = 20, hjust = 0.5, colour = "#e0cdbf"),
+            axis.title = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
+            panel.background = element_rect(fill = "transparent"), 
+            plot.background = element_rect(fill = "transparent"), 
+            legend.title = element_text(family = "Consolas", size = 16, color = "#e0cdbf"),
+            legend.text = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
+            axis.text.x = element_text(size = 14, color = "#e0cdbf"),
+            axis.text.y = element_text(size = 14, color = "#e0cdbf"),
+            axis.title.x = element_text(vjust = -1),
+            legend.background = element_rect(fill = "transparent")
+            
+            
+      ) +
+      guides(size = 'none') +
+      labs(title = "Zależność Między Ilością kropek a Ilością Linijek Tekstu", x = "Ilość Kropek", y = "Ilość Linii")
+    
+    
+    
+  }, bg = "transparent")
   
   # Wykres 1 dla zakładki MATLAB ------------------------------------------------
   output$MATLABWykres1 <- renderPlotly({
