@@ -22,6 +22,7 @@ df$Data_ostatniej_modefikacji <- as.Date(substr(df$Data_ostatniej_modefikacji,1,
 colnames(df)[which(names(df) == "if.")] <- "if"
 colnames(df)[which(names(df) == "else.")] <- "else"
 
+zmienne <- c("Sebastian", "Malgosia", "Mikolaj")
 
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
 sebastian_matlab <- read.csv("Sebastian_matlab.csv")
