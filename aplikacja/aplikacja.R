@@ -23,6 +23,10 @@ colnames(df)[which(names(df) == "if.")] <- "if"
 colnames(df)[which(names(df) == "else.")] <- "else"
 
 zmienne <- c("Sebastian", "Malgosia", "Mikolaj")
+word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres1.csv")
+word_wykres2 <- read.csv(".//przygotowane_ramki_danych_do_wykresow_word//word_wykres2.csv")
+word_wykres3 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres3.csv")
+
 
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
 sebastian_matlab <- read.csv("Sebastian_matlab.csv")
@@ -756,7 +760,7 @@ app_ui <- dashboardPage(
         # ,tags$h1('')
       ),
       tabItem(
-        tabName = "Word"
+        tabName = "Word",
         
         fluidRow(
           column(
