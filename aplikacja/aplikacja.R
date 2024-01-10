@@ -225,37 +225,48 @@ server <- function(input, output, session) {
   
   # word - zaleznosc miedzy kropkami / przecinkami ... -------------------------
   #word_wykres3 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres3.csv")
+
+
+  initial_plot <- ggplot() + theme_minimal()
   
-  output$wykres3 <- renderPlot({
-    
-    word_wykres3 %>% 
+  reactive_plot <- reactive({
+    df <- word_wykres3 %>% 
       filter(Imie == input$wybor_zmiennych) %>% 
-      filter(Ilosc.kropek < 100) %>% 
-      ggplot(aes(x = Ilosc.kropek, y = Ilosc.przecinkow, size = Ilosc.słow., color = Imie)) +
+      filter(Ilosc.kropek < 100)
+    
+    ggplot(df, aes(x = Ilosc.kropek, y = Ilosc.przecinkow, size = Ilosc.słow., color = Imie)) +
       geom_point() +
       scale_color_manual(values = c("Malgosia" = "#fc0000", "Sebastian" = "#ff8c00", Mikolaj = "#fff200")) +
       theme(#panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(size = 0.5, color = "#66685f", linety = 'dashed'),
-            panel.grid.minor = element_blank(),#31322e
-            plot.title = element_text(family = "Consolas", size = 20, hjust = 0.5, colour = "#e0cdbf"),
-            axis.title = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
-            panel.background = element_rect(fill = "transparent"), 
-            plot.background = element_rect(fill = "transparent"), 
-            legend.title = element_text(family = "Consolas", size = 16, color = "#e0cdbf"),
-            legend.text = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
-            axis.text.x = element_text(size = 14, color = "#e0cdbf"),
-            axis.text.y = element_text(size = 14, color = "#e0cdbf"),
-            axis.title.x = element_text(vjust = -1),
-            legend.background = element_rect(fill = "transparent")
-            
-            
+        panel.grid.major = element_line(size = 0.5, color = "#66685f", linety = 'dashed'),
+        panel.grid.minor = element_blank(),#31322e
+        plot.title = element_text(family = "Consolas", size = 20, hjust = 0.5, colour = "#e0cdbf"),
+        axis.title = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
+        panel.background = element_rect(fill = "transparent"), 
+        plot.background = element_rect(fill = "transparent"), 
+        legend.title = element_text(family = "Consolas", size = 16, color = "#e0cdbf"),
+        legend.text = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
+        axis.text.x = element_text(size = 14, color = "#e0cdbf"),
+        axis.text.y = element_text(size = 14, color = "#e0cdbf"),
+        axis.title.x = element_text(vjust = -1),
+        legend.background = element_rect(fill = "transparent")
+        
+        
       ) +
       guides(size = 'none') +
       labs(title = "Zależność Między Ilością kropek a Ilością Linijek Tekstu", x = "Ilość Kropek", y = "Ilość Linii")
     
-    
-    
-  }, bg = "transparent")
+  })
+
+  observe({
+    output$wykres3 <- renderPlot({
+      if (is.null(input$wybor_zmiennych)) {
+        print(initial_plot)
+      } else {
+        print(reactive_plot())
+      }
+    }, bg = "transparent")
+  })
   
   # Wykres 1 dla zakładki MATLAB ------------------------------------------------
   output$MATLABWykres1 <- renderPlotly({
@@ -504,13 +515,62 @@ server <- function(input, output, session) {
                gridcolor = "white"  # Kolor siatki
              )) 
   })
+
+
+  ### podsumowanie -> wykres numer 1--------------------------------------------
+  output$Podsumowanie_wykres1 <- renderPlot({
+    df <- podsumowanie_wykres1
+    df <- podsumowanie_wykres1 %>% 
+      filter(Imie == input$podsumowanie_11)
+    df$year <- as.integer(df$year)
+    df$month <- as.integer(df$month)
+    df$data <- as.Date(paste(df$year, "-", df$month, "-01", sep = ""), format = "%Y-%m-%d")
+    df <- df %>% 
+      filter(data >= input$podsumowanie_1[1] & data <= input$podsumowanie_1[2]) %>% 
+      arrange(month)%>% 
+      arrange(year) 
+    
+    ggplot(df, aes(x = data, y = n, group = Rozszerzenie, color = Rozszerzenie)) +
+      geom_line(size = 1) +
+      geom_ribbon(aes(ymax = n, ymin = 0, fill = Rozszerzenie), alpha = 0.4) +
+      theme_minimal() +
+      scale_color_manual(values = c("docx" = "#ef2009", "java" = "#ffd200", "m" = "#ff00d2")) +
+      scale_fill_manual(values = c("docx" = "#fb6e5f", "java" = "#fbe995", "m" = "#feadf0")) +
+      theme(
+        plot.background = element_rect(fill = "transparent"),
+        panel.background = element_rect(fill = "transparent"),
+        panel.grid.major = element_line(size = 0.2, color = "#ffdba9"),
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#ffdba9"),
+        axis.title = element_text(family = "Consolas", size = 16, color = "#ffeca9"),
+        axis.text.x = element_text(size = 14, color = "#ffeca9"),
+        axis.text.y = element_text(size = 14, color = "#ffeca9")
+      ) +
+      labs(title = "Tworzenie Plików o Danym Rozszerzeniu", x = "Czas", y = "Ilość Utworzonych Plików")
+    
+  }, bg = "transparent")
   
   
+  ### podsumowanie -> wykres numer 2 -------------------------------------------
   
   
-  
-  
-  
+  output$Podsumowanie_wykres2 <- renderPlot({
+    
+    df1 <- podsumowanie_wykres2 %>% 
+      filter(Imie == input$podsumowanie_2)
+    kolory <- c("#d71528", "#f38b2c", "#f8c01a")
+    
+    treemap(
+      df1,
+      index = "Rozszerzenie",
+      vSize = "n",
+      #type = "index",
+      #vColor = "Rozszerzenie",
+      palette = kolory
+    )
+    
+  }, bg = "transparent")
+
   # Zmiana stylu ---------------------------------------------------------------
   # observeEvent(input$navbarID, {
   #   if(input$menu == "Word"){
@@ -611,7 +671,8 @@ app_ui <- dashboardPage(
     sidebarMenu(id = "menu", sidebarMenuOutput("menu"),
                 menuItem("Java", tabName = "Java"),
                 menuItem("Word", tabName = "Word"),
-                menuItem("MATLAB", tabName = "MATLAB")
+                menuItem("MATLAB", tabName = "MATLAB"),
+                menuItem("Podsumowanie", tabName = "Podsumowanie")
     ),
     sliderInput(
       inputId = "data",
@@ -703,20 +764,6 @@ app_ui <- dashboardPage(
         fluidRow(
           column(
             width = 12,
-            plotOutput("wykres1_2")
-          )
-          
-        ),
-        fluidRow(
-          column(
-            width = 12,
-            plotOutput("wykres1_3")
-          )
-          
-        ),
-        fluidRow(
-          column(
-            width = 12,
             selectInput("zmienna",
                         "Wybierz Imię",
                         zmienne),
@@ -727,7 +774,7 @@ app_ui <- dashboardPage(
         fluidRow(
           column(
             width = 12,
-            checkboxGroupInput("wybor_zmiennych", "Wybierz Imię (Imiona)", choices = c("Malgosia", "Mikolaj", "Sebastian")),
+            checkboxGroupInput("wybor_zmiennych", "Wybierz Imię (Imiona)", choices = zmienne),
             plotOutput("wykres3")
           )
           
@@ -752,7 +799,27 @@ app_ui <- dashboardPage(
                  plotlyOutput("MATLABWykres3")
           )
         )
+      ),
+
+      tabItem(
+        tabName = "Podsumowanie",
+        fluidRow(
+          column(width = 10, 
+                 selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
+                 sliderInput(
+                   inputId = "podsumowanie_1",
+                   label = "Ustaw przedział czasu",
+                   min = as.Date("2018-01-01"),
+                   max = as.Date("2024-01-01"),
+                   value = c(as.Date("2018-01-01"), as.Date("2024-01-01"))
+                 ),
+                 plotOutput("Podsumowanie_wykres1"))
+        ),
+        fluidRow(width = 10, 
+                 selectInput("podsumowanie_2", "Wybierz Imię", zmienne),
+                 plotOutput("Podsumowanie_wykres2"))
       )
+      
     ),
     
   )
