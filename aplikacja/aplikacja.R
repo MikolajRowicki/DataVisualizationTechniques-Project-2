@@ -757,6 +757,9 @@ app_ui <- dashboardPage(
         fluidRow(
           column(
             width = 12,
+            selectInput("zmienna",
+                        "Wybierz Imię",
+                        zmienne),
             plotOutput("wykres1_1")
           )
           
