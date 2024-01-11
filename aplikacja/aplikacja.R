@@ -267,67 +267,65 @@ server <- function(input, output, session) {
       }
     }, bg = "transparent")
   })
-  
+
   # Wykres 1 dla zakładki MATLAB ------------------------------------------------
   output$MATLABWykres1 <- renderPlotly({
     p <- plot_ly()
     
-    if ("Mikołaj" %in% input$imiona) {
+    if ("Mikołaj" %in% input$matlab1) {
       mikolaj_matlab_filtered <- mikolaj_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         filter(Liczba.operatorow < 70)
       
-      p <-    add_trace(p,
-                        data = mikolaj_matlab_filtered,
-                        type = "scatter",
-                        mode = "markers",
-                        x = ~Liczba.operatorow, 
-                        y = ~Liczba.operatorow.otoczonych.spacjami, 
-                        marker = list(color = "blue"),
-                        name = "Mikołaj",
-                        alpha = 0.7
+      p <- add_trace(p,
+                     data = mikolaj_matlab_filtered,
+                     type = "violin",
+                     x = ~Imie,
+                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     box = list(visible = FALSE),
+                     line = list(color = "blue"),
+                     meanline = list(visible = TRUE),
+                     spanmode = "hard",
+                     name = "Mikołaj"
       )
-      
     }
     
-    if ("Sebastian" %in% input$imiona) {
+    if ("Sebastian" %in% input$matlab1) {
       sebastian_matlab_filtered <- sebastian_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         filter(Liczba.operatorow < 70)
       
-      
-      p <-   add_trace(p,
-                       data = sebastian_matlab_filtered,
-                       type = "scatter",
-                       mode = "markers",
-                       x = ~Liczba.operatorow, 
-                       y = ~Liczba.operatorow.otoczonych.spacjami, 
-                       marker = list(color = "red"),
-                       name = "Sebastian",
-                       alpha = 0.7
+      p <- add_trace(p,
+                     data = sebastian_matlab_filtered,
+                     type = "violin",
+                     x = ~Imie,
+                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     box = list(visible = FALSE),
+                     line = list(color = "red"),
+                     meanline = list(visible = TRUE),
+                     spanmode = "hard",
+                     name = "Sebastian"
       )
-      
     }
     
-    if ("Małgosia" %in% input$imiona) {
+    if ("Małgosia" %in% input$matlab1){
       malgosia_matlab_filtered <- malgosia_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
       
-      
-      p <-   add_trace(p,
-                       data = malgosia_matlab_filtered,
-                       type = "scatter",
-                       mode = "markers",
-                       x = ~Liczba.operatorow, 
-                       y = ~Liczba.operatorow.otoczonych.spacjami, 
-                       marker = list(color = "green"),
-                       name = "Małgosia",
-                       alpha = 0.7
+      p <- add_trace(p,
+                     data = malgosia_matlab_filtered,
+                     type = "violin",
+                     x = ~Imie,
+                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     box = list(visible = FALSE),
+                     line = list(color = "green"),
+                     meanline = list(visible = TRUE),
+                     spanmode = "hard",
+                     name = "Małgosia"
       )
-      
     }
     
-    names <- input$imiona  # Get the selected names
+    names <- input$matlab1  # Get the selected names
     if (length(names) == 1) {
       names_str <- paste(names, collapse = "")  # Combine names into a single string
       title <- paste("Konwencja zapisu operatorów matematycznych -", names_str)
@@ -337,16 +335,15 @@ server <- function(input, output, session) {
     
     p %>% 
       layout(title = title, 
-             xaxis = list(title = "Liczba użytych operatorów matematycznych"), 
+             xaxis = list(title = "Autor"), 
              yaxis = list(title = "Liczba operatorów zapisanych ze spacjami wokół nich"), 
              plot_bgcolor = "#232323",  # Kolor tła wykresu
              paper_bgcolor = "#232323",
              font = list(color = "white"),
-             aspectratio = list(x = 1, y = 1),  # Ustawienie stosunku osi X do Y
-             xaxis = list(scaleanchor = "y", scaleratio = 1)  # Ustawienie skali osi X
-  )
-    
+             aspectratio = list(x = 1, y = 1)  # Ustawienie stosunku osi X do Y
+      )
   })
+  
   
   
   
@@ -356,7 +353,7 @@ server <- function(input, output, session) {
   output$MATLABWykres2 <- renderPlotly({
     p <- plot_ly()
     
-    if ("Mikołaj" %in% input$imiona) {
+    if ("Mikołaj" %in% input$matlab2) {
       mikolaj_matlab_filtered <- mikolaj_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         filter(Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem < 60)
@@ -374,7 +371,7 @@ server <- function(input, output, session) {
       
     }
     
-    if ("Sebastian" %in% input$imiona) {
+    if ("Sebastian" %in% input$matlab2) {
       sebastian_matlab_filtered <- sebastian_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         filter(Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem < 60)
@@ -393,7 +390,7 @@ server <- function(input, output, session) {
       
     }
     
-    if ("Małgosia" %in% input$imiona) {
+    if ("Małgosia" %in% input$matlab2) {
       malgosia_matlab_filtered <- malgosia_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
       
@@ -411,7 +408,7 @@ server <- function(input, output, session) {
 
     }
     
-    names <- input$imiona  # Get the selected names
+    names <- input$matlab2  # Get the selected names
     if (length(names) == 1) {
       names_str <- paste(names, collapse = "")  # Combine names into a single string
       title <- paste("Stawianie średników na końcu linii -", names_str)
@@ -440,7 +437,7 @@ server <- function(input, output, session) {
   output$MATLABWykres3 <- renderPlotly({
     p <- plot_ly()
     
-    if ("Mikołaj" %in% input$imiona) {
+
       mikolaj_matlab_filtered <-  mikolaj_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.)
@@ -455,9 +452,8 @@ server <- function(input, output, session) {
                     marker = list(color = "blue"),
                     name = "Mikołaj"
       )
-    }
+
     
-    if ("Sebastian" %in% input$imiona) {
       sebastian_matlab_filtered <-  sebastian_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.) 
@@ -472,10 +468,8 @@ server <- function(input, output, session) {
                     marker = list(color = "red"),
                     name = "Sebastian"
       )
-    }
     
     
-    if ("Małgosia" %in% input$imiona) {
       malgosia_matlab_filtered <-  malgosia_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
         summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.)
@@ -491,20 +485,14 @@ server <- function(input, output, session) {
                     marker = list(color = "green"),
                     name = "Małgosia"
       )
-    }
+    
     
     # (analogiczne bloki dla innych autorów)
     
-    names <- input$imiona  # Get the selected names
-    if (length(names) == 1) {
-      names_str <- paste(names, collapse = "")  # Combine names into a single string
-      title <- paste("Średnia liczba znaków w wierszu -", names_str)
-    } else {
-      title <- "Średnia liczba znaków w wierszu"
-    }
+
     
     p %>% 
-      layout(title = title, 
+      layout(title = "Średnia liczba znaków w niepustym wierszu", 
              yaxis = list(title = "Średnia liczba znaków w niepustym wierszu"), 
              xaxis = list(title = "Autor"),
              plot_bgcolor = "#232323",  # Kolor tła wykresu
@@ -515,6 +503,76 @@ server <- function(input, output, session) {
                gridcolor = "white"  # Kolor siatki
              )) 
   })
+  
+  
+  # Wykres 4 dla zakładki MATLAB ------------------------------------------------
+  
+  output$MATLABWykres4 <- renderPlotly({
+    p_boxplot <- plot_ly()
+    
+    if ("Mikołaj" %in% input$matlab4) {
+      mikolaj_matlab_filtered <- mikolaj_matlab %>%
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
+        mutate(Imie = "Mikołaj")
+      
+      p_boxplot <- add_trace(p_boxplot,
+                             data = mikolaj_matlab_filtered,
+                             type = "box",
+                             x = ~Imie,
+                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             name = "Mikołaj",
+                             boxmean = TRUE,
+                             boxpoints = ""
+      )
+    }
+    
+    if ("Sebastian" %in% input$matlab4) {
+      sebastian_matlab_filtered <- sebastian_matlab %>%
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])%>% 
+        mutate(Imie = "Sebastian")
+      
+      p_boxplot <- add_trace(p_boxplot,
+                             data = sebastian_matlab_filtered,
+                             type = "box",
+                             x = ~Imie,
+                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             name = "Sebastian",
+                             boxmean = TRUE,
+                             boxpoints = ""
+      )
+    }
+    
+    if ("Małgosia" %in% input$matlab4) {
+      malgosia_matlab_filtered <- malgosia_matlab %>%
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])%>% 
+        mutate(Imie = "Małgosia")
+      
+      p_boxplot <- add_trace(p_boxplot,
+                             data = malgosia_matlab_filtered,
+                             type = "box",
+                             x = ~Imie,
+                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             name = "Małgosia",
+                             boxmean = TRUE,
+                             boxpoints = ""
+      )
+    }
+    
+    p_boxplot %>%
+      layout(title = "Jaką część pliku stanowią komentarze?",
+             xaxis = list(title = "Autor"),
+             yaxis = list(title = "Stosunek łącznej długości komentarzy do liczby wierszy"),
+             plot_bgcolor = "#232323",
+             paper_bgcolor = "#232323",
+             font = list(color = "white"),
+             aspectratio = list(x = 1, y = 1),
+             xaxis2 = list(domain = c(0.8, 1), anchor = "y2"),
+             grid = list(gridwidth = 5, gridcolor = "white"),
+             legend = list(title = "Autor")
+      )
+  })
+  
+  # Jaką część pliku stanowią komentarze?
 
 
   ### podsumowanie -> wykres numer 1--------------------------------------------
@@ -681,12 +739,6 @@ app_ui <- dashboardPage(
       max = max(df$Data_ostatniej_modefikacji),
       value = c(min(df$Data_ostatniej_modefikacji), max(df$Data_ostatniej_modefikacji))
     ),
-    selectInput(
-      inputId = "imiona",
-      label = "Wybierz imiona",
-      choices = c("Mikołaj", "Małgosia", "Sebastian"),
-      multiple = TRUE
-    ),
     width = 250
   ),
   dashboardBody(
@@ -787,19 +839,49 @@ app_ui <- dashboardPage(
       tabItem(
         tabName = "MATLAB",
         fluidRow(
-          box(title = "MATLAB"),
-          column(width = 8, style = "margin-bottom: 80px;",
+          box(title = "MATLAB",
+              width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
+                 selectInput(
+                   inputId = "matlab1",
+                   label = "Wybierz imię",
+                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                   multiple = TRUE
+                 ),
                  plotlyOutput("MATLABWykres1")
+          ),
+          box(width = 6,
+              style = "margin-bottom: 20px; margin-left: 10px;",
+              "Tekst opisujący wykres."
           )
         ),
         fluidRow(
-          column(width = 8, style = "margin-bottom: 80px;",
+          column(width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
+                 selectInput(
+                   inputId = "matlab2",
+                   label = "Wybierz imię",
+                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                   multiple = TRUE
+                 ),
                  plotlyOutput("MATLABWykres2")
           )
         ),
         fluidRow(
-          column(width = 8, style = "margin-bottom: 80px;",
+          column(width = 6, style = "margin-bottom: 80px;",
                  plotlyOutput("MATLABWykres3")
+          )
+        ),
+        fluidRow(
+          column(width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
+                 selectInput(
+                   inputId = "matlab4",
+                   label = "Wybierz imię",
+                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                   multiple = TRUE
+                 ),
+                 plotlyOutput("MATLABWykres4")
           )
         )
       ),
