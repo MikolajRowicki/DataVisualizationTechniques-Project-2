@@ -37,15 +37,22 @@ mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
 sebastian_matlab <- read.csv("Sebastian_matlab.csv")
 malgosia_matlab <- read.csv("Malgosia_matlab.csv")
 
+
 mikolaj_matlab <- mikolaj_matlab %>%
-  rename(Liczba.operatorow = Liczba.operatorów..........................) 
+  rename(Liczba.operatorow = Liczba.operatorów..........................) %>% 
+  mutate(Imie = "Mikołaj")
 
 sebastian_matlab <- sebastian_matlab %>%
-  rename(Liczba.operatorow = Liczba.operatorów..........................)
+  rename(Liczba.operatorow = Liczba.operatorów..........................) %>% 
+  mutate(Imie = "Sebastian")
 
 malgosia_matlab <- malgosia_matlab %>%
-  rename(Liczba.operatorow = Liczba.operatorów..........................)
+  rename(Liczba.operatorow = Liczba.operatorów..........................) %>% 
+  mutate(Imie = "Małgosia")
 
+
+matlab_merged <- bind_rows(mikolaj_matlab, sebastian_matlab, malgosia_matlab)
+matlab_merged$Data.modyfikacji <- as.Date(substr(matlab_merged$Data.modyfikacji,1,10))
 podsumowanie_wykres1 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres1.csv")
 podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres2.csv")
 
@@ -89,7 +96,7 @@ server <- function(input, output, session) {
              xaxis = list(fixedrange = TRUE,
                           title = "Data"),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba utworzoych pkików",
+                        title = "Liczba utworzoych plików",
                         gridcolor = "grey"),
              legend = list(
                itemclick = FALSE,
@@ -471,8 +478,7 @@ server <- function(input, output, session) {
              yaxis = list(title = "Procent operatorów zapisanych ze spacjami wokół"), 
              plot_bgcolor = "#232323",  # Kolor tła wykresu
              paper_bgcolor = "#232323",
-             font = list(color = "white"),
-             aspectratio = list(x = 1, y = 1)  # Ustawienie stosunku osi X do Y
+             font = list(color = "white") # Ustawienie stosunku osi X do Y
       )
   })
   
@@ -554,8 +560,7 @@ server <- function(input, output, session) {
              yaxis = list(title = "Liczba wierszy, które kończą się średnikiem"),
              plot_bgcolor = "#232323",  # Kolor tła wykresu
              paper_bgcolor = "#232323",
-             font = list(color = "white"),
-             aspectratio = list(x = 1, y = 1),  # Ustawienie stosunku osi X do Y
+             font = list(color = "white"), # Ustawienie stosunku osi X do Y
              xaxis = list(scaleanchor = "y", scaleratio = 1),  # Ustawienie skali osi X# Kolor tekstu
              grid = list(
                gridwidth = 5,  # Grubość siatki
@@ -693,11 +698,10 @@ server <- function(input, output, session) {
     p_boxplot %>%
       layout(title = "Jaką część pliku stanowią komentarze?",
              xaxis = list(title = "Autor"),
-             yaxis = list(title = "Stosunek długości komenatrzy do długości pliku"),
+             yaxis = list(title = "Stosunek długości komentarzy do długości pliku"),
              plot_bgcolor = "#232323",
              paper_bgcolor = "#232323",
              font = list(color = "white"),
-             aspectratio = list(x = 1, y = 1),
              xaxis2 = list(domain = c(0.8, 1), anchor = "y2"),
              grid = list(gridwidth = 5, gridcolor = "white"),
              legend = list(title = "Autor")
@@ -705,6 +709,57 @@ server <- function(input, output, session) {
   })
   
   # Jaką część pliku stanowią komentarze?
+  
+  ### Wykres 5 dla zakładki MATLAB-------------
+  
+  output$MATLABWykres5 <- renderPlotly({
+    
+    df_date_matlab <- matlab_merged %>%
+      group_by(Data.modyfikacji, Imie) %>%
+      summarise(liczba = n()) %>%
+      filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>%
+      mutate(Rok_i_Miesiac = substr(Data.modyfikacji, 1, 7)) %>%
+      group_by(Rok_i_Miesiac, Imie) %>%
+      mutate(liczba_w_miesiacu = sum(liczba))
+    
+    selected_names <- input$matlab5
+    
+    plot_ly(data = df_date_matlab %>% filter(Imie %in% selected_names),
+            x = ~Data.modyfikacji, y = ~liczba,
+            type = "bar", color = ~Imie,
+            hoverinfo = 'text',
+            hovertext = ~paste0("Liczba stworzonych plików \nw ",
+                                c("styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu",
+                                  "lipcu", "sierpniu", "wrześniu", "październiku", "listopadzie", "grudniu"
+                                )[as.numeric(substr(Data.modyfikacji, 6, 7))],
+                                " w ", substr(Data.modyfikacji, 1, 4), " roku",
+                                "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
+                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                ": ", liczba_w_miesiacu,
+                                "\nLiczba stworzonych plików\nw ", Data.modyfikacji,
+                                ": ", liczba),
+            textposition = "none",
+            colors = kolory_java,
+            xperiod = "M1", xperiodalignment = "middle"
+    ) %>%
+      layout(barmode = 'stack',
+             title = "Tworzenie plików .m w czasie",
+             xaxis = list(fixedrange = TRUE,
+                          title = "Data"),
+             yaxis = list(fixedrange = TRUE,
+                          title = "Liczba utworzonych plików",
+                          gridcolor = "grey"),
+             legend = list(
+               itemclick = FALSE,
+               itemdoubleclick = FALSE,
+               groupclick = FALSE
+             ),
+             plot_bgcolor = "rgba(0,0,0,0)",
+             paper_bgcolor = "rgba(0,0,0,0)",
+             font = list(color = "white")) %>%
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
+  })
 
 
   ### podsumowanie -> wykres numer 1--------------------------------------------
@@ -1012,8 +1067,22 @@ app_ui <- dashboardPage(
       ),
       tabItem(
         tabName = "MATLAB",
+        
         fluidRow(
           box(title = "MATLAB",
+              width = 6, style = "margin-bottom: 80px; margin-left: 20px; margin-top: 60 px",
+              selectInput(
+                inputId = "matlab5",
+                label = "Wybierz imię",
+                choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                multiple = TRUE
+              ),
+              plotlyOutput("MATLABWykres5")
+          )
+        ),
+        fluidRow(
+          box(
             width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
             selectInput(
               inputId = "matlab4",
@@ -1026,7 +1095,7 @@ app_ui <- dashboardPage(
           ),
           box(width = 6,
               style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
-              "Tekst opisujący wykres."
+              renderText("Wykres przedstawia wykres")
           )
         ),
 
