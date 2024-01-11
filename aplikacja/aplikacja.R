@@ -113,7 +113,7 @@ server <- function(input, output, session) {
             x = ~Imie, y = ~liczba_komentarzy_w_linii,
             type = "bar", name = 'Komentarze\njednoliniowe;\n<i><sup>//komentarz</sup></i>',
             hoverinfo = 'text',
-            hovertext = ~paste0("Średnia liczba\nkomentarzów\njednoliniowych na plik\nu ",
+            hovertext = ~paste0("Średnia liczba\nkomentarzy\njednoliniowych na plik\nu ",
                                 c("Sebastiana", "Mikołaja", "Małgosi"
                                 )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
                                 ":\n", round(liczba_komentarzy_w_linii, 2)),
@@ -123,18 +123,18 @@ server <- function(input, output, session) {
       add_trace(name = "Komentarze\nwieloliniowych;\n<i><sup>/*komentarz*/</sup></i>",
                 y = ~liczba_komentarzy_w_bloku,
                 hoverinfo = 'text',
-                hovertext = ~paste0("Średnia liczba\nkomentarzów\nwieloliniowych na plik\nu ",
+                hovertext = ~paste0("Średnia liczba\nkomentarzy\nwieloliniowych na plik\nu ",
                                     c("Sebastiana", "Mikołaja", "Małgosi"
                                     )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
                                     ":\n", round(liczba_komentarzy_w_bloku, 2)),
                 marker = list(color = kolory_java[4])
       ) %>%
       layout(barmode = 'group',
-             title = "Średnia liczba komentarzów na plik",
+             title = "Średnia liczba komentarzy na plik",
              xaxis = list(fixedrange = TRUE,
                           title = "Osoba"),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba komentarzów"),
+                        title = "Liczba komentarzy"),
              legend = list(
                itemclick = FALSE,
                itemdoubleclick = FALSE,
@@ -206,7 +206,7 @@ server <- function(input, output, session) {
       theme_bw() +
       labs(
         x = "Osoba",
-        y = "Średnia liczba komentarzów w bloku na plik"
+        y = "Średnia liczba komentarzy w bloku na plik"
       )
   })
   # Wykres 5 (nieczynny) -------------------------------------------------------------------
@@ -317,7 +317,8 @@ server <- function(input, output, session) {
         plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#fbbe9d"),
         axis.title = element_text(family = "Consolas", size = 16, color = "#ff7355"),
         axis.text.x = element_text(size = 14, color = "#ff7355"),
-        axis.text.y = element_text(size = 14, color = "#ff7355")
+        axis.text.y = element_text(size = 14, color = "#ff7355"),
+        rect = element_rect(colour = "#232323")
         
       )
     
@@ -414,9 +415,8 @@ server <- function(input, output, session) {
                      data = mikolaj_matlab_filtered,
                      type = "violin",
                      x = ~Imie,
-                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     y = ~Liczba.operatorow.otoczonych.spacjami * 100 / Liczba.operatorow,
                      box = list(visible = FALSE),
-                     line = list(color = "blue"),
                      meanline = list(visible = TRUE),
                      spanmode = "hard",
                      name = "Mikołaj"
@@ -432,9 +432,8 @@ server <- function(input, output, session) {
                      data = sebastian_matlab_filtered,
                      type = "violin",
                      x = ~Imie,
-                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     y = ~Liczba.operatorow.otoczonych.spacjami * 100 / Liczba.operatorow,
                      box = list(visible = FALSE),
-                     line = list(color = "red"),
                      meanline = list(visible = TRUE),
                      spanmode = "hard",
                      name = "Sebastian"
@@ -447,11 +446,11 @@ server <- function(input, output, session) {
       
       p <- add_trace(p,
                      data = malgosia_matlab_filtered,
+                     margin = list(l = 50, r = 50, b = 50, t = 100),
                      type = "violin",
                      x = ~Imie,
-                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     y = ~Liczba.operatorow.otoczonych.spacjami * 100 / Liczba.operatorow,
                      box = list(visible = FALSE),
-                     line = list(color = "green"),
                      meanline = list(visible = TRUE),
                      spanmode = "hard",
                      name = "Małgosia"
@@ -469,7 +468,7 @@ server <- function(input, output, session) {
     p %>% 
       layout(title = title, 
              xaxis = list(title = "Autor"), 
-             yaxis = list(title = "Liczba operatorów zapisanych ze spacjami wokół nich"), 
+             yaxis = list(title = "Procent operatorów zapisanych ze spacjami wokół"), 
              plot_bgcolor = "#232323",  # Kolor tła wykresu
              paper_bgcolor = "#232323",
              font = list(color = "white"),
@@ -497,7 +496,7 @@ server <- function(input, output, session) {
                     mode = "markers",
                     x = ~Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem,
                     y = ~Liczba.wierszy.zakonczonych.srednikiem,
-                    marker = list(color = "blue"),
+                    marker = list(color = "#1F77B4"),
                     name = "Mikołaj",
                     alpha = 0.7
                   )
@@ -516,7 +515,7 @@ server <- function(input, output, session) {
                     mode = "markers",
                     x = ~Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem,
                     y = ~Liczba.wierszy.zakonczonych.srednikiem,
-                    marker = list(color = "red"),
+                    marker = list(color = "#FF7F0E"),
                     name = "Sebastian",
                     alpha = 0.7
                   )
@@ -534,7 +533,7 @@ server <- function(input, output, session) {
                     mode = "markers",
                     x = ~Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem,
                     y = ~Liczba.wierszy.zakonczonych.srednikiem,
-                    marker = list(color = "green"),
+                    marker = list(color = "#2C9B2C"),
                     name = "Małgosia",
                     alpha = 0.7
                   )
@@ -582,7 +581,7 @@ server <- function(input, output, session) {
                     data = mikolaj_matlab_filtered,
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                    marker = list(color = "blue"),
+                    marker = list(color = "#1F77B4"),
                     name = "Mikołaj"
       )
 
@@ -598,7 +597,7 @@ server <- function(input, output, session) {
                     data = sebastian_matlab_filtered,
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                    marker = list(color = "red"),
+                    marker = list(color = "#FF7F0E"),
                     name = "Sebastian"
       )
     
@@ -615,7 +614,7 @@ server <- function(input, output, session) {
                     data = malgosia_matlab_filtered,
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                    marker = list(color = "green"),
+                    marker = list(color = "#2C9B2C"),
                     name = "Małgosia"
       )
     
@@ -625,7 +624,7 @@ server <- function(input, output, session) {
 
     
     p %>% 
-      layout(title = "Średnia liczba znaków w niepustym wierszu", 
+      layout(title = "Liczba znaków w niepustym wierszu", 
              yaxis = list(title = "Średnia liczba znaków w niepustym wierszu"), 
              xaxis = list(title = "Autor"),
              plot_bgcolor = "#232323",  # Kolor tła wykresu
@@ -694,7 +693,7 @@ server <- function(input, output, session) {
     p_boxplot %>%
       layout(title = "Jaką część pliku stanowią komentarze?",
              xaxis = list(title = "Autor"),
-             yaxis = list(title = "Stosunek łącznej długości komentarzy do liczby wierszy"),
+             yaxis = list(title = "Stosunek długości komenatrzy do długości pliku"),
              plot_bgcolor = "#232323",
              paper_bgcolor = "#232323",
              font = list(color = "white"),
@@ -735,7 +734,11 @@ server <- function(input, output, session) {
         plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#ffdba9"),
         axis.title = element_text(family = "Consolas", size = 16, color = "#ffeca9"),
         axis.text.x = element_text(size = 14, color = "#ffeca9"),
-        axis.text.y = element_text(size = 14, color = "#ffeca9")
+        axis.text.y = element_text(size = 14, color = "#ffeca9"),
+        panel.border = element_blank(),
+        legend.text = element_text(color = "#ffeca9"),
+        legend.title = element_text(color = "#ffeca9"),
+        rect = element_rect(colour = "#232323")
       ) +
       labs(title = "Tworzenie Plików o Danym Rozszerzeniu", x = "Czas", y = "Ilość Utworzonych Plików")
     
@@ -1011,6 +1014,24 @@ app_ui <- dashboardPage(
         tabName = "MATLAB",
         fluidRow(
           box(title = "MATLAB",
+            width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
+            selectInput(
+              inputId = "matlab4",
+              label = "Wybierz imię",
+              choices = c("Mikołaj", "Małgosia", "Sebastian"),
+              selected = c("Mikołaj", "Małgosia", "Sebastian"),
+              multiple = TRUE
+            ),
+            plotlyOutput("MATLABWykres4")
+          ),
+          box(width = 6,
+              style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
+              "Tekst opisujący wykres."
+          )
+        ),
+
+        fluidRow(
+          box(
               width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
                  selectInput(
                    inputId = "matlab1",
@@ -1042,25 +1063,14 @@ app_ui <- dashboardPage(
           column(width = 6, style = "margin-bottom: 80px;",
                  plotlyOutput("MATLABWykres3")
           )
-        ),
-        fluidRow(
-          column(width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
-                 selectInput(
-                   inputId = "matlab4",
-                   label = "Wybierz imię",
-                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
-                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
-                   multiple = TRUE
-                 ),
-                 plotlyOutput("MATLABWykres4")
-          )
         )
+
       ),
 
       tabItem(
         tabName = "Podsumowanie",
         fluidRow(
-          column(width = 10, 
+          column(width = 10, style = "margin-bottom: 80px; margin-left: 20px;",
                  selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
                  sliderInput(
                    inputId = "podsumowanie_1",
@@ -1071,9 +1081,10 @@ app_ui <- dashboardPage(
                  ),
                  plotOutput("Podsumowanie_wykres1"))
         ),
-        fluidRow(width = 10, 
+        fluidRow(
+            column(width = 8, style = "margin-left: 20px;",
                  selectInput("podsumowanie_2", "Wybierz Imię", zmienne),
-                 plotOutput("Podsumowanie_wykres2"))
+                 plotOutput("Podsumowanie_wykres2")))
       )
       
     ),
