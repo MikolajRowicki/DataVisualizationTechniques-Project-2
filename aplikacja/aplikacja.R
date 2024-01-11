@@ -12,7 +12,9 @@ library(dashboardthemes)
 library(tidyr)
 library(treemap)
 
-# Przygotowywane danych --------------------------------------------------------
+################################################################################
+# Przygotowywane danych
+################################################################################
 df1 <- read.csv("Sebastian_java.csv")
 df2 <- read.csv("Sebastian2_java.csv")
 df3 <- read.csv("Sebastian3_java.csv")
@@ -32,7 +34,6 @@ word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykr
 word_wykres2 <- read.csv(".//przygotowane_ramki_danych_do_wykresow_word//word_wykres2.csv")
 word_wykres3 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres3.csv")
 
-
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
 sebastian_matlab <- read.csv("Sebastian_matlab.csv")
 malgosia_matlab <- read.csv("Malgosia_matlab.csv")
@@ -49,8 +50,146 @@ malgosia_matlab <- malgosia_matlab %>%
 podsumowanie_wykres1 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres1.csv")
 podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres2.csv")
 
-# Serwer ***********************************************************************
+kolor_przewodni_java <- c('#fc0703', '#03a1fc')
+kolor_przewodni_word <- c('#1B5EBE', '#41A5EE')
+kolor_przewodni_matlab <- c('#ed9242', '#fcf647')
+theme_default <- shinyDashboardThemeDIY(
+  
+  ### general
+  appFontFamily = "FuturaMedium"
+  ,appFontColor = "white"
+    ,primaryFontColor = "#434C5E"
+    ,infoFontColor = "#434C5E"
+    ,successFontColor = "#434C5E"
+    ,warningFontColor = "#434C5E"
+    ,dangerFontColor = "#434C5E"
+    ,bodyBackColor = "#232323" 
+    
+  ### header
+  ,logoBackColor = "#151515" 
+    
+  ,headerButtonBackColor = "#151515"
+  ,headerButtonIconColor = "#D8DEE9"
+  ,headerButtonBackColorHover = "#48e0ab"
+  ,headerButtonIconColorHover = "#151515" 
+    
+  ,headerBackColor = "#151515"
+  ,headerBoxShadowColor = ""
+  ,headerBoxShadowSize = "0px 0px 0px"
+  
+  ### sidebar
+  # ,sidebarBackColor = "#151515"
+  ,sidebarBackColor = cssGradientThreeColors(
+    direction = "down"
+    ,colorStart = "#151515"
+    ,colorMiddle = "#151515"
+    ,colorEnd = "#232323"
+    ,colorStartPos = 0
+    ,colorMiddlePos = 50
+    ,colorEndPos = 100
+  )
+  ,sidebarPadding = 0
+  
+  ,sidebarMenuBackColor = "transparent"
+  ,sidebarMenuPadding = 5
+  ,sidebarMenuBorderRadius = 5
+  
+  ,sidebarShadowRadius = "" 
+  ,sidebarShadowColor = "0px 0px 0px"
+  
+  ,sidebarUserTextColor = "#D8DEE9"
+    
+  ,sidebarSearchBackColor = "#4C566A"
+    ,sidebarSearchIconColor = "#151515"
+    ,sidebarSearchBorderColor = "#4C566A"
+    
+  ,sidebarTabTextColor = "#ECEFF4"
+    ,sidebarTabTextSize = 14
+  ,sidebarTabBorderStyle = "none"
+  ,sidebarTabBorderColor = "#000000"
+    ,sidebarTabBorderWidth = 0
+  
+  # ,sidebarTabBackColorSelected = "#fc0703"
+  ,sidebarTabBackColorSelected = cssGradientThreeColors(
+    direction = "right"
+    ,colorStart = "#42c798"
+    ,colorMiddle = "#48e0ab"
+    ,colorEnd = "#55f2ba"
+    ,colorStartPos = 0
+    ,colorMiddlePos = 30
+    ,colorEndPos = 100
+  )
+  ,sidebarTabTextColorSelected = "#000000" 
+    ,sidebarTabRadiusSelected = "20px" 
+  
+  # ,sidebarTabBackColorHover = "#fc0703"
+  ,sidebarTabBackColorHover = cssGradientThreeColors(
+    direction = "right"
+    ,colorStart = "#42c798"
+      ,colorMiddle = "#48e0ab"
+      ,colorEnd = "#55f2ba"
+    ,colorStartPos = 0
+    ,colorMiddlePos = 30
+    ,colorEndPos = 100
+  )
+  ,sidebarTabTextColorHover = "#000000"
+    ,sidebarTabBorderStyleHover = "none"
+  ,sidebarTabBorderColorHover = "none"
+  ,sidebarTabBorderWidthHover = 0
+  ,sidebarTabRadiusHover = "20px"
+  
+  ### boxes
+  ,boxBackColor = "#232323" 
+    ,boxBorderRadius = 5
+  ,boxShadowSize = "0px 0px 0px"
+  ,boxShadowColor = ""
+  ,boxTitleSize = 18
+  ,boxDefaultColor = "#232323"
+    ,boxPrimaryColor = "#232323"
+    ,boxInfoColor = "#232323"
+    ,boxSuccessColor = "#232323"
+    ,boxWarningColor = "#232323"
+    ,boxDangerColor = "#232323"
+    
+  ,tabBoxTabColor = "#151515"
+    ,tabBoxTabTextSize = 16
+  ,tabBoxTabTextColor = "#151515"
+    ,tabBoxTabTextColorSelected = "#151515"
+    ,tabBoxBackColor = "#BF616A"
+    ,tabBoxHighlightColor = "#4C566A"
+    ,tabBoxBorderRadius = 5 
+  
+  ### inputs
+  ,buttonBackColor = "#151515"
+    ,buttonTextColor = "#2E3440"
+    ,buttonBorderColor = "#2E3440"
+    ,buttonBorderRadius = 5
+  
+  ,buttonBackColorHover = "#151515"
+    ,buttonTextColorHover = "#232323"
+    ,buttonBorderColorHover = "#2E3440"
+    
+  ,textboxBackColor = "#151515" 
+    ,textboxBorderColor = "#48e0ab" 
+    ,textboxBorderRadius = 5
+  ,textboxBackColorSelect = "#151515"
+    ,textboxBorderColorSelect = "#47fcf6"
+    
+  ### tables
+  ,tableBackColor = "#151515"
+    ,tableBorderColor = "#2E3440"
+    ,tableBorderTopSize = 1
+  ,tableBorderRowSize = 1
+)
+
+################################################################################
+# Serwer
+################################################################################
 server <- function(input, output, session) {
+  
+  #-----------------------------------------------------------------------------
+  # Wykresy Java
+  #-----------------------------------------------------------------------------
   
   # Wykres 1 -------------------------------------------------------------------
   output$JavaWykres1 <- renderPlotly({
@@ -279,7 +418,6 @@ server <- function(input, output, session) {
              tags$p("znaków napisanych całkowicie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
              color = "red")    
   })
-  
   # Wykres 9 -------------------------------------------------------------------
   output$JavaWykres9 <- renderValueBox({
     valueBox(tags$p(9012, style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
@@ -287,7 +425,10 @@ server <- function(input, output, session) {
              color = "red")    
   })
 
-    # WORD -----------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
+  # Wykresy Word ***************************************************************
+  #-----------------------------------------------------------------------------
+  
   # word - wykres tworzenia plikow ---------------------------------------------
   #word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres1.csv")
   output$wykres1_1 <- renderPlot({
@@ -321,9 +462,6 @@ server <- function(input, output, session) {
         rect = element_rect(colour = "#232323")
         
       )
-    
-    
-    
   }, bg = "transparent")
   
   # word - analiza interpunkcji ------------------------------------------------
@@ -402,6 +540,10 @@ server <- function(input, output, session) {
     }, bg = "transparent")
   })
 
+  #-----------------------------------------------------------------------------
+  # Wykresy MATLAB
+  #-----------------------------------------------------------------------------
+  
   # Wykres 1 dla zakładki MATLAB ------------------------------------------------
   output$MATLABWykres1 <- renderPlotly({
     p <- plot_ly()
@@ -705,7 +847,10 @@ server <- function(input, output, session) {
   })
   
   # Jaką część pliku stanowią komentarze?
-
+  
+  #-----------------------------------------------------------------------------
+  # Wykresy Podsumowanie
+  #-----------------------------------------------------------------------------
 
   ### podsumowanie -> wykres numer 1--------------------------------------------
   output$Podsumowanie_wykres1 <- renderPlot({
@@ -765,98 +910,333 @@ server <- function(input, output, session) {
     
   }, bg = "transparent")
 
-  # Zmiana stylu ---------------------------------------------------------------
-  # observeEvent(input$navbarID, {
-  #   if(input$menu == "Word"){
-  #     theme_word <- theme_java
-  #   } else {
-  #     session$sendCustomMessage("background-color", "red")
-  #   }
-  # })
+  #-----------------------------------------------------------------------------
+  # Zmiana motywu
+  #-----------------------------------------------------------------------------
+  output$style_tag <- renderUI({
+    # Motyw Word ----
+    if(input$menu=='Word')
+      return(shinyDashboardThemeDIY(
+        
+        ### general
+        appFontFamily = "FuturaMedium"
+        ,appFontColor = "white"
+          ,primaryFontColor = "#434C5E"
+          ,infoFontColor = "#434C5E"
+          ,successFontColor = "#434C5E"
+          ,warningFontColor = "#434C5E"
+          ,dangerFontColor = "#434C5E"
+          ,bodyBackColor = "#232323" 
+          
+        ### header
+        ,logoBackColor = "#151515" 
+          
+        ,headerButtonBackColor = "#151515"
+          ,headerButtonIconColor = "#D8DEE9"
+          ,headerButtonBackColorHover = kolor_przewodni_word[1]
+          ,headerButtonIconColorHover = "#151515" 
+          
+        ,headerBackColor = "#151515"
+          ,headerBoxShadowColor = ""
+        ,headerBoxShadowSize = "0px 0px 0px"
+        
+        ### sidebar
+        ,sidebarBackColor = "#151515"
+          ,sidebarPadding = 0
+        
+        ,sidebarMenuBackColor = "transparent"
+        ,sidebarMenuPadding = 5
+        ,sidebarMenuBorderRadius = 5
+        
+        ,sidebarShadowRadius = "" 
+        ,sidebarShadowColor = "0px 0px 0px"
+        
+        ,sidebarUserTextColor = "#D8DEE9"
+          
+        ,sidebarSearchBackColor = "#4C566A"
+          ,sidebarSearchIconColor = "#151515"
+          ,sidebarSearchBorderColor = "#4C566A"
+          
+        ,sidebarTabTextColor = "#ECEFF4"
+          ,sidebarTabTextSize = 14
+        ,sidebarTabBorderStyle = "none"
+        ,sidebarTabBorderColor = "#000000"
+          ,sidebarTabBorderWidth = 0
+        
+        ,sidebarTabBackColorSelected = kolor_przewodni_word[1]
+          ,sidebarTabTextColorSelected = "#000000" 
+          ,sidebarTabRadiusSelected = "20px" 
+        
+        ,sidebarTabBackColorHover = kolor_przewodni_word[1]
+          ,sidebarTabTextColorHover = "#000000"
+          ,sidebarTabBorderStyleHover = "none"
+        ,sidebarTabBorderColorHover = "none"
+        ,sidebarTabBorderWidthHover = 0
+        ,sidebarTabRadiusHover = "20px"
+        
+        ### boxes
+        ,boxBackColor = "#232323" 
+          ,boxBorderRadius = 5
+        ,boxShadowSize = "0px 0px 0px"
+        ,boxShadowColor = ""
+        ,boxTitleSize = 18
+        ,boxDefaultColor = "#232323"
+          ,boxPrimaryColor = "#232323"
+          ,boxInfoColor = "#232323"
+          ,boxSuccessColor = "#232323"
+          ,boxWarningColor = "#232323"
+          ,boxDangerColor = "#232323"
+          
+        ,tabBoxTabColor = "#151515"
+          ,tabBoxTabTextSize = 16
+        ,tabBoxTabTextColor = "#151515"
+          ,tabBoxTabTextColorSelected = "#151515"
+          ,tabBoxBackColor = "#BF616A"
+          ,tabBoxHighlightColor = "#4C566A"
+          ,tabBoxBorderRadius = 5 
+        
+        ### inputs
+        ,buttonBackColor = "#151515"
+          ,buttonTextColor = "#2E3440"
+          ,buttonBorderColor = "#2E3440"
+          ,buttonBorderRadius = 5
+        
+        ,buttonBackColorHover = "#151515"
+          ,buttonTextColorHover = "#232323"
+          ,buttonBorderColorHover = "#2E3440"
+          
+        ,textboxBackColor = "#151515" 
+          ,textboxBorderColor = kolor_przewodni_word[1]
+          ,textboxBorderRadius = 5
+        ,textboxBackColorSelect = "#151515"
+          ,textboxBorderColorSelect = kolor_przewodni_word[2]
+          
+        ### tables
+        ,tableBackColor = "#151515"
+          ,tableBorderColor = "#2E3440"
+          ,tableBorderTopSize = 1
+        ,tableBorderRowSize = 1
+      ))
+    # Motyw Java ----
+    if(input$menu=='Java')
+      return(shinyDashboardThemeDIY(
+        
+        ### general
+        appFontFamily = "FuturaMedium"
+        ,appFontColor = "white"
+          ,primaryFontColor = "#434C5E"
+          ,infoFontColor = "#434C5E"
+          ,successFontColor = "#434C5E"
+          ,warningFontColor = "#434C5E"
+          ,dangerFontColor = "#434C5E"
+          ,bodyBackColor = "#232323" 
+          
+        ### header
+        ,logoBackColor = "#151515" 
+          
+        ,headerButtonBackColor = "#151515"
+          ,headerButtonIconColor = "#D8DEE9"
+          ,headerButtonBackColorHover = kolor_przewodni_java[1]
+          ,headerButtonIconColorHover = "#151515" 
+          
+        ,headerBackColor = "#151515"
+          ,headerBoxShadowColor = ""
+        ,headerBoxShadowSize = "0px 0px 0px"
+        
+        ### sidebar
+        ,sidebarBackColor = "#151515"
+          ,sidebarPadding = 0
+        
+        ,sidebarMenuBackColor = "transparent"
+        ,sidebarMenuPadding = 5
+        ,sidebarMenuBorderRadius = 5
+        
+        ,sidebarShadowRadius = "" 
+        ,sidebarShadowColor = "0px 0px 0px"
+        
+        ,sidebarUserTextColor = "#D8DEE9"
+          
+        ,sidebarSearchBackColor = "#4C566A"
+          ,sidebarSearchIconColor = "#151515"
+          ,sidebarSearchBorderColor = "#4C566A"
+          
+        ,sidebarTabTextColor = "#ECEFF4"
+          ,sidebarTabTextSize = 14
+        ,sidebarTabBorderStyle = "none"
+        ,sidebarTabBorderColor = "#000000"
+          ,sidebarTabBorderWidth = 0
+        
+        ,sidebarTabBackColorSelected = kolor_przewodni_java[1]
+          ,sidebarTabTextColorSelected = "#000000" 
+          ,sidebarTabRadiusSelected = "20px" 
+        
+        ,sidebarTabBackColorHover = kolor_przewodni_java[1]
+          ,sidebarTabTextColorHover = "#000000"
+          ,sidebarTabBorderStyleHover = "none"
+        ,sidebarTabBorderColorHover = "none"
+        ,sidebarTabBorderWidthHover = 0
+        ,sidebarTabRadiusHover = "20px"
+        
+        ### boxes
+        ,boxBackColor = "#232323" 
+          ,boxBorderRadius = 5
+        ,boxShadowSize = "0px 0px 0px"
+        ,boxShadowColor = ""
+        ,boxTitleSize = 18
+        ,boxDefaultColor = "#232323"
+          ,boxPrimaryColor = "#232323"
+          ,boxInfoColor = "#232323"
+          ,boxSuccessColor = "#232323"
+          ,boxWarningColor = "#232323"
+          ,boxDangerColor = "#232323"
+          
+        ,tabBoxTabColor = "#151515"
+          ,tabBoxTabTextSize = 16
+        ,tabBoxTabTextColor = "#151515"
+          ,tabBoxTabTextColorSelected = "#151515"
+          ,tabBoxBackColor = "#BF616A"
+          ,tabBoxHighlightColor = "#4C566A"
+          ,tabBoxBorderRadius = 5 
+        
+        ### inputs
+        ,buttonBackColor = "#151515"
+          ,buttonTextColor = "#2E3440"
+          ,buttonBorderColor = "#2E3440"
+          ,buttonBorderRadius = 5
+        
+        ,buttonBackColorHover = "#151515"
+          ,buttonTextColorHover = "#232323"
+          ,buttonBorderColorHover = "#2E3440"
+          
+        ,textboxBackColor = "#151515" 
+          ,textboxBorderColor = kolor_przewodni_java[1]
+          ,textboxBorderRadius = 5
+        ,textboxBackColorSelect = "#151515"
+          ,textboxBorderColorSelect = kolor_przewodni_java[2]
+          
+        ### tables
+        ,tableBackColor = "#151515"
+          ,tableBorderColor = "#2E3440"
+          ,tableBorderTopSize = 1
+        ,tableBorderRowSize = 1
+      ))
+    # Motyw MATLAB ----
+    if(input$menu=='MATLAB')
+      return(shinyDashboardThemeDIY(
+        
+        ### general
+        appFontFamily = "FuturaMedium"
+        ,appFontColor = "white"
+          ,primaryFontColor = "#434C5E"
+          ,infoFontColor = "#434C5E"
+          ,successFontColor = "#434C5E"
+          ,warningFontColor = "#434C5E"
+          ,dangerFontColor = "#434C5E"
+          ,bodyBackColor = "#232323" 
+          
+        ### header
+        ,logoBackColor = "#151515" 
+          
+        ,headerButtonBackColor = "#151515"
+          ,headerButtonIconColor = "#D8DEE9"
+          ,headerButtonBackColorHover = kolor_przewodni_matlab[1]
+          ,headerButtonIconColorHover = "#151515" 
+          
+        ,headerBackColor = "#151515"
+          ,headerBoxShadowColor = ""
+        ,headerBoxShadowSize = "0px 0px 0px"
+        
+        ### sidebar
+        ,sidebarBackColor = "#151515"
+          ,sidebarPadding = 0
+        
+        ,sidebarMenuBackColor = "transparent"
+        ,sidebarMenuPadding = 5
+        ,sidebarMenuBorderRadius = 5
+        
+        ,sidebarShadowRadius = "" 
+        ,sidebarShadowColor = "0px 0px 0px"
+        
+        ,sidebarUserTextColor = "#D8DEE9"
+          
+        ,sidebarSearchBackColor = "#4C566A"
+          ,sidebarSearchIconColor = "#151515"
+          ,sidebarSearchBorderColor = "#4C566A"
+          
+        ,sidebarTabTextColor = "#ECEFF4"
+          ,sidebarTabTextSize = 14
+        ,sidebarTabBorderStyle = "none"
+        ,sidebarTabBorderColor = "#000000"
+          ,sidebarTabBorderWidth = 0
+        
+        ,sidebarTabBackColorSelected = kolor_przewodni_matlab[1]
+          ,sidebarTabTextColorSelected = "#000000" 
+          ,sidebarTabRadiusSelected = "20px" 
+        
+        ,sidebarTabBackColorHover = kolor_przewodni_matlab[1]
+          ,sidebarTabTextColorHover = "#000000"
+          ,sidebarTabBorderStyleHover = "none"
+        ,sidebarTabBorderColorHover = "none"
+        ,sidebarTabBorderWidthHover = 0
+        ,sidebarTabRadiusHover = "20px"
+        
+        ### boxes
+        ,boxBackColor = "#232323" 
+          ,boxBorderRadius = 5
+        ,boxShadowSize = "0px 0px 0px"
+        ,boxShadowColor = ""
+        ,boxTitleSize = 18
+        ,boxDefaultColor = "#232323"
+          ,boxPrimaryColor = "#232323"
+          ,boxInfoColor = "#232323"
+          ,boxSuccessColor = "#232323"
+          ,boxWarningColor = "#232323"
+          ,boxDangerColor = "#232323"
+          
+        ,tabBoxTabColor = "#151515"
+          ,tabBoxTabTextSize = 16
+        ,tabBoxTabTextColor = "#151515"
+          ,tabBoxTabTextColorSelected = "#151515"
+          ,tabBoxBackColor = "#BF616A"
+          ,tabBoxHighlightColor = "#4C566A"
+          ,tabBoxBorderRadius = 5 
+        
+        ### inputs
+        ,buttonBackColor = "#151515"
+          ,buttonTextColor = "#2E3440"
+          ,buttonBorderColor = "#2E3440"
+          ,buttonBorderRadius = 5
+        
+        ,buttonBackColorHover = "#151515"
+          ,buttonTextColorHover = "#232323"
+          ,buttonBorderColorHover = "#2E3440"
+          
+        ,textboxBackColor = "#151515" 
+          ,textboxBorderColor = kolor_przewodni_matlab[1] 
+          ,textboxBorderRadius = 5
+        ,textboxBackColorSelect = "#151515"
+          ,textboxBorderColorSelect = kolor_przewodni_matlab[2]
+          
+        ### tables
+        ,tableBackColor = "#151515"
+          ,tableBorderColor = "#2E3440"
+          ,tableBorderTopSize = 1
+        ,tableBorderRowSize = 1
+      ))
+    # Motyw domyślny ----
+    return(theme_default)
+  })
+  
 }
 
-# Styl -------------------------------------------------------------------------
-theme_java <- shinyDashboardThemeDIY(
-  appFontFamily = "FuturaMedium"
-  ,appFontColor = "white"
-    ,primaryFontColor = "#434C5E"
-    ,infoFontColor = "#434C5E"
-    ,successFontColor = "#434C5E"
-    ,warningFontColor = "#434C5E"
-    ,dangerFontColor = "#434C5E"
-  ,bodyBackColor = "#232323" 
-    ,logoBackColor = "#151515" 
-  ,headerButtonBackColor = "#151515"
-    ,headerButtonIconColor = "#D8DEE9"
-    ,headerButtonBackColorHover = "#fc0703"
-    ,headerButtonIconColorHover = "#151515" 
-    ,headerBackColor = "#151515"
-    ,headerBoxShadowColor = ""
-  ,headerBoxShadowSize = "0px 0px 0px"
-  ,sidebarBackColor = "#151515"
-    ,sidebarPadding = 0
-  ,sidebarMenuBackColor = "transparent"
-  ,sidebarMenuPadding = 5
-  ,sidebarMenuBorderRadius = 5
-  ,sidebarShadowRadius = "" 
-  ,sidebarShadowColor = "0px 0px 0px"
-  ,sidebarUserTextColor = "#D8DEE9"
-  ,sidebarSearchBackColor = "#4C566A"
-    ,sidebarSearchIconColor = "#151515"
-    ,sidebarSearchBorderColor = "#4C566A"
-  ,sidebarTabTextColor = "#ECEFF4"
-    ,sidebarTabTextSize = 14
-  ,sidebarTabBorderStyle = "none"
-  ,sidebarTabBorderColor = "#000000"
-    ,sidebarTabBorderWidth = 0
-  ,sidebarTabBackColorSelected = "#fc0703"
-    ,sidebarTabTextColorSelected = "#000000" 
-    ,sidebarTabRadiusSelected = "20px" 
-  ,sidebarTabBackColorHover = "#fc0703"
-    ,sidebarTabTextColorHover = "#000000"
-    ,sidebarTabBorderStyleHover = "none"
-  ,sidebarTabBorderColorHover = "none"
-  ,sidebarTabBorderWidthHover = 0
-  ,sidebarTabRadiusHover = "20px" 
-  ,boxBackColor = "#232323" 
-    ,boxBorderRadius = 5
-  ,boxShadowSize = "0px 0px 0px"
-  ,boxShadowColor = ""
-  ,boxTitleSize = 18
-  ,boxDefaultColor = "#232323"
-    ,boxPrimaryColor = "#232323"
-    ,boxInfoColor = "#232323"
-    ,boxSuccessColor = "#232323"
-    ,boxWarningColor = "#232323"
-    ,boxDangerColor = "#232323"
-  ,tabBoxTabColor = "#151515"
-    ,tabBoxTabTextSize = 16
-  ,tabBoxTabTextColor = "#151515"
-    ,tabBoxTabTextColorSelected = "#151515"
-    ,tabBoxBackColor = "#BF616A"
-    ,tabBoxHighlightColor = "#4C566A"
-    ,tabBoxBorderRadius = 5 
-  ,buttonBackColor = "#151515"
-    ,buttonTextColor = "#2E3440"
-    ,buttonBorderColor = "#2E3440"
-    ,buttonBorderRadius = 5
-  ,buttonBackColorHover = "#151515"
-    ,buttonTextColorHover = "#232323"
-    ,buttonBorderColorHover = "#2E3440"
-  ,textboxBackColor = "#151515" 
-    ,textboxBorderColor = "#fc0703" 
-    ,textboxBorderRadius = 5
-  ,textboxBackColorSelect = "#151515"
-    ,textboxBorderColorSelect = "#03a1fc"
-  ,tableBackColor = "#151515"
-    ,tableBorderColor = "#2E3440"
-    ,tableBorderTopSize = 1
-  ,tableBorderRowSize = 1
-)
-
-
-# Tworzenie UI -----------------------------------------------------------------
+################################################################################
+# Tworzenie UI
+################################################################################
 app_ui <- dashboardPage(
+  
+  #-----------------------------------------------------------------------------
+  # Panel zarządzania
+  #-----------------------------------------------------------------------------
   dashboardHeader(
     title = "Prototyp",
     titleWidth = 250
@@ -864,10 +1244,15 @@ app_ui <- dashboardPage(
   dashboardSidebar(
     tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: red}")),
     sidebarMenu(id = "menu", sidebarMenuOutput("menu"),
-                menuItem("Java", tabName = "Java"),
-                menuItem("Word", tabName = "Word"),
-                menuItem("MATLAB", tabName = "MATLAB"),
-                menuItem("Podsumowanie", tabName = "Podsumowanie")
+                menuItem("Podsumowanie", tabName = "Podsumowanie",
+                         icon = icon("home")),
+                menuItem("Java", tabName = "Java",
+                         icon = icon("java")),
+                menuItem("Word", tabName = "Word",
+                         icon = icon("file-word")),
+                menuItem("MATLAB", tabName = "MATLAB",
+                         icon = icon("calculator")),
+                uiOutput('style_tag')
     ),
     sliderInput(
       inputId = "data",
@@ -878,54 +1263,52 @@ app_ui <- dashboardPage(
     ),
     width = 250
   ),
+  #-----------------------------------------------------------------------------
+  # Koniec panelu zarządzania
+  #-----------------------------------------------------------------------------
+  
   dashboardBody(
-    theme_java,
-    # tags$head(
-    #   tags$style(
-    #     HTML('
-    #       #shiny-tab-Java h1 {
-    #         background-color: red;
-    #         color: white;
-    #       }
-    #       #shiny-tab-Word h2 {
-    #         background-color: blue;
-    #         color: red;
-    #       }
-    #       #shiny-tab-MATLAB h3 {
-    #         background-color: yellow;
-    #         color: red;
-    #       }
-    #     ')
-    #   )
-    # ),
+    theme_default,
     tags$style(type="text/css",
                ".shiny-output-error { visibility: hidden; }",
                ".shiny-output-error:before { visibility: hidden; }"
     ),
     tabItems(
+      
+      #-------------------------------------------------------------------------
+      # Panel ogólny
+      #-------------------------------------------------------------------------
+      tabItem(
+        tabName = "Podsumowanie",
+        fluidRow(
+          column(width = 10, style = "margin-bottom: 80px; margin-left: 20px;",
+                 selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
+                 sliderInput(
+                   inputId = "podsumowanie_1",
+                   label = "Ustaw przedział czasu",
+                   min = as.Date("2018-01-01"),
+                   max = as.Date("2024-01-01"),
+                   value = c(as.Date("2018-01-01"), as.Date("2024-01-01"))
+                 ),
+                 plotOutput("Podsumowanie_wykres1"))
+        ),
+        fluidRow(
+          column(width = 8, style = "margin-left: 20px;",
+                 selectInput("podsumowanie_2", "Wybierz Imię", zmienne),
+                 plotOutput("Podsumowanie_wykres2")))
+      ),
+      #-------------------------------------------------------------------------
+      # Koniec panelu ogólnego
+      #-------------------------------------------------------------------------
+      
+      #-------------------------------------------------------------------------
+      # Panel Java
+      #-------------------------------------------------------------------------
       tabItem(
         tabName = "Java",
-        #     tags$style(type = "text/css", "
-        #   .irs-bar {width: 100%; height: 25px; background: black; border-top: 1px solid black; border-bottom: 1px solid black;}
-        #   .irs-bar-edge {background: black; border: 1px solid black; height: 25px; border-radius: 0px; width: 20px;}
-        #   .irs-line {border: 1px solid black; height: 25px; border-radius: 0px;}
-        #   .irs-grid-text {font-family: 'arial'; color: white; bottom: 17px; z-index: 1;}
-        #   .irs-grid-pol {display: none;}
-        #   .irs-max {font-family: 'arial'; color: black;}
-        #   .irs-min {font-family: 'arial'; color: black;}
-        #   .irs-single {color:black; background:#6666ff;}
-        #   .irs-slider {width: 30px; height: 30px; top: 22px;}
-        # "),
         fluidRow(
           style = "margin-bottom: 80px;",
           box(title = "Java"),
-          # selectInput(
-          #   inputId = "JavaSelectInput2 (jeszcze nie działa)",
-          #   label = "Wybierz imię",
-          #   choices = c("Mikołaj", "Małgosia", "Sebastian"),
-          #   selected = c("Mikołaj", "Małgosia", "Sebastian"),
-          #   multiple = TRUE
-          # ),
           column(width = 12,
                  plotlyOutput("JavaWykres1")
           )
@@ -977,6 +1360,13 @@ app_ui <- dashboardPage(
         )
         # ,tags$h1('')
       ),
+      #-------------------------------------------------------------------------
+      # Koniec panelu Java
+      #-------------------------------------------------------------------------
+      
+      #-------------------------------------------------------------------------
+      # Panel Word
+      #-------------------------------------------------------------------------
       tabItem(
         tabName = "Word",
         
@@ -1008,8 +1398,14 @@ app_ui <- dashboardPage(
           )
           
         )
-        # ,tags$h2('')
       ),
+      #-------------------------------------------------------------------------
+      # Koniec panelu Word
+      #-------------------------------------------------------------------------
+      
+      #-------------------------------------------------------------------------
+      # Panel MATLAB
+      #-------------------------------------------------------------------------
       tabItem(
         tabName = "MATLAB",
         fluidRow(
@@ -1029,7 +1425,6 @@ app_ui <- dashboardPage(
               "Tekst opisujący wykres."
           )
         ),
-
         fluidRow(
           box(
               width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
@@ -1065,34 +1460,14 @@ app_ui <- dashboardPage(
           )
         )
 
-      ),
-
-      tabItem(
-        tabName = "Podsumowanie",
-        fluidRow(
-          column(width = 10, style = "margin-bottom: 80px; margin-left: 20px;",
-                 selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
-                 sliderInput(
-                   inputId = "podsumowanie_1",
-                   label = "Ustaw przedział czasu",
-                   min = as.Date("2018-01-01"),
-                   max = as.Date("2024-01-01"),
-                   value = c(as.Date("2018-01-01"), as.Date("2024-01-01"))
-                 ),
-                 plotOutput("Podsumowanie_wykres1"))
-        ),
-        fluidRow(
-            column(width = 8, style = "margin-left: 20px;",
-                 selectInput("podsumowanie_2", "Wybierz Imię", zmienne),
-                 plotOutput("Podsumowanie_wykres2")))
       )
+      #-------------------------------------------------------------------------
+      # Koniec panelu MATLAB
+      #-------------------------------------------------------------------------
       
     ),
-    
   )
 )
-
-
 
 
 shinyApp(app_ui, server)
