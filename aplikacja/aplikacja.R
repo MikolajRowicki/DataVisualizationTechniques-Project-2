@@ -19,10 +19,13 @@ df3 <- read.csv("Sebastian3_java.csv")
 df2$Imie <- "Sebastian"
 df3$Imie <- "Sebastian"
 df4 <- read.csv("Mikolaj_java.csv")
-df <- bind_rows(df1, df2, df3, df4)
+df5 <- read.csv("Malgosia_java.csv")
+df <- bind_rows(df1, df2, df3, df4, df5)
 df$Data_ostatniej_modefikacji <- as.Date(substr(df$Data_ostatniej_modefikacji,1,10))
 colnames(df)[which(names(df) == "if.")] <- "if"
 colnames(df)[which(names(df) == "else.")] <- "else"
+# kolory_java <- c(java_blue, java_orange, hot_red, mellow_red, pronounced_blue, mellow_blue)
+kolory_java <- c('#5382a1', '#f89820', '#fc0703', '#DD4B39', '#1666de', '#03a1fc')
 
 zmienne <- c("Sebastian", "Malgosia", "Mikolaj")
 word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres1.csv")
@@ -50,51 +53,148 @@ podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogoln
 server <- function(input, output, session) {
   
   # Wykres 1 -------------------------------------------------------------------
-  output$JavaWykres1 <- renderPlot({
-    ggplot(df %>% group_by(Data_ostatniej_modefikacji, Imie) %>% summarise(liczba= n()) %>% 
-             filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]),
-           aes(x = Data_ostatniej_modefikacji, y = liczba, color = Imie, fill = Imie)) +
-      geom_col() +
-      # geom_point() +
-      # geom_line() +
-      theme_bw() +
-      labs(
-        x = "Data",
-        y = "Liczba utworzonych plików",
-        title = "Liczba utworzonych plików w czasie"
-      )
+  output$JavaWykres1 <- renderPlotly({
+    df_date <- df %>% group_by(Data_ostatniej_modefikacji, Imie) %>% summarise(liczba= n()) %>% 
+      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>% 
+      mutate(Rok_i_Miesiac = substr(Data_ostatniej_modefikacji, 1, 7)) %>%
+      group_by(Rok_i_Miesiac, Imie) %>% mutate(liczba_w_miesiacu = sum(liczba))
+    plot_ly(data = df_date %>% filter(Imie == "Sebastian"),
+            x = ~Data_ostatniej_modefikacji, y = ~liczba,
+            type = "bar", name = "Sebastian",
+            hoverinfo = 'text',
+            hovertext = ~paste0("Liczba stworzonych plików \nw ",
+                                c("styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu",
+                                  "lipcu", "sierpniu", "wrześniu", "październiku", "listopadzie", "grudniu"
+                                )[as.numeric(substr(Data_ostatniej_modefikacji, 6, 7))],
+                                " w ", substr(Data_ostatniej_modefikacji, 1, 4), " roku",
+                                "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
+                                )[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))],
+                                ": ", liczba_w_miesiacu,
+                                "\nLiczba stworzonych plików\nw ", Data_ostatniej_modefikacji,
+                                ": ", liczba),
+            textposition = "none",
+            marker = list(color = kolory_java[6]),
+            xperiod="M1", xperiodalignment="middle"
+    ) %>%
+      add_trace(data = df_date %>% filter(Imie == "Mikolaj"),
+                name = "Mikołaj",
+                marker = list(color = kolory_java[2])
+      ) %>%
+      add_trace(data = df_date %>% filter(Imie == "Malgosia"),
+                name = "Małgosia",
+                marker = list(color = kolory_java[1])
+      ) %>%
+      layout(barmode = 'stack',
+             title = "Tworzenie plików .java w czasie",
+             xaxis = list(fixedrange = TRUE,
+                          title = "Data"),
+             yaxis=list(fixedrange=TRUE,
+                        title = "Liczba utworzoych pkików",
+                        gridcolor = "grey"),
+             legend = list(
+               itemclick = FALSE,
+               itemdoubleclick = FALSE,
+               groupclick = FALSE
+             ),
+             plot_bgcolor = "rgba(0,0,0,0)",
+             paper_bgcolor = "rgba(0,0,0,0)",
+             font = list(color = "white")) %>%
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
   })
   # Wykres 2 -------------------------------------------------------------------
-  output$JavaWykres2 <- renderPlot({
-    new_df <- df %>% 
-      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
+  output$JavaWykres2 <- renderPlotly({
+    df_date <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
       group_by(Imie) %>%
-      summarise(liczba_komentarzy_w_linii = mean(liczba_komentarzy_w_linii)) %>%
-      filter(liczba_komentarzy_w_linii > 0)
-    ggplot(new_df, aes(x = Imie, y = liczba_komentarzy_w_linii, fill = Imie)) +
-      geom_col() +
-      theme_bw() +
-      labs(
-        x = "Osoba",
-        y = "Średnia liczba komentarzy w linii na plik"
-      )
+      summarise(liczba_komentarzy_w_linii = mean(liczba_komentarzy_w_linii),
+                liczba_komentarzy_w_bloku = mean(liczba_komentarzy_w_bloku)) %>%
+      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))])
+    plot_ly(data = df_date,
+            x = ~Imie, y = ~liczba_komentarzy_w_linii,
+            type = "bar", name = 'Komentarze\njednoliniowe;\n<i><sup>//komentarz</sup></i>',
+            hoverinfo = 'text',
+            hovertext = ~paste0("Średnia liczba\nkomentarzów\njednoliniowych na plik\nu ",
+                                c("Sebastiana", "Mikołaja", "Małgosi"
+                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                ":\n", round(liczba_komentarzy_w_linii, 2)),
+            textposition = "none",
+            marker = list(color = kolory_java[5])
+    ) %>%
+      add_trace(name = "Komentarze\nwieloliniowych;\n<i><sup>/*komentarz*/</sup></i>",
+                y = ~liczba_komentarzy_w_bloku,
+                hoverinfo = 'text',
+                hovertext = ~paste0("Średnia liczba\nkomentarzów\nwieloliniowych na plik\nu ",
+                                    c("Sebastiana", "Mikołaja", "Małgosi"
+                                    )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                    ":\n", round(liczba_komentarzy_w_bloku, 2)),
+                marker = list(color = kolory_java[4])
+      ) %>%
+      layout(barmode = 'group',
+             title = "Średnia liczba komentarzów na plik",
+             xaxis = list(fixedrange = TRUE,
+                          title = "Osoba"),
+             yaxis=list(fixedrange=TRUE,
+                        title = "Liczba komentarzów"),
+             legend = list(
+               itemclick = FALSE,
+               itemdoubleclick = FALSE,
+               groupclick = FALSE
+             ),
+             plot_bgcolor = "rgba(0,0,0,0)",
+             paper_bgcolor = "rgba(0,0,0,0)",
+             font = list(color = "white")
+      ) %>%
+      config(displayModeBar = FALSE)
   })
   # Wykres 3 -------------------------------------------------------------------
-  output$JavaWykres3 <- renderPlot({
-    new_df <- df %>% 
-      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
-             liczba_komentarzy_w_linii > 0) %>%
+  output$JavaWykres3 <- renderPlotly({
+    df_date <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
       group_by(Imie) %>%
-      summarise(liczba_znakow_w_komantarzu_w_linii = mean(liczba_znakow_w_komantarzu_w_linii/liczba_komentarzy_w_linii))
-    ggplot(new_df, aes(x = Imie, y = liczba_znakow_w_komantarzu_w_linii, fill = Imie)) +
-      geom_col() +
-      theme_bw() +
-      labs(
-        x = "Osoba",
-        y = "Średnia liczba znaków w komentarzu w linii"
-      )
+      summarise(liczba_komentarzy_w_linii = sum(liczba_komentarzy_w_linii),
+                liczba_komentarzy_w_bloku = sum(liczba_komentarzy_w_bloku),
+                liczba_znakow_w_komantarzu_w_linii = sum(liczba_znakow_w_komantarzu_w_linii),
+                liczba_znakow_w_komentarzu_w_bloku = sum(liczba_znakow_w_komentarzu_w_bloku)) %>%
+      mutate(srednia_liczba_znakow_w_komantarzu_w_linii = if_else(liczba_komentarzy_w_linii == 0, 0, liczba_znakow_w_komantarzu_w_linii/liczba_komentarzy_w_linii),
+             srednia_liczba_znakow_w_komentarzu_w_bloku = if_else(liczba_komentarzy_w_bloku == 0, 0, liczba_znakow_w_komentarzu_w_bloku/liczba_komentarzy_w_bloku)) %>%
+      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))])
+    plot_ly(data = df_date,
+            x = ~Imie, y = ~srednia_liczba_znakow_w_komantarzu_w_linii,
+            type = "bar", name = "Komentarze\njedniolinowe;\n<i><sup>//komentarz</sup></i>",
+            hoverinfo = 'text',
+            hovertext = ~paste0("Średnia liczba znaków\nw komentarzach jedniolinowych\nu ",
+                                c("Sebastiana", "Mikołaja", "Małgosi"
+                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                ":\n", round(srednia_liczba_znakow_w_komantarzu_w_linii, 2)),
+            textposition = "none",
+            marker = list(color = kolory_java[5])
+    ) %>%
+      add_trace(name = "Komentarze\nwieloliniowe;\n<i><sup>/*komentarz*/</sup></i>",
+                y = ~srednia_liczba_znakow_w_komentarzu_w_bloku,
+                hoverinfo = 'text',
+                hovertext = ~paste0("Średnia liczba znaków\nw komentarzach wieloliniowych\nu ",
+                                    c("Sebastiana", "Mikołaja", "Małgosi"
+                                    )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                    ":\n", round(srednia_liczba_znakow_w_komentarzu_w_bloku, 2)),
+                marker = list(color = kolory_java[4])
+      ) %>%
+      layout(barmode = 'group',
+             title = "Średnia liczba znaków na komentarz",
+             xaxis = list(fixedrange = TRUE,
+                          title = "Osoba"),
+             yaxis=list(fixedrange=TRUE,
+                        title = "Liczba znaków"),
+             legend = list(
+               itemclick = FALSE,
+               itemdoubleclick = FALSE,
+               groupclick = FALSE
+             ),
+             plot_bgcolor = "rgba(0,0,0,0)",
+             paper_bgcolor = "rgba(0,0,0,0)",
+             font = list(color = "white")
+      ) %>%
+      config(displayModeBar = FALSE)
   })
-  # Wykres 4 -------------------------------------------------------------------
+  # Wykres 4 (nieczynny) -------------------------------------------------------------------
   output$JavaWykres4 <- renderPlot({
     new_df <- df %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
@@ -106,10 +206,10 @@ server <- function(input, output, session) {
       theme_bw() +
       labs(
         x = "Osoba",
-        y = "Średnia liczba komentarzy w bloku na plik"
+        y = "Średnia liczba komentarzów w bloku na plik"
       )
   })
-  # Wykres 5 -------------------------------------------------------------------
+  # Wykres 5 (nieczynny) -------------------------------------------------------------------
   output$JavaWykres5 <- renderPlot({
     new_df <- df %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
@@ -125,33 +225,66 @@ server <- function(input, output, session) {
       )
   })
   # Wykres 6 -------------------------------------------------------------------
-  output$JavaWykres6 <- renderText({
+  output$JavaWykres6 <- renderUI({
     new_df_Mikolaj <- df %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
              Imie == "Mikolaj")
+    najdluzszy_wyraz_Mikolaj <- new_df_Mikolaj$Najdluzszy_wyraz[nchar(new_df_Mikolaj$Najdluzszy_wyraz) == max(nchar(new_df_Mikolaj$Najdluzszy_wyraz))] %>%
+      head(1)
     new_df_Sebastian <- df %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
              Imie == "Sebastian")
-    paste("Mikołaj: ",
-      new_df_Mikolaj$Najdluzszy_wyraz[nchar(new_df_Mikolaj$Najdluzszy_wyraz) == max(nchar(new_df_Mikolaj$Najdluzszy_wyraz))] %>%
-      head(1), "Sebastian: ",
-      new_df_Sebastian$Najdluzszy_wyraz[nchar(new_df_Sebastian$Najdluzszy_wyraz) == max(nchar(new_df_Sebastian$Najdluzszy_wyraz))] %>%
-      head(1))
+    najdluzszy_wyraz_Sebastian <- new_df_Sebastian$Najdluzszy_wyraz[nchar(new_df_Sebastian$Najdluzszy_wyraz) == max(nchar(new_df_Sebastian$Najdluzszy_wyraz))] %>%
+      head(1)
+    new_df_Malgosia <- df %>% 
+      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
+             Imie == "Malgosia")
+    najdluzszy_wyraz_Malgosia <- new_df_Malgosia$Najdluzszy_wyraz[nchar(new_df_Malgosia$Najdluzszy_wyraz) == max(nchar(new_df_Malgosia$Najdluzszy_wyraz))] %>%
+      head(1)
+    HTML(paste("<b>Małgosia</b>:<br/>",
+               najdluzszy_wyraz_Malgosia, 
+               "<br/><small>(", nchar(najdluzszy_wyraz_Malgosia), "znaków)</small>"),
+         "<br/><b>Mikołaj</b>:<br/>",
+         najdluzszy_wyraz_Mikolaj, 
+         "<br/><small>(", nchar(najdluzszy_wyraz_Mikolaj), "znaków)</small>",
+         "<br><b>Sebastian</b>:<br/>",
+         najdluzszy_wyraz_Sebastian, 
+         "<br/><small>(", nchar(najdluzszy_wyraz_Sebastian), "znaków)</small>",
+    )
     
   })
   # Wykres 7 -------------------------------------------------------------------
-  output$JavaWykres7 <- renderText({
-    Mikolaj_txt <- df %>% 
+  output$JavaWykres7 <- renderUI({
+    Mikolaj_txt <- df %>%
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
              Imie == "Mikolaj") %>%
       summarise(sum(!!sym(input$txtIn))) %>% pull()
-    Sebastian_txt <- df %>% 
+    Sebastian_txt <- df %>%
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
              Imie == "Sebastian") %>%
       summarise(sum(!!sym(input$txtIn))) %>% pull()
-    paste0("Mikołaj: ", Mikolaj_txt, " ",
-           "Sebastian: ", Sebastian_txt)
-    
+    Malgosia_txt <- df %>%
+      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
+             Imie == "Malgosia") %>%
+      summarise(sum(!!sym(input$txtIn))) %>% pull()
+    HTML(paste0("<b>Małgosia</b>: ", Malgosia_txt,
+                "<br/><b>Mikołaj</b>: ", Mikolaj_txt,
+                "<br/><b>Sebastian</b>: ", Sebastian_txt
+    ))
+  })
+  
+  # Wykres 8 -------------------------------------------------------------------
+  output$JavaWykres8 <- renderValueBox({
+    valueBox(tags$p(501232, style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
+             tags$p("znaków napisanych całkowicie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
+             color = "red")    
+  })
+  
+  # Wykres 9 -------------------------------------------------------------------
+  output$JavaWykres9 <- renderValueBox({
+    valueBox(tags$p(9012, style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
+             tags$p("linijek napisanych", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
+             color = "red")    
   })
 
     # WORD -----------------------------------------------------------------------
@@ -726,6 +859,7 @@ app_ui <- dashboardPage(
     titleWidth = 250
     ),
   dashboardSidebar(
+    tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: red}")),
     sidebarMenu(id = "menu", sidebarMenuOutput("menu"),
                 menuItem("Java", tabName = "Java"),
                 menuItem("Word", tabName = "Word"),
@@ -761,45 +895,82 @@ app_ui <- dashboardPage(
     #     ')
     #   )
     # ),
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }"
+    ),
     tabItems(
       tabItem(
         tabName = "Java",
+        #     tags$style(type = "text/css", "
+        #   .irs-bar {width: 100%; height: 25px; background: black; border-top: 1px solid black; border-bottom: 1px solid black;}
+        #   .irs-bar-edge {background: black; border: 1px solid black; height: 25px; border-radius: 0px; width: 20px;}
+        #   .irs-line {border: 1px solid black; height: 25px; border-radius: 0px;}
+        #   .irs-grid-text {font-family: 'arial'; color: white; bottom: 17px; z-index: 1;}
+        #   .irs-grid-pol {display: none;}
+        #   .irs-max {font-family: 'arial'; color: black;}
+        #   .irs-min {font-family: 'arial'; color: black;}
+        #   .irs-single {color:black; background:#6666ff;}
+        #   .irs-slider {width: 30px; height: 30px; top: 22px;}
+        # "),
         fluidRow(
+          style = "margin-bottom: 80px;",
           box(title = "Java"),
+          # selectInput(
+          #   inputId = "JavaSelectInput2 (jeszcze nie działa)",
+          #   label = "Wybierz imię",
+          #   choices = c("Mikołaj", "Małgosia", "Sebastian"),
+          #   selected = c("Mikołaj", "Małgosia", "Sebastian"),
+          #   multiple = TRUE
+          # ),
           column(width = 12,
-                 plotOutput("JavaWykres1")
+                 plotlyOutput("JavaWykres1")
           )
         ),
         fluidRow(
-          column(width = 3,
-                 plotOutput("JavaWykres2")
+          style = "margin-bottom: 80px;",
+          column(width = 6,
+                 plotlyOutput("JavaWykres2")
           ),
-          column(width = 3,
-                 plotOutput("JavaWykres3")
-          ),
-          column(width = 3,
-                 plotOutput("JavaWykres4")
-          ),
-          column(width = 3,
-                 plotOutput("JavaWykres5")
+          column(width = 6,
+                 plotlyOutput("JavaWykres3")
           )
         ),
         fluidRow(
+          style = "margin-bottom: 80px;",
           column(width = 6,
                  box(
                    title = "Najdłuższy wyraz:",
-                   textOutput("JavaWykres6"),
+                   htmlOutput("JavaWykres6"),
                    width = 12
-                   )
-                 ),
+                 )
+          ),
           column(width = 6,
                  box(
                    title = "Ile wyrazów charakterystycznych dla javy (else, private, abstract itp.) zostało napisanych:",
                    textInput("txtIn", "Wpisz wyraz", value = "protected"),
-                   textOutput("JavaWykres7"),
+                   htmlOutput("JavaWykres7"),
                    width = 12
-                   )
                  )
+          )
+        ),
+        fluidRow(
+          style = "margin-bottom: 80px;",
+          column(width = 3,
+                 selectInput(
+                   inputId = "JavaSelectInput1",
+                   label = "Wybierz imiona (jeszcze nie działa)",
+                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                   multiple = TRUE
+                 )
+          ),
+          column(width = 4.5,
+                 valueBoxOutput('JavaWykres8')
+                 ),
+          column(width = 4.5,
+                 valueBoxOutput('JavaWykres9')
+          )
         )
         # ,tags$h1('')
       ),
