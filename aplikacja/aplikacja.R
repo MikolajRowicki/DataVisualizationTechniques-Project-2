@@ -53,6 +53,7 @@ podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogoln
 kolor_przewodni_java <- c('#fc0703', '#03a1fc')
 kolor_przewodni_word <- c('#1B5EBE', '#41A5EE')
 kolor_przewodni_matlab <- c('#ed9242', '#fcf647')
+# styl domyślny ----
 theme_default <- shinyDashboardThemeDIY(
   
   ### general
@@ -230,11 +231,11 @@ server <- function(input, output, session) {
              yaxis=list(fixedrange=TRUE,
                         title = "Liczba utworzoych pkików",
                         gridcolor = "grey"),
-             legend = list(
-               itemclick = FALSE,
-               itemdoubleclick = FALSE,
-               groupclick = FALSE
-             ),
+             # legend = list(
+             #   itemclick = FALSE,
+             #   itemdoubleclick = FALSE,
+             #   groupclick = FALSE
+             # ),
              plot_bgcolor = "rgba(0,0,0,0)",
              paper_bgcolor = "rgba(0,0,0,0)",
              font = list(color = "white")) %>%
@@ -394,34 +395,32 @@ server <- function(input, output, session) {
   })
   # Wykres 7 -------------------------------------------------------------------
   output$JavaWykres7 <- renderUI({
-    Mikolaj_txt <- df %>%
-      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
-             Imie == "Mikolaj") %>%
-      summarise(sum(!!sym(input$txtIn))) %>% pull()
-    Sebastian_txt <- df %>%
-      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
-             Imie == "Sebastian") %>%
-      summarise(sum(!!sym(input$txtIn))) %>% pull()
-    Malgosia_txt <- df %>%
-      filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
-             Imie == "Malgosia") %>%
-      summarise(sum(!!sym(input$txtIn))) %>% pull()
-    HTML(paste0("<b>Małgosia</b>: ", Malgosia_txt,
-                "<br/><b>Mikołaj</b>: ", Mikolaj_txt,
-                "<br/><b>Sebastian</b>: ", Sebastian_txt
+    df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2], input$txtIn %in% colnames(df)[15:45])
+    Mikolaj_df_tmp <- df_tmp %>% filter(Imie == "Mikolaj")
+    Sebastian_df_tmp <- df_tmp %>% filter(Imie == "Sebastian")
+    Malgosia_df_tmp <- df_tmp %>% filter(Imie == "Malgosia")
+    HTML(paste0("<b>Małgosia</b>: ", round(Malgosia_df_tmp %>% summarise(sum(!!sym(input$txtIn))) %>% pull() / Malgosia_df_tmp %>% summarise(liczba_plikow = n()), 2),
+                "<br/><b>Mikołaj</b>: ", round(Mikolaj_df_tmp %>% summarise(sum(!!sym(input$txtIn))) %>% pull() / Mikolaj_df_tmp %>% summarise(liczba_plikow = n()), 2),
+                "<br/><b>Sebastian</b>: ", round(Sebastian_df_tmp %>% summarise(sum(!!sym(input$txtIn))) %>% pull() / Sebastian_df_tmp %>% summarise(liczba_plikow = n()), 2)
     ))
   })
   
   # Wykres 8 -------------------------------------------------------------------
   output$JavaWykres8 <- renderValueBox({
-    valueBox(tags$p(501232, style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
-             tags$p("znaków napisanych całkowicie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
+    valueBox(tags$p(df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
+                      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))]) %>%
+                      filter(Imie %in% input$JavaSelectInput1) %>% summarise(ilosc_znakow = sum(Liczba_znaków)) %>% pull(),
+                    style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
+             tags$p("znaków napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
              color = "red")    
   })
   # Wykres 9 -------------------------------------------------------------------
   output$JavaWykres9 <- renderValueBox({
-    valueBox(tags$p(9012, style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
-             tags$p("linijek napisanych", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
+    valueBox(tags$p(df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
+                      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))]) %>%
+                      filter(Imie %in% input$JavaSelectInput1) %>% summarise(ilosc_znakow = sum(Liczba_linii)) %>% pull(),
+                    style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
+             tags$p("linijek napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
              color = "red")    
   })
 
@@ -911,9 +910,10 @@ server <- function(input, output, session) {
   }, bg = "transparent")
 
   #-----------------------------------------------------------------------------
-  # Zmiana motywu
+  # Zmiana stylu
   #-----------------------------------------------------------------------------
-  output$style_tag <- renderUI({
+  # styl ogólny strony----
+  output$style_ogol <- renderUI({
     # Motyw Word ----
     if(input$menu=='Word')
       return(shinyDashboardThemeDIY(
@@ -1227,6 +1227,142 @@ server <- function(input, output, session) {
     return(theme_default)
   })
   
+  # styl wybranych komponentów !WORK IN PROGRESS!----
+  output$style_css <- renderUI({
+    # word page style----
+    if(input$menu=='Word')
+      return(tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #1B5EBE}")))
+    # java page style----
+    if(input$menu=='Java')
+      return(tags$style(HTML("
+    /* sliders */
+    .js-irs-0 {
+    max-width: 215px;
+    } 
+    .irs--shiny .irs-bar {
+    border-top-color: #fc0703;
+    border-bottom-color: #fc0703;
+    } 
+    .irs--shiny .irs-bar-edge {
+    border-color: #fc0703;
+    }
+    .irs--shiny .irs-single, .irs--shiny .irs-bar-edge, .irs--shiny .irs-bar {
+    background: #DD4B39;
+    }
+    .irs--shiny .irs-handle {
+    border: 1px solid #fc0703;
+    background-color: #fc0703;
+    }
+    .irs--shiny .irs-handle.state_hover, .irs--shiny .irs-handle:hover {
+    background: #DD4B39;
+    }
+    .irs--shiny .irs-from, .irs--shiny .irs-to, .irs--shiny .irs-single {
+    color: #000000;
+    background-color: #fc0703;
+    }
+    /* dropdown menus */
+    .selectize-dropdown .selected {
+    background-color: #fc0703;
+    color: #000000;
+    }
+    .selectize-dropdown .active:not(.selected) {
+    background: #03a1fc;
+    color: #000000;
+    }
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: #000000;
+    color: #ffffff
+    }
+    .selectize-dropdown {
+    color: #ffffff;
+    }
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    border-color: #03a1fc;
+    }
+    .selectize-dropdown [data-selectable] .highlight {
+    background: rgba(235, 64, 52, 0.4);
+    border-radius: 1px;
+    }
+    .selectize-dropdown, .selectize-input, .selectize-input input{
+    color: #ffffff;
+    }
+    .selectize-control.multi .selectize-input>div {
+    cursor: pointer;
+    background: #DD4B39;
+    color: #ffffff;
+    }
+    selectize-dropdown .create {
+    color: #ffffff;
+    }
+    
+    /* KONFLIKT Z SELECTIZE: MULTIPLE FALSE */
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    border-color: #fc0703;
+    }
+    
+    /* fixed sidebar and header */
+    .sidebar {
+    position: fixed;
+    width: 250px;
+    white-space: nowrap;
+    overflow: visible;
+    }
+    .main-header {
+    position: fixed;
+    width:100%;
+    }
+                           ")))
+    # matlab page style----
+    if(input$menu=='MATLAB')
+      return(tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #ed9242}")))
+    # home page style----
+    return(tags$style(HTML("
+    /* sliders */
+    .js-irs-0 {
+    max-width: 215px;
+    } 
+    .irs--shiny .irs-bar {
+    border-top-color: #48e0ab;
+    border-bottom-color: #48e0ab;
+    } 
+    .irs--shiny .irs-bar-edge {
+    border-color: #48e0ab;
+    }
+    .irs--shiny .irs-single, .irs--shiny .irs-bar-edge, .irs--shiny .irs-bar {
+    background: #47fcf6;
+    }
+    .irs--shiny .irs-handle {
+    border: 1px solid #48e0ab;
+    background-color: #48e0ab;
+    }
+    .irs--shiny .irs-handle.state_hover, .irs--shiny .irs-handle:hover {
+    background: #47fcf6;
+    }
+    .irs--shiny .irs-from, .irs--shiny .irs-to, .irs--shiny .irs-single {
+    color: #000000;
+    background-color: #48e0ab;
+    }
+    /* dropdown menus */
+    .selectize-dropdown .selected {
+    background-color: #48e0ab;
+    color: #000000;
+    }
+    .selectize-dropdown .active:not(.selected) {
+    background: #47fcf6;
+    color: #000000;
+    }
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: #000000;
+    color: #ffffff
+    }
+    .selectize-dropdown {
+    color: #ffffff;
+    }
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    border-color: #47fcf6;
+    }
+                           ")))
+    })
 }
 
 ################################################################################
@@ -1242,8 +1378,9 @@ app_ui <- dashboardPage(
     titleWidth = 250
     ),
   dashboardSidebar(
-    tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: red}")),
-    sidebarMenu(id = "menu", sidebarMenuOutput("menu"),
+    sidebarMenu(uiOutput('style_ogol'),
+                uiOutput('style_css'),
+                id = "menu", sidebarMenuOutput("menu"),
                 menuItem("Podsumowanie", tabName = "Podsumowanie",
                          icon = icon("home")),
                 menuItem("Java", tabName = "Java",
@@ -1251,8 +1388,7 @@ app_ui <- dashboardPage(
                 menuItem("Word", tabName = "Word",
                          icon = icon("file-word")),
                 menuItem("MATLAB", tabName = "MATLAB",
-                         icon = icon("calculator")),
-                uiOutput('style_tag')
+                         icon = icon("calculator"))
     ),
     sliderInput(
       inputId = "data",
@@ -1306,12 +1442,17 @@ app_ui <- dashboardPage(
       #-------------------------------------------------------------------------
       tabItem(
         tabName = "Java",
+        fluidRow(style = "margin-top: 30px;",
+                 box(title = "Java")),
         fluidRow(
           style = "margin-bottom: 80px;",
-          box(title = "Java"),
-          column(width = 12,
+          column(width = 10,
                  plotlyOutput("JavaWykres1")
-          )
+          ),
+          column(width = 2,
+                 box(style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
+                     "Tekst opisujący wykres.")
+                 )
         ),
         fluidRow(
           style = "margin-bottom: 80px;",
@@ -1326,15 +1467,24 @@ app_ui <- dashboardPage(
           style = "margin-bottom: 80px;",
           column(width = 6,
                  box(
-                   title = "Najdłuższy wyraz:",
+                   title = tags$p("Najdłuższy wyraz:",
+                          style = "font-size: 125%; text-align: left;color: #FFFFFF;"),
                    htmlOutput("JavaWykres6"),
                    width = 12
                  )
           ),
           column(width = 6,
                  box(
-                   title = "Ile wyrazów charakterystycznych dla javy (else, private, abstract itp.) zostało napisanych:",
-                   textInput("txtIn", "Wpisz wyraz", value = "protected"),
+                   title = tags$p("Ile wyrazów charakterystycznych dla javy (else, private, abstract itp.) średnio zostało napisanych na plik:",
+                                  style = "font-size: 125%; text-align: left;color: #FFFFFF;"),
+                   selectizeInput("txtIn", "Wpisz wyraz charakterystyczny dla javy",
+                                  choices = colnames(df)[15:45],
+                                  selected = "protected",
+                                  multiple = F, 
+                                  options = list(create=F,
+                                                 placeholder = 'Wpisz wyraz',
+                                                 plugins = list('restore_on_backspace'))
+                                  ),
                    htmlOutput("JavaWykres7"),
                    width = 12
                  )
@@ -1343,12 +1493,15 @@ app_ui <- dashboardPage(
         fluidRow(
           style = "margin-bottom: 80px;",
           column(width = 3,
-                 selectInput(
+                 selectizeInput(
                    inputId = "JavaSelectInput1",
-                   label = "Wybierz imiona (jeszcze nie działa)",
+                   label = "Wybierz osoby, do których dane będą się odnosiły",
                    choices = c("Mikołaj", "Małgosia", "Sebastian"),
                    selected = c("Mikołaj", "Małgosia", "Sebastian"),
-                   multiple = TRUE
+                   multiple = TRUE,
+                   options = list(create=F,
+                                  placeholder = 'Wybierz imiona',
+                                  plugins= list('remove_button'))
                  )
           ),
           column(width = 4.5,
@@ -1358,7 +1511,6 @@ app_ui <- dashboardPage(
                  valueBoxOutput('JavaWykres9')
           )
         )
-        # ,tags$h1('')
       ),
       #-------------------------------------------------------------------------
       # Koniec panelu Java
@@ -1468,6 +1620,5 @@ app_ui <- dashboardPage(
     ),
   )
 )
-
 
 shinyApp(app_ui, server)
