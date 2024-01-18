@@ -26,13 +26,17 @@ df <- bind_rows(df1, df2, df3, df4, df5)
 df$Data_ostatniej_modefikacji <- as.Date(substr(df$Data_ostatniej_modefikacji,1,10))
 colnames(df)[which(names(df) == "if.")] <- "if"
 colnames(df)[which(names(df) == "else.")] <- "else"
+malgosia_word <- read.csv("Malgosia-word.csv")
+sebastian_word <- read.csv("Sebastian-word.csv")
+mikolaj_word <- read.csv("Mikolaj-word.csv")
+word <- rbind(malgosia_word, mikolaj_word, sebastian_word)
 # kolory_java <- c(java_blue, java_orange, hot_red, mellow_red, pronounced_blue, mellow_blue)
 kolory_java <- c('#5382a1', '#f89820', '#fc0703', '#DD4B39', '#1666de', '#03a1fc')
+kolory_word <- c("#7780f8", "#0a2051", "#39bacc", "#78dfd0", "#2929b3")
+kolory_ogolny <- c("#0d5630", "#6b3c02", "#1b0952", "#6af1ab", "#f7be79", "#64b5f8")
 
-zmienne <- c("Sebastian", "Malgosia", "Mikolaj")
-word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres1.csv")
-word_wykres2 <- read.csv(".//przygotowane_ramki_danych_do_wykresow_word//word_wykres2.csv")
-word_wykres3 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres3.csv")
+
+zmienne <- c("Mikolaj", "Sebastian", "Malgosia")
 
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
 sebastian_matlab <- read.csv("Sebastian_matlab.csv")
@@ -429,115 +433,142 @@ server <- function(input, output, session) {
   #-----------------------------------------------------------------------------
   
   # word - wykres tworzenia plikow ---------------------------------------------
-  #word_wykres1 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres1.csv")
-  output$wykres1_1 <- renderPlot({
+  output$wykres1_1 <- renderPlotly({
     
-    word11 <- word_wykres1 %>% 
-      filter(Imie == input$zmienna)
-    word11$year <- as.integer(word11$year)
-    word11$month <- as.integer(word11$month)
-    word11 <- word11 %>% 
-      arrange(month)%>% 
-      arrange(year)
-    word11$data <- as.Date(paste(word11$year, word11$month, "01", sep = "-"), format = "%Y-%m-%d")
+    word$Data.utworzenia.pliku <- as.Date(substr(word$Data.utworzenia.pliku,1,10))
+    word <- word %>% 
+      group_by(Data.utworzenia.pliku, Imie) %>%
+      summarise(n = n()) %>% 
+      mutate(data = substr(Data.utworzenia.pliku, 1, 7)) %>%
+      group_by(data, Imie) %>%
+      mutate(liczba_w_miesiacu = sum(n)) %>% 
+      filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2])
     
-    ggplot(word11, aes(data, y = n)) +
-      geom_col(color = "#d11a05", fill = "#d11a05", width = 22)+
-      labs(title = paste("Pliki Word ", input$zmienna),
-           x = "Czas",
-           y = "Ilość") +
-      scale_y_continuous(breaks = seq(0, round(max(word11$n)), by = 2)) +
-      theme_minimal() +
-      theme(
-        axis.ticks.x = element_blank(),
-        plot.background = element_rect(fill = "transparent"),
-        panel.background = element_rect(fill = "transparent"),
-        panel.grid.major = element_line(size = 0.3, color = "#fbbe9d"),
-        panel.grid.minor = element_blank(),#31322e
-        plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#fbbe9d"),
-        axis.title = element_text(family = "Consolas", size = 16, color = "#ff7355"),
-        axis.text.x = element_text(size = 14, color = "#ff7355"),
-        axis.text.y = element_text(size = 14, color = "#ff7355"),
-        rect = element_rect(colour = "#232323")
-        
-      )
-  }, bg = "transparent")
+    plot_ly(data = word%>% 
+            filter(Imie == "Sebastian"),
+            x = ~Data.utworzenia.pliku, 
+            y = ~n,
+            type = "bar",
+            name = "Sebastian",
+            hoverinfo = 'text',
+            hovertext = ~paste0("Liczba stworzonych plików \nw ",
+                                c("styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu",
+                                  "lipcu", "sierpniu", "wrześniu", "październiku", "listopadzie", "grudniu"
+                                )[as.numeric(substr(Data.utworzenia.pliku, 6, 7))],
+                                " w ", substr(Data.utworzenia.pliku, 1, 4), " roku",
+                                "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
+                                )[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))],
+                                ": ", liczba_w_miesiacu,
+                                "\nLiczba stworzonych plików\nw ", Data.utworzenia.pliku,
+                                ": ", n),
+            textposition = "none",
+            marker = list(color = kolory_word[1]),
+            xperiod="M1", xperiodalignment="middle"
+    ) %>%
+      add_trace(data = word %>% filter(Imie == "Mikolaj"),
+                name = "Mikołaj",
+                marker = list(color = kolory_word[2])
+      ) %>%
+      add_trace(data = word %>% filter(Imie == "Malgosia"),
+                name = "Małgosia",
+                marker = list(color = kolory_word[3])
+      ) %>%
+      layout(barmode = 'stack',
+             font = list(family = "FuturaMedium", color = "white", size = 14),
+             title = list(text = "Tworzenie plików .docx w czasie", font = list(size = 22)),
+             margin = list(t = 40),
+             xaxis = list(fixedrange = TRUE,
+                          title = list(text = "Data", font = list(size = 18))),
+             yaxis=list(fixedrange=TRUE,
+                        title = list(text = "Liczba utworzoych plików", font = list(size = 18)),
+                        gridcolor = "grey"),
+             plot_bgcolor = "rgba(0,0,0,0)",
+             paper_bgcolor = "rgba(0,0,0,0)"
+             ) %>%
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
+    
+  })
   
   # word - analiza interpunkcji ------------------------------------------------
-  #word_wykres2 <- read.csv(".//przygotowane_ramki_danych_do_wykresow_word//word_wykres2.csv")
-  output$wykres2 <- renderPlot({
+  output$wykres2 <- renderPlotly({
+    kolor <- kolory_word[1]
+
+    if (input$zmienna == "Mikolaj")
+    {
+      kolor <- kolory_word[2]
+    } else if (input$zmienna == "Malgosia") {
+      kolor <- kolory_word[3]
+    }else {
+      kolor <- kolory_word[1]
+    }
     
-    word_wykres2 %>% 
-      select(-X) %>% 
-      pivot_longer(cols = -Imie, names_to = "Kolumna", values_to = "Wartosc") %>% 
+    
+    word2 <- word %>% 
       filter(Imie == input$zmienna) %>% 
-      ggplot(aes(x = reorder(Kolumna, -Wartosc), y = Wartosc)) +
-      geom_col(fill = "#fc0703") +
-      labs(
-        title = "Interpunkcja - word",
-        x = "Znaki Interpunkcjne",
-        y = "Ilość"
-      ) +
-      theme_minimal() +
-      theme(
-        panel.grid.major = element_line(size = 0.5, color = "#66685f", linety = 'dashed'),
-        panel.grid.minor = element_blank(),#31322e
-        plot.title = element_text(family = "Consolas", size = 23, hjust = 0.5, colour = "#ff9a64"),
-        axis.title = element_text(family = "Consolas", size = 16, color = "#ff9a64"),
-        axis.text.x = element_text(size = 14, color = "#ff9a64"),
-        axis.text.y = element_text(size = 14, color = "#ff9a64"),
-        axis.title.x = element_text(vjust = -1),
-        axis.ticks.x = element_blank()
-      )
+      filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2]) %>% 
+      summarise(Kropka = sum(Ilosc.kropek), Przecinek = sum(Ilosc.przecinkow), Dwukropek = sum(Ilosc.dwukropkow), Pozostałe = sum(Ilosc.pozostalych.znakow), Pytajnik = sum(Ilosc.pytajnikow), Wykrzyknik = sum(Ilosc.wykrzyknikow), Myślnik= sum(Ilosc.myslnikow))
     
+    df <- word2 %>% 
+      pivot_longer(cols = c("Kropka", "Przecinek", "Dwukropek", "Pozostałe", "Pytajnik", "Wykrzyknik", "Myślnik"), names_to = "Kolumna", values_to = "Wartosc")
     
-  }, bg = "transparent")
+    plot_ly(
+      df,
+      x = ~reorder(Kolumna, -Wartosc),
+      y = ~Wartosc,
+      type = 'bar',
+      marker = list(color = kolor)
+      
+    ) %>% 
+      layout(
+        font = list(family = "FuturaMedium", color = "white", size = 14),
+        title = list(text = "Interpunkcja - word", font = list(size = 22)),
+        xaxis = list(title = list(text= "Znaki Interpunkcjne", font = list(size = 18))),
+        yaxis = list(title = list(text= "Ilość", font = list(size = 18))),
+        showlegend = FALSE,
+        margin = list(t = 40),
+        plot_bgcolor = "rgba(0,0,0,0)",
+        paper_bgcolor = "rgba(0,0,0,0)"
+      ) %>%
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
+    
+  })
   
   
   # word - zaleznosc miedzy kropkami / przecinkami ... -------------------------
-  #word_wykres3 <- read.csv("./przygotowane_ramki_danych_do_wykresow_word/word_wykres3.csv")
-
-
-  initial_plot <- ggplot() + theme_minimal()
   
-  reactive_plot <- reactive({
-    df <- word_wykres3 %>% 
-      filter(Imie == input$wybor_zmiennych) %>% 
-      filter(Ilosc.kropek < 100)
+  output$wykres3 <- renderPlotly({
     
-    ggplot(df, aes(x = Ilosc.kropek, y = Ilosc.przecinkow, size = Ilosc.słow., color = Imie)) +
-      geom_point() +
-      scale_color_manual(values = c("Malgosia" = "#fc0000", "Sebastian" = "#ff8c00", Mikolaj = "#fff200")) +
-      theme(#panel.background = element_rect(fill = "white"),
-        panel.grid.major = element_line(size = 0.5, color = "#66685f", linety = 'dashed'),
-        panel.grid.minor = element_blank(),#31322e
-        plot.title = element_text(family = "Consolas", size = 20, hjust = 0.5, colour = "#e0cdbf"),
-        axis.title = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
-        panel.background = element_rect(fill = "transparent"), 
-        plot.background = element_rect(fill = "transparent"), 
-        legend.title = element_text(family = "Consolas", size = 16, color = "#e0cdbf"),
-        legend.text = element_text(family = "Consolas", size = 14, color = "#e0cdbf"),
-        axis.text.x = element_text(size = 14, color = "#e0cdbf"),
-        axis.text.y = element_text(size = 14, color = "#e0cdbf"),
-        axis.title.x = element_text(vjust = -1),
-        legend.background = element_rect(fill = "transparent")
-        
-        
-      ) +
-      guides(size = 'none') +
-      labs(title = "Zależność Między Ilością kropek a Ilością Linijek Tekstu", x = "Ilość Kropek", y = "Ilość Linii")
+    kolor <- c(kolory_word[3], kolory_word[2], kolory_word[1])
+    df <- word %>% 
+      filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2]) %>% 
+      select(Ilosc.kropek, Ilosc.słow., Ilosc.przecinkow, Imie)
+    plot_ly(data = df %>% 
+            filter(Ilosc.kropek <= 500),
+            x = ~Ilosc.kropek,
+            y = ~Ilosc.przecinkow,
+            type = 'scatter',
+            size = ~Ilosc.słow.,
+            color = ~Imie,
+            colors = kolor,
+            mode = 'markers'
+    )%>%
+      layout(
+        font = list(family = "FuturaMedium", color = "white", size = 14),
+        title = list(text = "Zależność Między Kropkami i Przecinkami", font = list(size = 22)),
+        xaxis = list(title = list(text= "Ilość Kropek", font = list(size = 18))),
+        yaxis = list(title = list(text= "Ilość Przecinków", font = list(size = 18))),
+        showlegend = list(show = TRUE),
+        margin = list(t = 40),
+        plot_bgcolor = "rgba(0,0,0,0)",
+        paper_bgcolor = "rgba(0,0,0,0)"
+      ) %>% 
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
     
   })
 
-  observe({
-    output$wykres3 <- renderPlot({
-      if (is.null(input$wybor_zmiennych)) {
-        print(initial_plot)
-      } else {
-        print(reactive_plot())
-      }
-    }, bg = "transparent")
-  })
 
   #-----------------------------------------------------------------------------
   # Wykresy MATLAB
@@ -852,62 +883,204 @@ server <- function(input, output, session) {
   #-----------------------------------------------------------------------------
 
   ### podsumowanie -> wykres numer 1--------------------------------------------
-  output$Podsumowanie_wykres1 <- renderPlot({
+  output$Podsumowanie_wykres1 <- renderPlotly({
+    
     df <- podsumowanie_wykres1
-    df <- podsumowanie_wykres1 %>% 
-      filter(Imie == input$podsumowanie_11)
     df$year <- as.integer(df$year)
     df$month <- as.integer(df$month)
     df$data <- as.Date(paste(df$year, "-", df$month, "-01", sep = ""), format = "%Y-%m-%d")
     df <- df %>% 
-      filter(data >= input$podsumowanie_1[1] & data <= input$podsumowanie_1[2]) %>% 
-      arrange(month)%>% 
-      arrange(year) 
+      arrange(month) %>% 
+      arrange(year) %>% 
+      filter(data >= input$data[1] & data <= input$data[2]) %>% 
+      filter(Imie == input$podsumowanie_11)
+    df <- df %>% 
+      mutate( nn = 
+                case_when(
+                  Rozszerzenie == "docx" ~ n,
+                  Rozszerzenie == "m" & month < 9 & year == 2023 ~ NA,
+                  Rozszerzenie == "java" & year < 2023 ~ NA,
+                  Rozszerzenie == "m" & year < 2023 ~ NA,
+                  TRUE ~ n
+                )
+      )
+    df <- df[complete.cases(df[, "nn"]), ]
     
-    ggplot(df, aes(x = data, y = n, group = Rozszerzenie, color = Rozszerzenie)) +
-      geom_line(size = 1) +
-      geom_ribbon(aes(ymax = n, ymin = 0, fill = Rozszerzenie), alpha = 0.4) +
-      theme_minimal() +
-      scale_color_manual(values = c("docx" = "#ef2009", "java" = "#ffd200", "m" = "#ff00d2")) +
-      scale_fill_manual(values = c("docx" = "#fb6e5f", "java" = "#fbe995", "m" = "#feadf0")) +
-      theme(
-        plot.background = element_rect(fill = "transparent"),
-        panel.background = element_rect(fill = "transparent"),
-        panel.grid.major = element_line(size = 0.2, color = "#ffdba9"),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(family = "Consolas", size = 22, hjust = 0.5, colour = "#ffdba9"),
-        axis.title = element_text(family = "Consolas", size = 16, color = "#ffeca9"),
-        axis.text.x = element_text(size = 14, color = "#ffeca9"),
-        axis.text.y = element_text(size = 14, color = "#ffeca9"),
-        panel.border = element_blank(),
-        legend.text = element_text(color = "#ffeca9"),
-        legend.title = element_text(color = "#ffeca9"),
-        rect = element_rect(colour = "#232323")
-      ) +
-      labs(title = "Tworzenie Plików o Danym Rozszerzeniu", x = "Czas", y = "Ilość Utworzonych Plików")
+    df1 <- df %>% 
+      filter(Rozszerzenie == "java")
     
-  }, bg = "transparent")
-  
+    df2 <- df %>% 
+      filter(Rozszerzenie == "docx")
+    
+    df3 <- df %>% 
+      filter(Rozszerzenie == "m")
+    
+    w <- plot_ly()
+    w %>% 
+      add_trace(x = df1$data, y = df1$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[2]), color = "java", hoverinfo = "none")%>% 
+      add_trace(x = c(df1$data, rev(df1$data)), y = c(df1$nn, rep(min(df1$nn), length(df1$nn))),
+                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[5], showlegend = FALSE, hoverinfo = "none") %>% 
+      add_trace(x = df2$data, y = df2$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[1]), color = "docx", hoverinfo = "none") %>% 
+      add_trace(x = c(df2$data, rev(df2$data)), y = c(df2$nn, rep(min(df2$nn), length(df2$nn))),
+                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[4], showlegend = FALSE, hoverinfo = "none") %>% 
+      add_trace(x = df3$data, y = df3$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[3]), color = "m", hoverinfo = "none") %>% 
+      add_trace(x = c(df3$data, rev(df3$data)), y = c(df3$nn, rep(min(df3$nn), length(df3$nn))),
+                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[6], showlegend = FALSE, hoverinfo = "none") %>% 
+      layout(
+        font = list(family = "FuturaMedium", color = "white", size = 14),
+        title = list(text = "Tworzenie Plików o Danym Rozszerzeniu", font = list(size = 22)),
+        xaxis = list(title = list(text= "Czas", font = list(size = 18))),
+        yaxis = list(title = list(text= "Ilość Utworzonych Plików", font = list(size = 18))),
+        margin = list(t = 40),
+        plot_bgcolor = "rgba(0,0,0,0)",
+        paper_bgcolor = "rgba(0,0,0,0)"
+      ) %>% 
+      config(displayModeBar = FALSE,
+            locale = 'pl') 
+    
+  })
   
   ### podsumowanie -> wykres numer 2 -------------------------------------------
   
   
-  output$Podsumowanie_wykres2 <- renderPlot({
+  output$Podsumowanie_wykres2 <- renderPlotly({
     
     df1 <- podsumowanie_wykres2 %>% 
-      filter(Imie == input$podsumowanie_2)
-    kolory <- c("#d71528", "#f38b2c", "#f8c01a")
+      filter(Imie == input$podsumowanie_2) %>% 
+      filter(data >= input$data[1] & data <= input$data[2]) %>% 
+      group_by(Rozszerzenie) %>% 
+      summarise(n = n())
     
-    treemap(
-      df1,
-      index = "Rozszerzenie",
-      vSize = "n",
-      #type = "index",
-      #vColor = "Rozszerzenie",
-      palette = kolory
+    df1$Procent <- (df1$n / sum(df1$n)) * 100
+    
+    plot_ly(
+      data = df1,
+      labels = ~Rozszerzenie,
+      parents = ~"",
+      values = ~n,
+      type = "treemap",
+      marker = list(
+        colors = c(kolory_ogolny[1], kolory_ogolny[2], kolory_ogolny[3]),
+        line = list(width = 1, color = "white")
+      ),
+      hoverinfo = 'text',
+      hovertext = ~paste('Rozszerzenie: ', Rozszerzenie, '<br>Procent: ', round(Procent, 2), '%'),
+      textposition = "none"
+    ) %>%
+      layout(
+        font = list(family = "FuturaMedium", color = "white", size = 14),
+        title = list(text = "Jak Rozkładają Się Pliki na Naszych Komputerach?", font = list(size = 22)),
+        margin = list(t = 40),
+        treemapcolorway = c(kolory_ogolny[1], kolory_ogolny[2], kolory_ogolny[3]),
+        plot_bgcolor = "rgba(0,0,0,0)",
+        paper_bgcolor = "rgba(0,0,0,0)"
+      ) %>% 
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
+    
+  })
+  
+  
+  #---------------------------------
+  
+  output$tekst_ogolny <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 22, "px;",
+      "color: ", "#7ed987", ";",
+      "background-color: rgba(0, 0, 0, 0);",
+      "border: rgba(0, 0, 0, 0);",
+      "padding: 10px;",
+      "margin-top: 10px;",
+      "text-align: justify;"
     )
+    text <- "Witamy w zakładce Ogólne! Tutaj znajdziesz szczegółowe informacje dotyczące tworzonych przez nas plików. Aby uzyskać bardziej precyzyjne dane, skorzystaj z suwaka po prawej stronie i wybierz interesujący Cię przedział czasowy."
+    div(style = text_style, HTML(text))
+  })
+  
+  output$tekst_podsumowanie_1 <- renderUI({
+
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#48e0ab", ";",
+      "background-color: rgba(0, 0, 0, 0);",
+      "border: rgba(0, 0, 0, 0);",
+      "margin-top: 70px;",
+      "padding: 10px;"
+    )
+    text <- "Na wykresie obserwujemy ilość plików utworzonych przez nas z podziałem na różne rozszerzenia. Po wyborze konkretnej osoby możliwe jest prześledzenie historii tworzenia plików przez daną osobę. Wyraźnie widać, kiedy zaczęliśmy intensywnie tworzyć pliki z rozszerzeniem Matlab i Java.
+    W kolejnych zakładkach dostępne są bardziej szczegółowe dane dotyczące tworzenia plików dla każdego z rozszerzeń, co pozwala na dokładniejszą analizę."
+    div(style = text_style, HTML(text))
+  })
+
+  output$tekst_podsumowanie_2 <- renderUI({
+
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#48e0ab", ";",
+      "background-color: rgba(0, 0, 0, 0);",
+      "border: rgba(0, 0, 0, 0);",
+      "margin-top: 60px;",
+      "padding: 10px;"
+    )
+    text <- "Na wykresie porównujemy ilość plików z różnymi rozszerzeniami, umożliwiając identyfikację dominującego formatu plików. Po najechaniu na konkretne pole wykresu uzyskujemy informację o procentowym udziale plików z danym rozszerzeniem. Zauważalne jest, że u Małgosi przeważają pliki Java, podczas gdy u Sebastiana utrzymane są najbardziej zrównoważone proporcje między różnymi formatami plików."
+    div(style = text_style, HTML(text))
+  })
+
+
+  output$tekst_word_1 <- renderUI({
+
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 40px;",
+      "text-align: justify;"
+    )
+    text <- "Pierwszy wykres prezentuje ilość utworzonych plików przez każdą osobę z naszej grupy. Dane dotyczą liczby plików stworzonych w poszczególnych miesiącach i latach. Przy najeżdżaniu kursorem na konkretną kolumnę możliwe jest uzyskanie szczegółowych informacji na temat ilości utworzonych plików w poszczególnych dniach.
+            Zauważalne jest, że Mikołaj regularnie korzysta z programu Word przez wiele lat. Natomiast Sebastian i Małgosia tworzyli pliki głownie w latach 2019 - 2021."
+    div(style = text_style, HTML(text))
+  })
+
+  output$tekst_word_2 <- renderUI({
     
-  }, bg = "transparent")
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 70px;",
+      "text-align: justify;"
+    )
+    text <- "Na wykresie po prawej stronie dostępne są informacje dotyczące najczęściej używanych znaków interpunkcyjnych. Dane obejmują okres czasu wybrany za pomocą suwaka umieszczonego w pasku po prawej stronie. Warto zauważyć, że wśród najpopularniejszych znaków interpunkcyjnych dominują przede wszystkim kropki i przecinki. Kategoria 'pozostałe' obejmuje znaki takie jak wielokropki, średniki i cudzysłowia.
+            Analizując okres od 2017 do 2023 roku, zauważamy, że u Małgosi i Mikołaja najwięcej używanych jest przecinków, natomiast u Sebastiana przeważają kropki."
+    div(style = text_style, HTML(text))
+  })
+  
+  output$tekst_word_3 <- renderUI({
+
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 40px;",
+      "text-align: justify;"
+    )
+    text <- "Na ostatnim wykresie dokładniej przeanalizowaliśmy zależności pomiędzy najczęściej używanymi przez nas znakami interpunkcyjnymi. Każda kropka na tym wykresie reprezentuje jeden plik. Dodatkowo, rozmiar kropki odzwierciedla liczbę słów w danym pliku - im większa kropka, tym dłuższy tekst."
+    div(style = text_style, HTML(text))
+  })
+  
 
   #-----------------------------------------------------------------------------
   # Zmiana stylu
@@ -1381,7 +1554,7 @@ app_ui <- dashboardPage(
     sidebarMenu(uiOutput('style_ogol'),
                 uiOutput('style_css'),
                 id = "menu", sidebarMenuOutput("menu"),
-                menuItem("Podsumowanie", tabName = "Podsumowanie",
+                menuItem("Ogólny", tabName = "Ogólny",
                          icon = icon("home")),
                 menuItem("Java", tabName = "Java",
                          icon = icon("java")),
@@ -1393,16 +1566,16 @@ app_ui <- dashboardPage(
     sliderInput(
       inputId = "data",
       label = "Ustaw przedział czasu",
-      min = min(df$Data_ostatniej_modefikacji),
-      max = max(df$Data_ostatniej_modefikacji),
-      value = c(min(df$Data_ostatniej_modefikacji), max(df$Data_ostatniej_modefikacji))
+      min = min(as.Date(word_wykres1$Data.utworzenia.pliku)),
+      max = max(as.Date(podsumowanie_wykres2$data)),
+      value = c(as.Date(min(as.Date(df$Data_ostatniej_modefikacji))), as.Date(max(as.Date(podsumowanie_wykres2$data))))
     ),
     width = 250
   ),
   #-----------------------------------------------------------------------------
   # Koniec panelu zarządzania
   #-----------------------------------------------------------------------------
-  
+  #style = "margin-bottom: 80px; margin-left: 20px; margin-top: 80x;"
   dashboardBody(
     theme_default,
     tags$style(type="text/css",
@@ -1415,23 +1588,36 @@ app_ui <- dashboardPage(
       # Panel ogólny
       #-------------------------------------------------------------------------
       tabItem(
-        tabName = "Podsumowanie",
+        tabName = "Ogólny",
         fluidRow(
-          column(width = 10, style = "margin-bottom: 80px; margin-left: 20px;",
-                 selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
-                 sliderInput(
-                   inputId = "podsumowanie_1",
-                   label = "Ustaw przedział czasu",
-                   min = as.Date("2018-01-01"),
-                   max = as.Date("2024-01-01"),
-                   value = c(as.Date("2018-01-01"), as.Date("2024-01-01"))
-                 ),
-                 plotOutput("Podsumowanie_wykres1"))
+          column(width = 8,
+                 wellPanel(
+                   style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+                   uiOutput("tekst_ogolny")
+                 ))
         ),
         fluidRow(
-          column(width = 8, style = "margin-left: 20px;",
+          column(width = 8,
+                 selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
+                 plotlyOutput("Podsumowanie_wykres1")
+                 ),
+          column(width = 4,
+                 wellPanel(
+                   style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+                   uiOutput("tekst_podsumowanie_1")
+                 ))
+        ),
+        fluidRow(
+          column(width = 8,
                  selectInput("podsumowanie_2", "Wybierz Imię", zmienne),
-                 plotOutput("Podsumowanie_wykres2")))
+                 plotlyOutput("Podsumowanie_wykres2")
+                 ),
+          column(width = 4,
+                 wellPanel(
+                   style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+                   uiOutput("tekst_podsumowanie_2")
+                 ))
+          )
       ),
       #-------------------------------------------------------------------------
       # Koniec panelu ogólnego
@@ -1521,32 +1707,53 @@ app_ui <- dashboardPage(
       #-------------------------------------------------------------------------
       tabItem(
         tabName = "Word",
-        
+        fluidRow(style = "margin-bottom: 20px; margin-left: 20px;",
+                 box(title = "Word")),
         fluidRow(
+          style = "margin-bottom: 80px; margin-top: 40px;",
           column(
-            width = 12,
-            selectInput("zmienna",
-                        "Wybierz Imię",
-                        zmienne),
-            plotOutput("wykres1_1")
+            width = 8,
+            plotlyOutput("wykres1_1")
+          ),
+          column(
+            width = 4,
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              uiOutput("tekst_word_1")
+            )
           )
           
         ),
         fluidRow(
+          style = "margin-bottom: 40px; margin-top: 40px;",
           column(
-            width = 12,
+            width = 4,
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              uiOutput("tekst_word_2")
+            )
+          ),
+          column(
+            width = 8,
             selectInput("zmienna",
                         "Wybierz Imię",
                         zmienne),
-            plotOutput("wykres2")
+            plotlyOutput("wykres2", height = "500px")
           )
           
         ),
         fluidRow(
+          style = "margin-bottom: 40px; margin-top: 40px;",
           column(
-            width = 12,
-            checkboxGroupInput("wybor_zmiennych", "Wybierz Imię (Imiona)", choices = zmienne),
-            plotOutput("wykres3")
+            width = 8,
+            plotlyOutput("wykres3")
+          ),
+          column(
+            width = 4,
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              uiOutput("tekst_word_3")
+            )
           )
           
         )
@@ -1622,3 +1829,4 @@ app_ui <- dashboardPage(
 )
 
 shinyApp(app_ui, server)
+
