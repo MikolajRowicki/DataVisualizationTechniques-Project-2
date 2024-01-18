@@ -1,9 +1,6 @@
 #setwd("C:\\Users\\HP\\R\\TWD_semestr3\\DataVisualizationTechniques-Project-2\\aplikacja")
 
 library(dplyr)
-library(treemap)
-library(plotly)
-
 ### pierwszy wykres -> zakładka ogólna
 
 
@@ -55,39 +52,26 @@ java5 <- java5 %>%
   select(Imie, data, Rozszerzenie)
 
 java <- rbind(java1, java2, java3, java4, java5)
-
-df <- rbind(java, matlab, word)
-
-
-
-df$month <- as.integer(substring(df$data, 6, 7))
-df$year <- as.integer(substring(df$data, 1, 4))
-df$month <- sprintf("%d", df$month)
+x <- rbind(java, matlab, word)
+###write.csv(x, "ogolny_wykres2.csv")
+x$month <- as.integer(substring(x$data, 6, 7))
+x$year <- as.integer(substring(x$data, 1, 4))
+x$month <- sprintf("%d", x$month)
 
 
-df <- df %>% 
+x <- x %>% 
   select(year, month, Rozszerzenie, Imie) %>% 
   group_by(year, month, Rozszerzenie, Imie) %>% 
   summarise(n = n())
-full <- expand.grid(year = unique(df$year), Imie = unique(df$Imie), Rozszerzenie = unique(df$Rozszerzenie), month = 1:12)
-df <- merge(df, full, by = c("year", "month", "Imie", "Rozszerzenie"), all = TRUE)
-df[is.na(df)] <- 0
-df$year <- as.integer(df$year)
-df$month <- as.integer(df$month)
-df <- df %>% 
-  arrange(month)%>% 
-  arrange(year)
+full <- expand.grid(year = unique(x$year), Imie = unique(x$Imie), Rozszerzenie = unique(x$Rozszerzenie), month = 1:12)
+x <- merge(x, full, by = c("year", "month", "Imie", "Rozszerzenie"), all = TRUE)
+x$year <- as.integer(x$year)
+x$month <- as.integer(x$month)
+x[is.na(x)] <- 0
 
-#write.csv(df, "ogolny_wykres1.csv")
+
+
+write.csv(x, "ogolny_wykres1.csv")
 
 ### drugi wykres -> rozkład plików dla danej osoby
-
-df1 <- rbind(java, matlab, word)
-df1 <- df1 %>% 
-  select(Imie, Rozszerzenie) %>% 
-  group_by(Imie, Rozszerzenie) %>% 
-  summarise(n = n())
-
-#write.csv(df1, "ogolny_wykres2.csv")
-
 
