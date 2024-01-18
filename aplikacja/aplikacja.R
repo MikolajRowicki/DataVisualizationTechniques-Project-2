@@ -1566,7 +1566,7 @@ app_ui <- dashboardPage(
     sliderInput(
       inputId = "data",
       label = "Ustaw przedział czasu",
-      min = min(as.Date(word_wykres1$Data.utworzenia.pliku)),
+      min = min(as.Date(word$Data.utworzenia.pliku)),
       max = max(as.Date(podsumowanie_wykres2$data)),
       value = c(as.Date(min(as.Date(df$Data_ostatniej_modefikacji))), as.Date(max(as.Date(podsumowanie_wykres2$data))))
     ),
