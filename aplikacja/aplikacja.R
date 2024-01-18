@@ -68,6 +68,7 @@ kolor_przewodni_java <- c('#fc0703', '#03a1fc')
 kolor_przewodni_word <- c('#1B5EBE', '#41A5EE')
 kolor_przewodni_matlab <- c('#ed9242', '#fcf647')
 # styl domyślny ----
+kolor_tla <- "#232323"
 theme_default <- shinyDashboardThemeDIY(
   
   ### general
@@ -78,7 +79,7 @@ theme_default <- shinyDashboardThemeDIY(
     ,successFontColor = "#434C5E"
     ,warningFontColor = "#434C5E"
     ,dangerFontColor = "#434C5E"
-    ,bodyBackColor = "#232323" 
+    ,bodyBackColor = kolor_tla 
     
   ### header
   ,logoBackColor = "#151515" 
@@ -98,7 +99,7 @@ theme_default <- shinyDashboardThemeDIY(
     direction = "down"
     ,colorStart = "#151515"
     ,colorMiddle = "#151515"
-    ,colorEnd = "#232323"
+    ,colorEnd = kolor_tla
     ,colorStartPos = 0
     ,colorMiddlePos = 50
     ,colorEndPos = 100
@@ -154,17 +155,17 @@ theme_default <- shinyDashboardThemeDIY(
   ,sidebarTabRadiusHover = "20px"
   
   ### boxes
-  ,boxBackColor = "#232323" 
+  ,boxBackColor = kolor_tla 
     ,boxBorderRadius = 5
   ,boxShadowSize = "0px 0px 0px"
   ,boxShadowColor = ""
   ,boxTitleSize = 18
-  ,boxDefaultColor = "#232323"
-    ,boxPrimaryColor = "#232323"
-    ,boxInfoColor = "#232323"
-    ,boxSuccessColor = "#232323"
-    ,boxWarningColor = "#232323"
-    ,boxDangerColor = "#232323"
+  ,boxDefaultColor = kolor_tla
+    ,boxPrimaryColor = kolor_tla
+    ,boxInfoColor = kolor_tla
+    ,boxSuccessColor = kolor_tla
+    ,boxWarningColor = kolor_tla
+    ,boxDangerColor = kolor_tla
     
   ,tabBoxTabColor = "#151515"
     ,tabBoxTabTextSize = 16
@@ -181,7 +182,7 @@ theme_default <- shinyDashboardThemeDIY(
     ,buttonBorderRadius = 5
   
   ,buttonBackColorHover = "#151515"
-    ,buttonTextColorHover = "#232323"
+    ,buttonTextColorHover = kolor_tla
     ,buttonBorderColorHover = "#2E3440"
     
   ,textboxBackColor = "#151515" 
@@ -674,8 +675,8 @@ server <- function(input, output, session) {
       layout(title = title, 
              xaxis = list(title = "Autor"), 
              yaxis = list(title = "Procent operatorów zapisanych ze spacjami wokół"), 
-             plot_bgcolor = "#232323",  # Kolor tła wykresu
-             paper_bgcolor = "#232323",
+             plot_bgcolor = kolor_tla,  # Kolor tła wykresu
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              aspectratio = list(x = 1, y = 1)  # Ustawienie stosunku osi X do Y
       )
@@ -757,8 +758,8 @@ server <- function(input, output, session) {
       layout(title = title, 
              xaxis = list(title = "Liczba wierszy, które powinny się kończyć średnikiem"), 
              yaxis = list(title = "Liczba wierszy, które kończą się średnikiem"),
-             plot_bgcolor = "#232323",  # Kolor tła wykresu
-             paper_bgcolor = "#232323",
+             plot_bgcolor = kolor_tla,  # Kolor tła wykresu
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              aspectratio = list(x = 1, y = 1),  # Ustawienie stosunku osi X do Y
              xaxis = list(scaleanchor = "y", scaleratio = 1),  # Ustawienie skali osi X# Kolor tekstu
@@ -832,8 +833,8 @@ server <- function(input, output, session) {
       layout(title = "Liczba znaków w niepustym wierszu", 
              yaxis = list(title = "Średnia liczba znaków w niepustym wierszu"), 
              xaxis = list(title = "Autor"),
-             plot_bgcolor = "#232323",  # Kolor tła wykresu
-             paper_bgcolor = "#232323",
+             plot_bgcolor = kolor_tla,  # Kolor tła wykresu
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              grid = list(
                gridwidth = 5,  # Grubość siatki
@@ -899,8 +900,8 @@ server <- function(input, output, session) {
       layout(title = "Jaką część pliku stanowią komentarze?",
              xaxis = list(title = "Autor"),
              yaxis = list(title = "Stosunek długości komenatrzy do długości pliku"),
-             plot_bgcolor = "#232323",
-             paper_bgcolor = "#232323",
+             plot_bgcolor = kolor_tla,
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              aspectratio = list(x = 1, y = 1),
              xaxis2 = list(domain = c(0.8, 1), anchor = "y2"),
@@ -1134,7 +1135,7 @@ server <- function(input, output, session) {
           ,successFontColor = "#434C5E"
           ,warningFontColor = "#434C5E"
           ,dangerFontColor = "#434C5E"
-          ,bodyBackColor = "#232323" 
+          ,bodyBackColor = kolor_tla
           
         ### header
         ,logoBackColor = "#151515" 
@@ -1149,7 +1150,15 @@ server <- function(input, output, session) {
         ,headerBoxShadowSize = "0px 0px 0px"
         
         ### sidebar
-        ,sidebarBackColor = "#151515"
+        ,sidebarBackColor = cssGradientThreeColors(
+          direction = "down"
+          ,colorStart = "#151515"
+            ,colorMiddle = "#151515"
+            ,colorEnd = kolor_tla
+          ,colorStartPos = 0
+          ,colorMiddlePos = 50
+          ,colorEndPos = 100
+        )
           ,sidebarPadding = 0
         
         ,sidebarMenuBackColor = "transparent"
@@ -1183,17 +1192,17 @@ server <- function(input, output, session) {
         ,sidebarTabRadiusHover = "20px"
         
         ### boxes
-        ,boxBackColor = "#232323" 
+        ,boxBackColor = kolor_tla
           ,boxBorderRadius = 5
         ,boxShadowSize = "0px 0px 0px"
         ,boxShadowColor = ""
         ,boxTitleSize = 18
-        ,boxDefaultColor = "#232323"
-          ,boxPrimaryColor = "#232323"
-          ,boxInfoColor = "#232323"
-          ,boxSuccessColor = "#232323"
-          ,boxWarningColor = "#232323"
-          ,boxDangerColor = "#232323"
+        ,boxDefaultColor = kolor_tla
+          ,boxPrimaryColor = kolor_tla
+          ,boxInfoColor = kolor_tla
+          ,boxSuccessColor = kolor_tla
+          ,boxWarningColor = kolor_tla
+          ,boxDangerColor = kolor_tla
           
         ,tabBoxTabColor = "#151515"
           ,tabBoxTabTextSize = 16
@@ -1210,7 +1219,7 @@ server <- function(input, output, session) {
           ,buttonBorderRadius = 5
         
         ,buttonBackColorHover = "#151515"
-          ,buttonTextColorHover = "#232323"
+          ,buttonTextColorHover = kolor_tla
           ,buttonBorderColorHover = "#2E3440"
           
         ,textboxBackColor = "#151515" 
@@ -1237,7 +1246,7 @@ server <- function(input, output, session) {
           ,successFontColor = "#434C5E"
           ,warningFontColor = "#434C5E"
           ,dangerFontColor = "#434C5E"
-          ,bodyBackColor = "#232323" 
+          ,bodyBackColor = kolor_tla 
           
         ### header
         ,logoBackColor = "#151515" 
@@ -1252,7 +1261,15 @@ server <- function(input, output, session) {
         ,headerBoxShadowSize = "0px 0px 0px"
         
         ### sidebar
-        ,sidebarBackColor = "#151515"
+        ,sidebarBackColor = cssGradientThreeColors(
+          direction = "down"
+          ,colorStart = "#151515"
+            ,colorMiddle = "#151515"
+            ,colorEnd = kolor_tla
+          ,colorStartPos = 0
+          ,colorMiddlePos = 50
+          ,colorEndPos = 100
+        )
           ,sidebarPadding = 0
         
         ,sidebarMenuBackColor = "transparent"
@@ -1286,17 +1303,17 @@ server <- function(input, output, session) {
         ,sidebarTabRadiusHover = "20px"
         
         ### boxes
-        ,boxBackColor = "#232323" 
-          ,boxBorderRadius = 5
+        ,boxBackColor = kolor_tla
+        ,boxBorderRadius = 5
         ,boxShadowSize = "0px 0px 0px"
         ,boxShadowColor = ""
         ,boxTitleSize = 18
-        ,boxDefaultColor = "#232323"
-          ,boxPrimaryColor = "#232323"
-          ,boxInfoColor = "#232323"
-          ,boxSuccessColor = "#232323"
-          ,boxWarningColor = "#232323"
-          ,boxDangerColor = "#232323"
+        ,boxDefaultColor = kolor_tla
+        ,boxPrimaryColor = kolor_tla
+        ,boxInfoColor = kolor_tla
+        ,boxSuccessColor = kolor_tla
+        ,boxWarningColor = kolor_tla
+        ,boxDangerColor = kolor_tla
           
         ,tabBoxTabColor = "#151515"
           ,tabBoxTabTextSize = 16
@@ -1313,7 +1330,7 @@ server <- function(input, output, session) {
           ,buttonBorderRadius = 5
         
         ,buttonBackColorHover = "#151515"
-          ,buttonTextColorHover = "#232323"
+          ,buttonTextColorHover = kolor_tla
           ,buttonBorderColorHover = "#2E3440"
           
         ,textboxBackColor = "#151515" 
@@ -1340,7 +1357,7 @@ server <- function(input, output, session) {
           ,successFontColor = "#434C5E"
           ,warningFontColor = "#434C5E"
           ,dangerFontColor = "#434C5E"
-          ,bodyBackColor = "#232323" 
+          ,bodyBackColor = kolor_tla
           
         ### header
         ,logoBackColor = "#151515" 
@@ -1355,7 +1372,15 @@ server <- function(input, output, session) {
         ,headerBoxShadowSize = "0px 0px 0px"
         
         ### sidebar
-        ,sidebarBackColor = "#151515"
+        ,sidebarBackColor = cssGradientThreeColors(
+          direction = "down"
+          ,colorStart = "#151515"
+            ,colorMiddle = "#151515"
+            ,colorEnd = kolor_tla
+          ,colorStartPos = 0
+          ,colorMiddlePos = 50
+          ,colorEndPos = 100
+        )
           ,sidebarPadding = 0
         
         ,sidebarMenuBackColor = "transparent"
@@ -1389,17 +1414,17 @@ server <- function(input, output, session) {
         ,sidebarTabRadiusHover = "20px"
         
         ### boxes
-        ,boxBackColor = "#232323" 
-          ,boxBorderRadius = 5
+        ,boxBackColor = kolor_tla
+        ,boxBorderRadius = 5
         ,boxShadowSize = "0px 0px 0px"
         ,boxShadowColor = ""
         ,boxTitleSize = 18
-        ,boxDefaultColor = "#232323"
-          ,boxPrimaryColor = "#232323"
-          ,boxInfoColor = "#232323"
-          ,boxSuccessColor = "#232323"
-          ,boxWarningColor = "#232323"
-          ,boxDangerColor = "#232323"
+        ,boxDefaultColor = kolor_tla
+        ,boxPrimaryColor = kolor_tla
+        ,boxInfoColor = kolor_tla
+        ,boxSuccessColor = kolor_tla
+        ,boxWarningColor = kolor_tla
+        ,boxDangerColor = kolor_tla
           
         ,tabBoxTabColor = "#151515"
           ,tabBoxTabTextSize = 16
@@ -1416,7 +1441,7 @@ server <- function(input, output, session) {
           ,buttonBorderRadius = 5
         
         ,buttonBackColorHover = "#151515"
-          ,buttonTextColorHover = "#232323"
+          ,buttonTextColorHover = kolor_tla
           ,buttonBorderColorHover = "#2E3440"
           
         ,textboxBackColor = "#151515" 
@@ -1435,7 +1460,7 @@ server <- function(input, output, session) {
     return(theme_default)
   })
   
-  # styl wybranych komponentów !WORK IN PROGRESS!----
+  # styl wybranych komponentów----
   output$style_css <- renderUI({
     # word page style----
     if(input$menu=='Word')
@@ -1500,6 +1525,9 @@ server <- function(input, output, session) {
     .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
     border-color: #41A5EE;
     background: #151515;
+    }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #41A5EE;
     }
     
     /* fixed sidebar and header */
@@ -1578,6 +1606,9 @@ server <- function(input, output, session) {
     border-color: #03a1fc;
     background: #151515;
     }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #03a1fc;
+    }
     
     /* fixed sidebar and header */
     .sidebar {
@@ -1655,6 +1686,9 @@ server <- function(input, output, session) {
     border-color: #fcf647;
     background: #151515;
     }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #fcf647;
+    }
     
     /* fixed sidebar and header */
     .sidebar {
@@ -1730,6 +1764,9 @@ server <- function(input, output, session) {
     .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
     border-color: #47fcf6;
     background: #151515;
+    }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #47fcf6;
     }
     
     /* fixed sidebar and header */
