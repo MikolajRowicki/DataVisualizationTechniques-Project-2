@@ -15,6 +15,9 @@ library(treemap)
 ################################################################################
 # Przygotowywane danych
 ################################################################################
+# java
+# df_test <- read.csv("Test_java.csv")
+# df_test <- read.csv("Test2_java.csv")
 df1 <- read.csv("Sebastian_java.csv")
 df2 <- read.csv("Sebastian2_java.csv")
 df3 <- read.csv("Sebastian3_java.csv")
@@ -23,21 +26,26 @@ df3$Imie <- "Sebastian"
 df4 <- read.csv("Mikolaj_java.csv")
 df5 <- read.csv("Malgosia_java.csv")
 df <- bind_rows(df1, df2, df3, df4, df5)
+df[is.na(df)] <- 0
 df$Data_ostatniej_modefikacji <- as.Date(substr(df$Data_ostatniej_modefikacji,1,10))
-colnames(df)[which(names(df) == "if.")] <- "if"
+colnames(df)[which(names(df) == "break.")] <- "break"
 colnames(df)[which(names(df) == "else.")] <- "else"
+colnames(df)[which(names(df) == "for.")] <- "for"
+colnames(df)[which(names(df) == "if.")] <- "if"
+colnames(df)[which(names(df) == "non.sealed")] <- "non-sealed"
+colnames(df)[which(names(df) == "while.")] <- "while"
+java_keyword_list <- sort(colnames(df)[15:45])
+kolory_java <- c('#5382a1', '#f89820', '#fc0703', '#DD4B39', '#1666de', '#03a1fc')
+
+# word
 malgosia_word <- read.csv("Malgosia-word.csv")
 sebastian_word <- read.csv("Sebastian-word.csv")
 mikolaj_word <- read.csv("Mikolaj-word.csv")
 word <- rbind(malgosia_word, mikolaj_word, sebastian_word)
-# kolory_java <- c(java_blue, java_orange, hot_red, mellow_red, pronounced_blue, mellow_blue)
-kolory_java <- c('#5382a1', '#f89820', '#fc0703', '#DD4B39', '#1666de', '#03a1fc')
-kolory_word <- c("#7780f8", "#0a2051", "#39bacc", "#78dfd0", "#2929b3")
-kolory_ogolny <- c("#0d5630", "#6b3c02", "#1b0952", "#6af1ab", "#f7be79", "#64b5f8")
-
-
 zmienne <- c("Mikolaj", "Sebastian", "Malgosia")
+kolory_word <- c("#7780f8", "#0a2051", "#39bacc", "#78dfd0", "#2929b3")
 
+# matlab
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
 sebastian_matlab <- read.csv("Sebastian_matlab.csv")
 malgosia_matlab <- read.csv("Malgosia_matlab.csv")
@@ -51,8 +59,10 @@ sebastian_matlab <- sebastian_matlab %>%
 malgosia_matlab <- malgosia_matlab %>%
   rename(Liczba.operatorow = Liczba.operatorów..........................)
 
+# zakładka domowa
 podsumowanie_wykres1 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres1.csv")
 podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres2.csv")
+kolory_ogolny <- c("#0d5630", "#6b3c02", "#1b0952", "#6af1ab", "#f7be79", "#64b5f8")
 
 kolor_przewodni_java <- c('#fc0703', '#03a1fc')
 kolor_przewodni_word <- c('#1B5EBE', '#41A5EE')
@@ -278,7 +288,8 @@ server <- function(input, output, session) {
              xaxis = list(fixedrange = TRUE,
                           title = "Osoba"),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba komentarzy"),
+                        title = "Liczba komentarzy",
+                        gridcolor = "grey"),
              legend = list(
                itemclick = FALSE,
                itemdoubleclick = FALSE,
@@ -326,7 +337,8 @@ server <- function(input, output, session) {
              xaxis = list(fixedrange = TRUE,
                           title = "Osoba"),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba znaków"),
+                        title = "Liczba znaków",
+                        gridcolor = "grey"),
              legend = list(
                itemclick = FALSE,
                itemdoubleclick = FALSE,
@@ -426,6 +438,27 @@ server <- function(input, output, session) {
                     style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
              tags$p("linijek napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
              color = "red")    
+  })
+  # Wykres 10 ------------------------------------------------------------------
+  output$JavaWykres10 <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 15, "px;",
+      "color: ", "white", ";",
+      "background-color:", "#DD4B39", ";",
+      "border:", "#fc0703", ";",
+      "padding: 10px;",
+      "margin-top: 10px;",
+      "text-align: justify;"
+    )
+    text <- "Wykres przedstawia liczbę utworzonych plików z rozszerzeniem
+                     .java w czasie. Klikając na legendę można wybać osoby, do których
+                      dane będą się odnosić. Po najechaniu na słupek w danym kolorze można
+                     zobaczyć dokładną liczbę utworzonych plików w wybranym miesiącu. Dodatkowo
+                     jeżdżąc kurosrem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
+                     o ilości utworzonych plików z podziałem na dni."
+    div(style = text_style, HTML(text))
   })
 
   #-----------------------------------------------------------------------------
@@ -981,8 +1014,8 @@ server <- function(input, output, session) {
   })
   
   
-  #---------------------------------
   
+  # output$tekst_ogolny----
   output$tekst_ogolny <- renderUI({
     
     text_style <- paste0(
@@ -995,10 +1028,10 @@ server <- function(input, output, session) {
       "margin-top: 10px;",
       "text-align: justify;"
     )
-    text <- "Witamy w zakładce Ogólne! Tutaj znajdziesz szczegółowe informacje dotyczące tworzonych przez nas plików. Aby uzyskać bardziej precyzyjne dane, skorzystaj z suwaka po prawej stronie i wybierz interesujący Cię przedział czasowy."
+    text <- "Witamy na stronie domowej! Tutaj znajdziesz szczegółowe informacje dotyczące tworzonych przez nas plików. Aby uzyskać bardziej precyzyjne dane, skorzystaj z suwaka po prawej stronie i wybierz interesujący Cię przedział czasowy."
     div(style = text_style, HTML(text))
   })
-  
+  # output$tekst_podsumowanie_1----
   output$tekst_podsumowanie_1 <- renderUI({
 
     text_style <- paste0(
@@ -1014,7 +1047,7 @@ server <- function(input, output, session) {
     W kolejnych zakładkach dostępne są bardziej szczegółowe dane dotyczące tworzenia plików dla każdego z rozszerzeń, co pozwala na dokładniejszą analizę."
     div(style = text_style, HTML(text))
   })
-
+  # output$tekst_podsumowanie_2----
   output$tekst_podsumowanie_2 <- renderUI({
 
     text_style <- paste0(
@@ -1030,7 +1063,8 @@ server <- function(input, output, session) {
     div(style = text_style, HTML(text))
   })
 
-
+  
+  # output$tekst_word_1----
   output$tekst_word_1 <- renderUI({
 
     text_style <- paste0(
@@ -1047,7 +1081,7 @@ server <- function(input, output, session) {
             Zauważalne jest, że Mikołaj regularnie korzysta z programu Word przez wiele lat. Natomiast Sebastian i Małgosia tworzyli pliki głownie w latach 2019 - 2021."
     div(style = text_style, HTML(text))
   })
-
+  # output$tekst_word_2----
   output$tekst_word_2 <- renderUI({
     
     text_style <- paste0(
@@ -1064,7 +1098,7 @@ server <- function(input, output, session) {
             Analizując okres od 2017 do 2023 roku, zauważamy, że u Małgosi i Mikołaja najwięcej używanych jest przecinków, natomiast u Sebastiana przeważają kropki."
     div(style = text_style, HTML(text))
   })
-  
+  # output$tekst_word_3----
   output$tekst_word_3 <- renderUI({
 
     text_style <- paste0(
@@ -1082,6 +1116,7 @@ server <- function(input, output, session) {
   })
   
 
+  
   #-----------------------------------------------------------------------------
   # Zmiana stylu
   #-----------------------------------------------------------------------------
@@ -1404,10 +1439,85 @@ server <- function(input, output, session) {
   output$style_css <- renderUI({
     # word page style----
     if(input$menu=='Word')
-      return(tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #1B5EBE}")))
+      return(tags$style(HTML("
+      
+    /* sliders */
+    .js-irs-0 {
+    max-width: 215px;
+    } 
+    .irs--shiny .irs-bar {
+    border-top-color: #1B5EBE;
+    border-bottom-color: #1B5EBE;
+    } 
+    .irs--shiny .irs-bar-edge {
+    border-color: #1B5EBE;
+    }
+    .irs--shiny .irs-single, .irs--shiny .irs-bar-edge, .irs--shiny .irs-bar {
+    background: #41A5EE;
+    }
+    .irs--shiny .irs-handle {
+    border: 1px solid #1B5EBE;
+    background-color: #1B5EBE;
+    }
+    .irs--shiny .irs-handle.state_hover, .irs--shiny .irs-handle:hover {
+    background: #41A5EE;
+    }
+    .irs--shiny .irs-from, .irs--shiny .irs-to, .irs--shiny .irs-single {
+    color: #000000;
+    background-color: #1B5EBE;
+    }
+    
+    /* dropdown menus */
+    .selectize-dropdown .selected {
+    background-color: #1B5EBE;
+    color: #000000;
+    }
+    .selectize-dropdown .active:not(.selected) {
+    background: #41A5EE;
+    color: #000000;
+    }
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: #000000;
+    color: #ffffff
+    }
+    .selectize-dropdown [data-selectable] .highlight {
+    background: rgba(235, 64, 52, 0.4);
+    border-radius: 1px;
+    }
+    .selectize-control.multi .selectize-input>div {
+    cursor: pointer;
+    background: #1B5EBE;
+    color: #ffffff;
+    }
+    selectize-dropdown .create {
+    color: #ffffff;
+    }
+    .form-control, .selectize-input, .selectize-control.single .selectize-input {
+    background: #000000;
+    color: #ffffff;
+    border-color: #1B5EBE;
+    }
+    .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
+    border-color: #41A5EE;
+    background: #151515;
+    }
+    
+    /* fixed sidebar and header */
+    .sidebar {
+    position: fixed;
+    width: 250px;
+    white-space: nowrap;
+    overflow: visible;
+    }
+    .main-header {
+    position: fixed;
+    width:100%;
+    }
+                           ")))
     # java page style----
     if(input$menu=='Java')
       return(tags$style(HTML("
+      
     /* sliders */
     .js-irs-0 {
     max-width: 215px;
@@ -1433,6 +1543,7 @@ server <- function(input, output, session) {
     color: #000000;
     background-color: #fc0703;
     }
+    
     /* dropdown menus */
     .selectize-dropdown .selected {
     background-color: #fc0703;
@@ -1446,18 +1557,9 @@ server <- function(input, output, session) {
     background: #000000;
     color: #ffffff
     }
-    .selectize-dropdown {
-    color: #ffffff;
-    }
-    .selectize-input, .selectize-control.single .selectize-input.input-active {
-    border-color: #03a1fc;
-    }
     .selectize-dropdown [data-selectable] .highlight {
     background: rgba(235, 64, 52, 0.4);
     border-radius: 1px;
-    }
-    .selectize-dropdown, .selectize-input, .selectize-input input{
-    color: #ffffff;
     }
     .selectize-control.multi .selectize-input>div {
     cursor: pointer;
@@ -1467,10 +1569,14 @@ server <- function(input, output, session) {
     selectize-dropdown .create {
     color: #ffffff;
     }
-    
-    /* KONFLIKT Z SELECTIZE: MULTIPLE FALSE */
-    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    .form-control, .selectize-input, .selectize-control.single .selectize-input {
+    background: #000000;
+    color: #ffffff;
     border-color: #fc0703;
+    }
+    .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
+    border-color: #03a1fc;
+    background: #151515;
     }
     
     /* fixed sidebar and header */
@@ -1487,9 +1593,84 @@ server <- function(input, output, session) {
                            ")))
     # matlab page style----
     if(input$menu=='MATLAB')
-      return(tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #ed9242}")))
+      return(tags$style(HTML("
+      
+    /* sliders */
+    .js-irs-0 {
+    max-width: 215px;
+    } 
+    .irs--shiny .irs-bar {
+    border-top-color: #ed9242;
+    border-bottom-color: #ed9242;
+    } 
+    .irs--shiny .irs-bar-edge {
+    border-color: #ed9242;
+    }
+    .irs--shiny .irs-single, .irs--shiny .irs-bar-edge, .irs--shiny .irs-bar {
+    background: #fcf647;
+    }
+    .irs--shiny .irs-handle {
+    border: 1px solid #ed9242;
+    background-color: #ed9242;
+    }
+    .irs--shiny .irs-handle.state_hover, .irs--shiny .irs-handle:hover {
+    background: #fcf647;
+    }
+    .irs--shiny .irs-from, .irs--shiny .irs-to, .irs--shiny .irs-single {
+    color: #000000;
+    background-color: #ed9242;
+    }
+    
+    /* dropdown menus */
+    .selectize-dropdown .selected {
+    background-color: #ed9242;
+    color: #000000;
+    }
+    .selectize-dropdown .active:not(.selected) {
+    background: #fcf647;
+    color: #000000;
+    }
+    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: #000000;
+    color: #ffffff
+    }
+    .selectize-dropdown [data-selectable] .highlight {
+    background: rgba(235, 64, 52, 0.4);
+    border-radius: 1px;
+    }
+    .selectize-control.multi .selectize-input>div {
+    cursor: pointer;
+    background: #ed9242;
+    color: #ffffff;
+    }
+    selectize-dropdown .create {
+    color: #ffffff;
+    }
+    .form-control, .selectize-input, .selectize-control.single .selectize-input {
+    background: #000000;
+    color: #ffffff;
+    border-color: #ed9242;
+    }
+    .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
+    border-color: #fcf647;
+    background: #151515;
+    }
+    
+    /* fixed sidebar and header */
+    .sidebar {
+    position: fixed;
+    width: 250px;
+    white-space: nowrap;
+    overflow: visible;
+    }
+    .main-header {
+    position: fixed;
+    width:100%;
+    }
+                           ")))
     # home page style----
     return(tags$style(HTML("
+      
     /* sliders */
     .js-irs-0 {
     max-width: 215px;
@@ -1515,6 +1696,7 @@ server <- function(input, output, session) {
     color: #000000;
     background-color: #48e0ab;
     }
+    
     /* dropdown menus */
     .selectize-dropdown .selected {
     background-color: #48e0ab;
@@ -1528,14 +1710,41 @@ server <- function(input, output, session) {
     background: #000000;
     color: #ffffff
     }
-    .selectize-dropdown {
+    .selectize-dropdown [data-selectable] .highlight {
+    background: rgba(235, 64, 52, 0.4);
+    border-radius: 1px;
+    }
+    .selectize-control.multi .selectize-input>div {
+    cursor: pointer;
+    background: #48e0ab;
     color: #ffffff;
     }
-    .selectize-input, .selectize-control.single .selectize-input.input-active {
+    selectize-dropdown .create {
+    color: #ffffff;
+    }
+    .form-control, .selectize-input, .selectize-control.single .selectize-input {
+    background: #000000;
+    color: #ffffff;
+    border-color: #48e0ab;
+    }
+    .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
     border-color: #47fcf6;
+    background: #151515;
+    }
+    
+    /* fixed sidebar and header */
+    .sidebar {
+    position: fixed;
+    width: 250px;
+    white-space: nowrap;
+    overflow: visible;
+    }
+    .main-header {
+    position: fixed;
+    width:100%;
     }
                            ")))
-    })
+  })
 }
 
 ################################################################################
@@ -1554,7 +1763,7 @@ app_ui <- dashboardPage(
     sidebarMenu(uiOutput('style_ogol'),
                 uiOutput('style_css'),
                 id = "menu", sidebarMenuOutput("menu"),
-                menuItem("Ogólny", tabName = "Ogólny",
+                menuItem("Strona domowa", tabName = "Ogólny",
                          icon = icon("home")),
                 menuItem("Java", tabName = "Java",
                          icon = icon("java")),
@@ -1629,16 +1838,33 @@ app_ui <- dashboardPage(
       tabItem(
         tabName = "Java",
         fluidRow(style = "margin-top: 30px;",
-                 box(title = "Java")),
+                 box(
+                   title = tags$p(icon("java"),"Java",
+                                  style = "font-size: 200%;")
+                 )
+        ),
         fluidRow(
           style = "margin-bottom: 80px;",
-          column(width = 10,
+          column(width = 9,
                  plotlyOutput("JavaWykres1")
           ),
-          column(width = 2,
-                 box(style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
-                     "Tekst opisujący wykres.")
+          column(width = 3,
+                 wellPanel(
+                   style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+                   uiOutput("JavaWykres10")
+                   )
                  )
+        # ),
+        # fluidRow(
+          # column(width = 4,
+          #        box(style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
+          #            "    Wykres przedstawia liczbę utworzonych plików z rozszerzeniem
+          #            .java w czasie. Klikając na legendę można wybać osoby, do których
+          #             dane będą się odnosić. Po najechaniu na słupek w danym kolorze można
+          #            zobaczyć dokładną liczbę utworzonych plików w wybranym miesiącu. Dodatkowo
+          #            jeżdżąc kurosrem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
+          #            o ilości utworzonych plików z podziałem na dni.")
+          #        )
         ),
         fluidRow(
           style = "margin-bottom: 80px;",
@@ -1654,23 +1880,23 @@ app_ui <- dashboardPage(
           column(width = 6,
                  box(
                    title = tags$p("Najdłuższy wyraz:",
-                          style = "font-size: 125%; text-align: left;color: #FFFFFF;"),
+                                  style = "font-size: 125%; text-align: left;color: #FFFFFF;"),
                    htmlOutput("JavaWykres6"),
                    width = 12
                  )
           ),
           column(width = 6,
                  box(
-                   title = tags$p("Ile wyrazów charakterystycznych dla javy (else, private, abstract itp.) średnio zostało napisanych na plik:",
+                   title = tags$p("Ile wyrazów charakterystycznych dla Javy średnio zostało napisanych na plik:",
                                   style = "font-size: 125%; text-align: left;color: #FFFFFF;"),
-                   selectizeInput("txtIn", "Wpisz wyraz charakterystyczny dla javy",
-                                  choices = colnames(df)[15:45],
+                   selectizeInput("txtIn", "Wpisz wyraz charakterystyczny dla Javy",
+                                  choices = java_keyword_list,
                                   selected = "protected",
                                   multiple = F, 
                                   options = list(create=F,
                                                  placeholder = 'Wpisz wyraz',
                                                  plugins = list('restore_on_backspace'))
-                                  ),
+                   ),
                    htmlOutput("JavaWykres7"),
                    width = 12
                  )
@@ -1687,12 +1913,13 @@ app_ui <- dashboardPage(
                    multiple = TRUE,
                    options = list(create=F,
                                   placeholder = 'Wybierz imiona',
-                                  plugins= list('remove_button'))
+                                  plugins= list('remove_button')
+                   )
                  )
           ),
           column(width = 4.5,
                  valueBoxOutput('JavaWykres8')
-                 ),
+          ),
           column(width = 4.5,
                  valueBoxOutput('JavaWykres9')
           )
