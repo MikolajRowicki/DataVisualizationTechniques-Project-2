@@ -58,7 +58,8 @@ sebastian_matlab <- sebastian_matlab %>%
 
 malgosia_matlab <- malgosia_matlab %>%
   rename(Liczba.operatorow = Liczba.operatorów..........................)
-
+matlab_merged <- bind_rows(mikolaj_matlab, sebastian_matlab, malgosia_matlab)
+matlab_merged$Data.modyfikacji <- as.Date(substr(matlab_merged$Data.modyfikacji,1,10))
 # zakładka domowa
 podsumowanie_wykres1 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres1.csv")
 podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres2.csv")
@@ -692,19 +693,18 @@ server <- function(input, output, session) {
     
     if ("Mikołaj" %in% input$matlab2) {
       mikolaj_matlab_filtered <- mikolaj_matlab %>% 
-        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
-        filter(Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem < 60)
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
       
-              p <-    add_trace(p,
-                    data = mikolaj_matlab_filtered,
-                    type = "scatter",
-                    mode = "markers",
-                    x = ~Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem,
-                    y = ~Liczba.wierszy.zakonczonych.srednikiem,
-                    marker = list(color = "#1F77B4"),
-                    name = "Mikołaj",
-                    alpha = 0.7
-                  )
+          p <- add_trace(p,
+                         data = mikolaj_matlab_filtered,
+                         type = "box",
+                         x = ~Imie,
+                         y = ~round(Liczba.wierszy.zakonczonych.srednikiem / Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem, 2),
+                         
+                         name = "Mikołaj",
+                         boxmean = TRUE,
+                         boxpoints = ""
+              )
       
     }
     
@@ -716,13 +716,13 @@ server <- function(input, output, session) {
     
                 p <-   add_trace(p,
                     data = sebastian_matlab_filtered,
-                    type = "scatter",
-                    mode = "markers",
-                    x = ~Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem,
-                    y = ~Liczba.wierszy.zakonczonych.srednikiem,
-                    marker = list(color = "#FF7F0E"),
+                    type = "box",
+                    x = ~Imie,
+                    y = ~round(Liczba.wierszy.zakonczonych.srednikiem / Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem, 2),
+                    
                     name = "Sebastian",
-                    alpha = 0.7
+                    boxmean = TRUE,
+                    boxpoints = ""
                   )
       
     }
@@ -734,13 +734,13 @@ server <- function(input, output, session) {
 
                 p <-   add_trace(p,
                     data = malgosia_matlab_filtered,
-                    type = "scatter",
-                    mode = "markers",
-                    x = ~Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem,
-                    y = ~Liczba.wierszy.zakonczonych.srednikiem,
-                    marker = list(color = "#2C9B2C"),
+                    type = "box",
+                    x = ~Imie,
+                    y = ~round(Liczba.wierszy.zakonczonych.srednikiem / Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem, 2)
+                    ,
                     name = "Małgosia",
-                    alpha = 0.7
+                    boxmean = TRUE,
+                    boxpoints = ""
                   )
 
     }
@@ -752,16 +752,19 @@ server <- function(input, output, session) {
     } else {
       title <- "Stawianie średników na końcu linii"
     }
-    
+    y_axis_values <- seq(0, 1, 0.1)
     p %>% 
       layout(title = title, 
              xaxis = list(title = "Liczba wierszy, które powinny się kończyć średnikiem"), 
-             yaxis = list(title = "Liczba wierszy, które kończą się średnikiem"),
+             yaxis = list(
+               title = "Liczba wierszy, które kończą się średnikiem",
+               tickvals = y_axis_values,
+               ticktext = sprintf("%.0f%%", y_axis_values * 100),
+               tickformat = "%"),  # Dodanie formatu procentowego do osi Y
              plot_bgcolor = "#232323",  # Kolor tła wykresu
              paper_bgcolor = "#232323",
              font = list(color = "white"),
-             aspectratio = list(x = 1, y = 1),  # Ustawienie stosunku osi X do Y
-             xaxis = list(scaleanchor = "y", scaleratio = 1),  # Ustawienie skali osi X# Kolor tekstu
+             xaxis = list(scaleanchor = "y", scaleratio = 1),  # Ustawienie skali osi X
              grid = list(
                gridwidth = 5,  # Grubość siatki
                gridcolor = "white"  # Kolor siatki
@@ -787,7 +790,8 @@ server <- function(input, output, session) {
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
                     marker = list(color = "#1F77B4"),
-                    name = "Mikołaj"
+                    name = "Mikołaj",
+                    opacity = 0.7
       )
 
     
@@ -803,7 +807,8 @@ server <- function(input, output, session) {
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
                     marker = list(color = "#FF7F0E"),
-                    name = "Sebastian"
+                    name = "Sebastian",
+                    opacity = 0.7
       )
     
     
@@ -820,7 +825,8 @@ server <- function(input, output, session) {
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
                     marker = list(color = "#2C9B2C"),
-                    name = "Małgosia"
+                    name = "Małgosia",
+                    opacity = 0.7
       )
     
     
@@ -856,7 +862,7 @@ server <- function(input, output, session) {
                              data = mikolaj_matlab_filtered,
                              type = "box",
                              x = ~Imie,
-                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             y = ~Laczna.dlugosc.komentarzy * 100/ Liczba.wierszy,
                              name = "Mikołaj",
                              boxmean = TRUE,
                              boxpoints = ""
@@ -872,8 +878,9 @@ server <- function(input, output, session) {
                              data = sebastian_matlab_filtered,
                              type = "box",
                              x = ~Imie,
-                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             y = ~Laczna.dlugosc.komentarzy * 100 / Liczba.wierszy,
                              name = "Sebastian",
+                             hovertemplate = "Value: %{y}<extra></extra>",
                              boxmean = TRUE,
                              boxpoints = ""
       )
@@ -882,13 +889,15 @@ server <- function(input, output, session) {
     if ("Małgosia" %in% input$matlab4) {
       malgosia_matlab_filtered <- malgosia_matlab %>%
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])%>% 
+        mutate( przelicznik  = Laczna.dlugosc.komentarzy / Liczba.wierszy) %>% 
+        filter(przelicznik < 0.5) %>% 
         mutate(Imie = "Małgosia")
       
       p_boxplot <- add_trace(p_boxplot,
                              data = malgosia_matlab_filtered,
                              type = "box",
                              x = ~Imie,
-                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             y = ~Laczna.dlugosc.komentarzy * 100/ Liczba.wierszy,
                              name = "Małgosia",
                              boxmean = TRUE,
                              boxpoints = ""
@@ -907,6 +916,57 @@ server <- function(input, output, session) {
              grid = list(gridwidth = 5, gridcolor = "white"),
              legend = list(title = "Autor")
       )
+  })
+  
+  ### Wykres 5 dla zakładki MATLAB-------------
+  
+  output$MATLABWykres5 <- renderPlotly({
+    
+    df_date_matlab <- matlab_merged %>%
+      group_by(Data.modyfikacji, Imie) %>%
+      summarise(liczba = n()) %>%
+      filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>%
+      mutate(Rok_i_Miesiac = substr(Data.modyfikacji, 1, 7)) %>%
+      group_by(Rok_i_Miesiac, Imie) %>%
+      mutate(liczba_w_miesiacu = sum(liczba))
+    
+    selected_names <- input$matlab5
+    
+    plot_ly(data = df_date_matlab %>% filter(Imie %in% selected_names),
+            x = ~Data.modyfikacji, y = ~liczba,
+            type = "bar", color = ~Imie,
+            hoverinfo = 'text',
+            hovertext = ~paste0("Liczba stworzonych plików \nw ",
+                                c("styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu",
+                                  "lipcu", "sierpniu", "wrześniu", "październiku", "listopadzie", "grudniu"
+                                )[as.numeric(substr(Data.modyfikacji, 6, 7))],
+                                " w ", substr(Data.modyfikacji, 1, 4), " roku",
+                                "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
+                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                ": ", liczba_w_miesiacu,
+                                "\nLiczba stworzonych plików\nw ", Data.modyfikacji,
+                                ": ", liczba),
+            textposition = "none",
+            colors = kolory_java,
+            xperiod = "M1", xperiodalignment = "middle"
+    ) %>%
+      layout(barmode = 'stack',
+             title = "Tworzenie plików .m w czasie",
+             xaxis = list(fixedrange = TRUE,
+                          title = "Data"),
+             yaxis = list(fixedrange = TRUE,
+                          title = "Liczba utworzonych plików",
+                          gridcolor = "grey"),
+             legend = list(
+               itemclick = FALSE,
+               itemdoubleclick = FALSE,
+               groupclick = FALSE
+             ),
+             plot_bgcolor = "rgba(0,0,0,0)",
+             paper_bgcolor = "rgba(0,0,0,0)",
+             font = list(color = "white")) %>%
+      config(displayModeBar = FALSE,
+             locale = 'pl') 
   })
   
   # Jaką część pliku stanowią komentarze?
@@ -1115,6 +1175,85 @@ server <- function(input, output, session) {
     div(style = text_style, HTML(text))
   })
   
+  output$tekst_matlab_1 <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 70px;",
+      "text-align: justify;"
+    )
+    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
+    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
+    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
+    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
+    i wynoszą około 35 procent."
+    div(style = text_style, HTML(text))
+  })
+  
+  output$tekst_matlab_2 <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 70px;",
+      "text-align: justify;"
+    )
+    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
+    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
+    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
+    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
+    i wynoszą około 35 procent."
+    div(style = text_style, HTML(text))
+  })
+  
+  output$tekst_matlab_3 <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 70px;",
+      "text-align: justify;"
+    )
+    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
+    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
+    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
+    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
+    i wynoszą około 35 procent."
+    div(style = text_style, HTML(text))
+  })
+  
+  output$tekst_matlab_4 <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "#c0cae8", ";",
+      "background-color: ", "#2949a9", ";",
+      "border: 2px solid ", "black", ";",
+      "padding: 10px;",
+      "margin-top: 70px;",
+      "text-align: justify;"
+    )
+    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
+    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
+    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
+    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
+    i wynoszą około 35 procent."
+    div(style = text_style, HTML(text))
+  })
 
   
   #-----------------------------------------------------------------------------
@@ -1862,7 +2001,7 @@ app_ui <- dashboardPage(
           #            .java w czasie. Klikając na legendę można wybać osoby, do których
           #             dane będą się odnosić. Po najechaniu na słupek w danym kolorze można
           #            zobaczyć dokładną liczbę utworzonych plików w wybranym miesiącu. Dodatkowo
-          #            jeżdżąc kurosrem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
+          #            jeżdżąc kursorem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
           #            o ilości utworzonych plików z podziałem na dni.")
           #        )
         ),
@@ -1993,27 +2132,56 @@ app_ui <- dashboardPage(
       # Panel MATLAB
       #-------------------------------------------------------------------------
       tabItem(
-        tabName = "MATLAB",
-        fluidRow(
-          box(title = "MATLAB",
-            width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
+      tabName = "MATLAB",
+      fluidRow(style = "margin-left: 500px;",
+               box(title = h4("Matlab", style = "font-size: 45px; margin-top: 60px"),
+                   width = 12,  # Dostosuj szerokość pudełka według potrzeb
+                   solidHeader = TRUE,
+                   style = "font-size: 200px; margin: auto;"
+               )),
+      fluidRow(
+            column( width = 8, style = "margin-bottom: 80px; margin-left: 20px; margin-top: 60 px",
             selectInput(
-              inputId = "matlab4",
+              inputId = "matlab5",
               label = "Wybierz imię",
               choices = c("Mikołaj", "Małgosia", "Sebastian"),
               selected = c("Mikołaj", "Małgosia", "Sebastian"),
               multiple = TRUE
             ),
-            plotlyOutput("MATLABWykres4")
+            plotlyOutput("MATLABWykres5")
+        ))
+      ,
+      fluidRow(
+        style = "margin-bottom: 80px;",
+        column(
+          width = 8,
+          selectInput(
+            inputId = "matlab4",
+            label = "Wybierz imię",
+            choices = c("Mikołaj", "Małgosia", "Sebastian"),
+            selected = c("Mikołaj", "Małgosia", "Sebastian"),
+            multiple = TRUE
           ),
-          box(width = 6,
-              style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
-              "Tekst opisujący wykres."
-          )
+          plotlyOutput("MATLABWykres4")
         ),
-        fluidRow(
-          box(
-              width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
+        column(
+          width = 4,
+          wellPanel(
+            style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+            uiOutput("tekst_matlab_1")
+          )
+        )),
+        fluidRow( 
+          style = "margin-bottom: 80px; margin-left: 20px;",
+          column(
+            width = 4,
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              uiOutput("tekst_matlab_2")
+            )
+          ),
+          column(
+              width = 8,
                  selectInput(
                    inputId = "matlab1",
                    label = "Wybierz imię",
@@ -2022,12 +2190,7 @@ app_ui <- dashboardPage(
                    multiple = TRUE
                  ),
                  plotlyOutput("MATLABWykres1")
-          ),
-          box(width = 6,
-              style = "margin-bottom: 20px; margin-left: 10px;",
-              "Tekst opisujący wykres."
-          )
-        ),
+          )),
         fluidRow(
           column(width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
                  selectInput(
@@ -2038,10 +2201,24 @@ app_ui <- dashboardPage(
                    multiple = TRUE
                  ),
                  plotlyOutput("MATLABWykres2")
+          ),
+          column(
+            width = 4,
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              uiOutput("tekst_matlab_3")
+            )
           )
         ),
         fluidRow(
-          column(width = 6, style = "margin-bottom: 80px;",
+          column(
+            width = 4,
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              uiOutput("tekst_matlab_4")
+            )
+          ),
+          column(width = 6,
                  plotlyOutput("MATLABWykres3")
           )
         )
