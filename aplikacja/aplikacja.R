@@ -11,6 +11,7 @@ library(plotly)
 library(dashboardthemes)
 library(tidyr)
 library(treemap)
+library(shinycssloaders)
 
 ################################################################################
 # Przygotowywane danych
@@ -24,7 +25,11 @@ df3 <- read.csv("Sebastian3_java.csv")
 df2$Imie <- "Sebastian"
 df3$Imie <- "Sebastian"
 df4 <- read.csv("Mikolaj_java.csv")
+df4 <- df4 %>%
+  mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 df5 <- read.csv("Malgosia_java.csv")
+df5 <- df5 %>%
+  mutate(Imie = ifelse(Imie == "Malgosia", "Małgosia", Imie))
 df <- bind_rows(df1, df2, df3, df4, df5)
 df[is.na(df)] <- 0
 df$Data_ostatniej_modefikacji <- as.Date(substr(df$Data_ostatniej_modefikacji,1,10))
@@ -39,10 +44,15 @@ kolory_java <- c('#5382a1', '#f89820', '#fc0703', '#DD4B39', '#1666de', '#03a1fc
 
 # word
 malgosia_word <- read.csv("Malgosia-word.csv")
+malgosia_word <- malgosia_word %>%
+  mutate(Imie = ifelse(Imie == "Malgosia", "Małgosia", Imie))
 sebastian_word <- read.csv("Sebastian-word.csv")
+
 mikolaj_word <- read.csv("Mikolaj-word.csv")
+mikolaj_word <- mikolaj_word %>%
+  mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 word <- rbind(malgosia_word, mikolaj_word, sebastian_word)
-zmienne <- c("Mikolaj", "Sebastian", "Malgosia")
+zmienne <- c("Mikołaj", "Sebastian", "Małgosia")
 kolory_word <- c("#7780f8", "#0a2051", "#39bacc", "#78dfd0", "#2929b3")
 
 # matlab
@@ -60,15 +70,25 @@ malgosia_matlab <- malgosia_matlab %>%
   rename(Liczba.operatorow = Liczba.operatorów..........................)
 matlab_merged <- bind_rows(mikolaj_matlab, sebastian_matlab, malgosia_matlab)
 matlab_merged$Data.modyfikacji <- as.Date(substr(matlab_merged$Data.modyfikacji,1,10))
+matlab_merged <- matlab_merged %>%
+  mutate(Imie = ifelse(Imie == "Malgosia", "Małgosia", Imie)) %>%
+  mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 # zakładka domowa
 podsumowanie_wykres1 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres1.csv")
+podsumowanie_wykres1 <- podsumowanie_wykres1 %>%
+  mutate(Imie = ifelse(Imie == "Malgosia", "Małgosia", Imie)) %>%
+  mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 podsumowanie_wykres2 <- read.csv("./przygotowane_ramki_danych_podsumowanie/ogolny_wykres2.csv")
+podsumowanie_wykres2 <- podsumowanie_wykres2 %>%
+  mutate(Imie = ifelse(Imie == "Malgosia", "Małgosia", Imie)) %>%
+  mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 kolory_ogolny <- c("#0d5630", "#6b3c02", "#1b0952", "#6af1ab", "#f7be79", "#64b5f8")
 
 kolor_przewodni_java <- c('#fc0703', '#03a1fc')
 kolor_przewodni_word <- c('#1B5EBE', '#41A5EE')
 kolor_przewodni_matlab <- c('#ed9242', '#fcf647')
 # styl domyślny ----
+kolor_tla <- "#352d2d"
 theme_default <- shinyDashboardThemeDIY(
   
   ### general
@@ -79,7 +99,7 @@ theme_default <- shinyDashboardThemeDIY(
     ,successFontColor = "#434C5E"
     ,warningFontColor = "#434C5E"
     ,dangerFontColor = "#434C5E"
-    ,bodyBackColor = "#232323" 
+    ,bodyBackColor = kolor_tla 
     
   ### header
   ,logoBackColor = "#151515" 
@@ -99,7 +119,7 @@ theme_default <- shinyDashboardThemeDIY(
     direction = "down"
     ,colorStart = "#151515"
     ,colorMiddle = "#151515"
-    ,colorEnd = "#232323"
+    ,colorEnd = kolor_tla
     ,colorStartPos = 0
     ,colorMiddlePos = 50
     ,colorEndPos = 100
@@ -155,17 +175,17 @@ theme_default <- shinyDashboardThemeDIY(
   ,sidebarTabRadiusHover = "20px"
   
   ### boxes
-  ,boxBackColor = "#232323" 
+  ,boxBackColor = kolor_tla 
     ,boxBorderRadius = 5
   ,boxShadowSize = "0px 0px 0px"
   ,boxShadowColor = ""
   ,boxTitleSize = 18
-  ,boxDefaultColor = "#232323"
-    ,boxPrimaryColor = "#232323"
-    ,boxInfoColor = "#232323"
-    ,boxSuccessColor = "#232323"
-    ,boxWarningColor = "#232323"
-    ,boxDangerColor = "#232323"
+  ,boxDefaultColor = kolor_tla
+    ,boxPrimaryColor = kolor_tla
+    ,boxInfoColor = kolor_tla
+    ,boxSuccessColor = kolor_tla
+    ,boxWarningColor = kolor_tla
+    ,boxDangerColor = kolor_tla
     
   ,tabBoxTabColor = "#151515"
     ,tabBoxTabTextSize = 16
@@ -182,7 +202,7 @@ theme_default <- shinyDashboardThemeDIY(
     ,buttonBorderRadius = 5
   
   ,buttonBackColorHover = "#151515"
-    ,buttonTextColorHover = "#232323"
+    ,buttonTextColorHover = kolor_tla
     ,buttonBorderColorHover = "#2E3440"
     
   ,textboxBackColor = "#151515" 
@@ -209,13 +229,17 @@ server <- function(input, output, session) {
   
   # Wykres 1 -------------------------------------------------------------------
   output$JavaWykres1 <- renderPlotly({
-    df_date <- df %>% group_by(Data_ostatniej_modefikacji, Imie) %>% summarise(liczba= n()) %>% 
+    df_date <- df %>% 
+      group_by(Data_ostatniej_modefikacji, Imie) %>% 
+      summarise(liczba= n()) %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>% 
       mutate(Rok_i_Miesiac = substr(Data_ostatniej_modefikacji, 1, 7)) %>%
-      group_by(Rok_i_Miesiac, Imie) %>% mutate(liczba_w_miesiacu = sum(liczba))
-    plot_ly(data = df_date %>% filter(Imie == "Sebastian"),
+      group_by(Rok_i_Miesiac, Imie) %>% 
+      mutate(liczba_w_miesiacu = sum(liczba))
+    
+    plot_ly(data = df_date %>% filter(Imie %in% c("Sebastian", "Mikołaj", "Małgosia")),
             x = ~Data_ostatniej_modefikacji, y = ~liczba,
-            type = "bar", name = "Sebastian",
+            type = "bar", color = ~Imie,
             hoverinfo = 'text',
             hovertext = ~paste0("Liczba stworzonych plików \nw ",
                                 c("styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu",
@@ -223,34 +247,21 @@ server <- function(input, output, session) {
                                 )[as.numeric(substr(Data_ostatniej_modefikacji, 6, 7))],
                                 " w ", substr(Data_ostatniej_modefikacji, 1, 4), " roku",
                                 "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
-                                )[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))],
+                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
                                 ": ", liczba_w_miesiacu,
                                 "\nLiczba stworzonych plików\nw ", Data_ostatniej_modefikacji,
                                 ": ", liczba),
             textposition = "none",
-            marker = list(color = kolory_java[6]),
+            colors =  kolory_java,
             xperiod="M1", xperiodalignment="middle"
     ) %>%
-      add_trace(data = df_date %>% filter(Imie == "Mikolaj"),
-                name = "Mikołaj",
-                marker = list(color = kolory_java[2])
-      ) %>%
-      add_trace(data = df_date %>% filter(Imie == "Malgosia"),
-                name = "Małgosia",
-                marker = list(color = kolory_java[1])
-      ) %>%
-      layout(barmode = 'stack',
+      layout(barmode = 'group',
              title = "Tworzenie plików .java w czasie",
              xaxis = list(fixedrange = TRUE,
                           title = "Data"),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba utworzoych pkików",
+                        title = "Liczba utworzonych plików",
                         gridcolor = "grey"),
-             # legend = list(
-             #   itemclick = FALSE,
-             #   itemdoubleclick = FALSE,
-             #   groupclick = FALSE
-             # ),
              plot_bgcolor = "rgba(0,0,0,0)",
              paper_bgcolor = "rgba(0,0,0,0)",
              font = list(color = "white")) %>%
@@ -263,7 +274,7 @@ server <- function(input, output, session) {
       group_by(Imie) %>%
       summarise(liczba_komentarzy_w_linii = mean(liczba_komentarzy_w_linii),
                 liczba_komentarzy_w_bloku = mean(liczba_komentarzy_w_bloku)) %>%
-      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))])
+      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))])
     plot_ly(data = df_date,
             x = ~Imie, y = ~liczba_komentarzy_w_linii,
             type = "bar", name = 'Komentarze\njednoliniowe;\n<i><sup>//komentarz</sup></i>',
@@ -312,7 +323,7 @@ server <- function(input, output, session) {
                 liczba_znakow_w_komentarzu_w_bloku = sum(liczba_znakow_w_komentarzu_w_bloku)) %>%
       mutate(srednia_liczba_znakow_w_komantarzu_w_linii = if_else(liczba_komentarzy_w_linii == 0, 0, liczba_znakow_w_komantarzu_w_linii/liczba_komentarzy_w_linii),
              srednia_liczba_znakow_w_komentarzu_w_bloku = if_else(liczba_komentarzy_w_bloku == 0, 0, liczba_znakow_w_komentarzu_w_bloku/liczba_komentarzy_w_bloku)) %>%
-      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))])
+      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))])
     plot_ly(data = df_date,
             x = ~Imie, y = ~srednia_liczba_znakow_w_komantarzu_w_linii,
             type = "bar", name = "Komentarze\njedniolinowe;\n<i><sup>//komentarz</sup></i>",
@@ -385,7 +396,7 @@ server <- function(input, output, session) {
   output$JavaWykres6 <- renderUI({
     new_df_Mikolaj <- df %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
-             Imie == "Mikolaj")
+             Imie == "Mikołaj")
     najdluzszy_wyraz_Mikolaj <- new_df_Mikolaj$Najdluzszy_wyraz[nchar(new_df_Mikolaj$Najdluzszy_wyraz) == max(nchar(new_df_Mikolaj$Najdluzszy_wyraz))] %>%
       head(1)
     new_df_Sebastian <- df %>% 
@@ -395,7 +406,7 @@ server <- function(input, output, session) {
       head(1)
     new_df_Malgosia <- df %>% 
       filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2],
-             Imie == "Malgosia")
+             Imie == "Małgosia")
     najdluzszy_wyraz_Malgosia <- new_df_Malgosia$Najdluzszy_wyraz[nchar(new_df_Malgosia$Najdluzszy_wyraz) == max(nchar(new_df_Malgosia$Najdluzszy_wyraz))] %>%
       head(1)
     HTML(paste("<b>Małgosia</b>:<br/>",
@@ -413,9 +424,9 @@ server <- function(input, output, session) {
   # Wykres 7 -------------------------------------------------------------------
   output$JavaWykres7 <- renderUI({
     df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2], input$txtIn %in% colnames(df)[15:45])
-    Mikolaj_df_tmp <- df_tmp %>% filter(Imie == "Mikolaj")
+    Mikolaj_df_tmp <- df_tmp %>% filter(Imie == "Mikołaj")
     Sebastian_df_tmp <- df_tmp %>% filter(Imie == "Sebastian")
-    Malgosia_df_tmp <- df_tmp %>% filter(Imie == "Malgosia")
+    Malgosia_df_tmp <- df_tmp %>% filter(Imie == "Małgosia")
     HTML(paste0("<b>Małgosia</b>: ", round(Malgosia_df_tmp %>% summarise(sum(!!sym(input$txtIn))) %>% pull() / Malgosia_df_tmp %>% summarise(liczba_plikow = n()), 2),
                 "<br/><b>Mikołaj</b>: ", round(Mikolaj_df_tmp %>% summarise(sum(!!sym(input$txtIn))) %>% pull() / Mikolaj_df_tmp %>% summarise(liczba_plikow = n()), 2),
                 "<br/><b>Sebastian</b>: ", round(Sebastian_df_tmp %>% summarise(sum(!!sym(input$txtIn))) %>% pull() / Sebastian_df_tmp %>% summarise(liczba_plikow = n()), 2)
@@ -425,7 +436,7 @@ server <- function(input, output, session) {
   # Wykres 8 -------------------------------------------------------------------
   output$JavaWykres8 <- renderValueBox({
     valueBox(tags$p(df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
-                      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))]) %>%
+                      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))]) %>%
                       filter(Imie %in% input$JavaSelectInput1) %>% summarise(ilosc_znakow = sum(Liczba_znaków)) %>% pull(),
                     style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
              tags$p("znaków napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
@@ -434,7 +445,7 @@ server <- function(input, output, session) {
   # Wykres 9 -------------------------------------------------------------------
   output$JavaWykres9 <- renderValueBox({
     valueBox(tags$p(df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2]) %>%
-                      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))]) %>%
+                      mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))]) %>%
                       filter(Imie %in% input$JavaSelectInput1) %>% summarise(ilosc_znakow = sum(Liczba_linii)) %>% pull(),
                     style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
              tags$p("linijek napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
@@ -457,7 +468,7 @@ server <- function(input, output, session) {
                      .java w czasie. Klikając na legendę można wybać osoby, do których
                       dane będą się odnosić. Po najechaniu na słupek w danym kolorze można
                      zobaczyć dokładną liczbę utworzonych plików w wybranym miesiącu. Dodatkowo
-                     jeżdżąc kurosrem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
+                     jeżdżąc kursorem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
                      o ilości utworzonych plików z podziałem na dni."
     div(style = text_style, HTML(text))
   })
@@ -468,9 +479,8 @@ server <- function(input, output, session) {
   
   # word - wykres tworzenia plikow ---------------------------------------------
   output$wykres1_1 <- renderPlotly({
-    
     word$Data.utworzenia.pliku <- as.Date(substr(word$Data.utworzenia.pliku,1,10))
-    word <- word %>% 
+    word1 <- word %>% 
       group_by(Data.utworzenia.pliku, Imie) %>%
       summarise(n = n()) %>% 
       mutate(data = substr(Data.utworzenia.pliku, 1, 7)) %>%
@@ -478,12 +488,11 @@ server <- function(input, output, session) {
       mutate(liczba_w_miesiacu = sum(n)) %>% 
       filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2])
     
-    plot_ly(data = word%>% 
-            filter(Imie == "Sebastian"),
+    plot_ly(data = word1 %>% filter(Imie %in% c("Sebastian", "Mikołaj", "Małgosia")),
             x = ~Data.utworzenia.pliku, 
             y = ~n,
             type = "bar",
-            name = "Sebastian",
+            color = ~Imie,
             hoverinfo = 'text',
             hovertext = ~paste0("Liczba stworzonych plików \nw ",
                                 c("styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu",
@@ -491,63 +500,54 @@ server <- function(input, output, session) {
                                 )[as.numeric(substr(Data.utworzenia.pliku, 6, 7))],
                                 " w ", substr(Data.utworzenia.pliku, 1, 4), " roku",
                                 "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
-                                )[match(Imie, c("Sebastian", "Mikolaj", "Malgosia"))],
+                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
                                 ": ", liczba_w_miesiacu,
                                 "\nLiczba stworzonych plików\nw ", Data.utworzenia.pliku,
                                 ": ", n),
             textposition = "none",
-            marker = list(color = kolory_word[1]),
+            colors =  kolory_word,
             xperiod="M1", xperiodalignment="middle"
     ) %>%
-      add_trace(data = word %>% filter(Imie == "Mikolaj"),
-                name = "Mikołaj",
-                marker = list(color = kolory_word[2])
-      ) %>%
-      add_trace(data = word %>% filter(Imie == "Malgosia"),
-                name = "Małgosia",
-                marker = list(color = kolory_word[3])
-      ) %>%
-      layout(barmode = 'stack',
+      layout(barmode = 'group',
              font = list(family = "FuturaMedium", color = "white", size = 14),
              title = list(text = "Tworzenie plików .docx w czasie", font = list(size = 22)),
              margin = list(t = 40),
              xaxis = list(fixedrange = TRUE,
                           title = list(text = "Data", font = list(size = 18))),
              yaxis=list(fixedrange=TRUE,
-                        title = list(text = "Liczba utworzoych plików", font = list(size = 18)),
+                        title = list(text = "Liczba utworzonych plików", font = list(size = 18)),
                         gridcolor = "grey"),
              plot_bgcolor = "rgba(0,0,0,0)",
              paper_bgcolor = "rgba(0,0,0,0)"
-             ) %>%
+      ) %>%
       config(displayModeBar = FALSE,
              locale = 'pl') 
-    
   })
   
   # word - analiza interpunkcji ------------------------------------------------
   output$wykres2 <- renderPlotly({
     kolor <- kolory_word[1]
 
-    if (input$zmienna == "Mikolaj")
+    if (input$zmienna == "Mikołaj")
     {
       kolor <- kolory_word[2]
-    } else if (input$zmienna == "Malgosia") {
+    } else if (input$zmienna == "Małgosia") {
       kolor <- kolory_word[3]
-    }else {
-      kolor <- kolory_word[1]
+    }else if (input$zmienna == "Sebastian") {
+      kolor <- kolory_word[3]
     }
     
     
-    word2 <- word %>% 
+    df_word2 <- word %>% 
       filter(Imie == input$zmienna) %>% 
       filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2]) %>% 
       summarise(Kropka = sum(Ilosc.kropek), Przecinek = sum(Ilosc.przecinkow), Dwukropek = sum(Ilosc.dwukropkow), Pozostałe = sum(Ilosc.pozostalych.znakow), Pytajnik = sum(Ilosc.pytajnikow), Wykrzyknik = sum(Ilosc.wykrzyknikow), Myślnik= sum(Ilosc.myslnikow))
     
-    df <- word2 %>% 
+    df_word2 <- df_word2 %>% 
       pivot_longer(cols = c("Kropka", "Przecinek", "Dwukropek", "Pozostałe", "Pytajnik", "Wykrzyknik", "Myślnik"), names_to = "Kolumna", values_to = "Wartosc")
     
     plot_ly(
-      df,
+      df_word2,
       x = ~reorder(Kolumna, -Wartosc),
       y = ~Wartosc,
       type = 'bar',
@@ -575,10 +575,10 @@ server <- function(input, output, session) {
   output$wykres3 <- renderPlotly({
     
     kolor <- c(kolory_word[3], kolory_word[2], kolory_word[1])
-    df <- word %>% 
+    df_word3 <- word %>% 
       filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2]) %>% 
       select(Ilosc.kropek, Ilosc.słow., Ilosc.przecinkow, Imie)
-    plot_ly(data = df %>% 
+    plot_ly(data = df_word3 %>% 
             filter(Ilosc.kropek <= 500),
             x = ~Ilosc.kropek,
             y = ~Ilosc.przecinkow,
@@ -586,7 +586,8 @@ server <- function(input, output, session) {
             size = ~Ilosc.słow.,
             color = ~Imie,
             colors = kolor,
-            mode = 'markers'
+            mode = 'markers',
+            opacity = 1
     )%>%
       layout(
         font = list(family = "FuturaMedium", color = "white", size = 14),
@@ -612,6 +613,23 @@ server <- function(input, output, session) {
   output$MATLABWykres1 <- renderPlotly({
     p <- plot_ly()
     
+    if ("Małgosia" %in% input$matlab1){
+      malgosia_matlab_filtered <- malgosia_matlab %>% 
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
+      
+      p <- add_trace(p,
+                     data = malgosia_matlab_filtered,
+                     margin = list(l = 50, r = 50, b = 50, t = 100),
+                     type = "violin",
+                     x = ~Imie,
+                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
+                     box = list(visible = FALSE),
+                     meanline = list(visible = TRUE),
+                     spanmode = "hard",
+                     name = "Małgosia"
+      )
+    }
+    
     if ("Mikołaj" %in% input$matlab1) {
       mikolaj_matlab_filtered <- mikolaj_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
@@ -621,7 +639,7 @@ server <- function(input, output, session) {
                      data = mikolaj_matlab_filtered,
                      type = "violin",
                      x = ~Imie,
-                     y = ~Liczba.operatorow.otoczonych.spacjami * 100 / Liczba.operatorow,
+                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
                      box = list(visible = FALSE),
                      meanline = list(visible = TRUE),
                      spanmode = "hard",
@@ -638,28 +656,11 @@ server <- function(input, output, session) {
                      data = sebastian_matlab_filtered,
                      type = "violin",
                      x = ~Imie,
-                     y = ~Liczba.operatorow.otoczonych.spacjami * 100 / Liczba.operatorow,
+                     y = ~Liczba.operatorow.otoczonych.spacjami / Liczba.operatorow,
                      box = list(visible = FALSE),
                      meanline = list(visible = TRUE),
                      spanmode = "hard",
                      name = "Sebastian"
-      )
-    }
-    
-    if ("Małgosia" %in% input$matlab1){
-      malgosia_matlab_filtered <- malgosia_matlab %>% 
-        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
-      
-      p <- add_trace(p,
-                     data = malgosia_matlab_filtered,
-                     margin = list(l = 50, r = 50, b = 50, t = 100),
-                     type = "violin",
-                     x = ~Imie,
-                     y = ~Liczba.operatorow.otoczonych.spacjami * 100 / Liczba.operatorow,
-                     box = list(visible = FALSE),
-                     meanline = list(visible = TRUE),
-                     spanmode = "hard",
-                     name = "Małgosia"
       )
     }
     
@@ -674,9 +675,14 @@ server <- function(input, output, session) {
     p %>% 
       layout(title = title, 
              xaxis = list(title = "Autor"), 
-             yaxis = list(title = "Procent operatorów zapisanych ze spacjami wokół"), 
-             plot_bgcolor = "#232323",  # Kolor tła wykresu
-             paper_bgcolor = "#232323",
+             y_axis_values <- seq(0, 1, 0.1),
+             yaxis = list(
+               title = "Udział w pliku operatorów zapisanych ze spacjami wokół",
+               tickvals = y_axis_values,
+               ticktext = sprintf("%.0f%%", y_axis_values * 100),
+               tickformat = "%"),  # Dodanie formatu procentowego do osi Y
+             plot_bgcolor = kolor_tla,  # Kolor tła wykresu
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              aspectratio = list(x = 1, y = 1)  # Ustawienie stosunku osi X do Y
       )
@@ -690,6 +696,24 @@ server <- function(input, output, session) {
   
   output$MATLABWykres2 <- renderPlotly({
     p <- plot_ly()
+    
+    if ("Małgosia" %in% input$matlab2) {
+      malgosia_matlab_filtered <- malgosia_matlab %>% 
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
+      
+      
+      p <-   add_trace(p,
+                       data = malgosia_matlab_filtered,
+                       type = "box",
+                       x = ~Imie,
+                       y = ~round(Liczba.wierszy.zakonczonych.srednikiem / Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem, 2)
+                       ,
+                       name = "Małgosia",
+                       boxmean = TRUE,
+                       boxpoints = ""
+      )
+      
+    }
     
     if ("Mikołaj" %in% input$matlab2) {
       mikolaj_matlab_filtered <- mikolaj_matlab %>% 
@@ -727,24 +751,6 @@ server <- function(input, output, session) {
       
     }
     
-    if ("Małgosia" %in% input$matlab2) {
-      malgosia_matlab_filtered <- malgosia_matlab %>% 
-        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])
-      
-
-                p <-   add_trace(p,
-                    data = malgosia_matlab_filtered,
-                    type = "box",
-                    x = ~Imie,
-                    y = ~round(Liczba.wierszy.zakonczonych.srednikiem / Liczba.wierszy..ktore.powinny.sie.konczyc.srednikiem, 2)
-                    ,
-                    name = "Małgosia",
-                    boxmean = TRUE,
-                    boxpoints = ""
-                  )
-
-    }
-    
     names <- input$matlab2  # Get the selected names
     if (length(names) == 1) {
       names_str <- paste(names, collapse = "")  # Combine names into a single string
@@ -755,14 +761,15 @@ server <- function(input, output, session) {
     y_axis_values <- seq(0, 1, 0.1)
     p %>% 
       layout(title = title, 
-             xaxis = list(title = "Liczba wierszy, które powinny się kończyć średnikiem"), 
+             xaxis = list(title = "Autor"),
+             y_axis_values <- seq(0, 1, 0.1),
              yaxis = list(
-               title = "Liczba wierszy, które kończą się średnikiem",
+               title = "Udział wierszy zakończonych średnikiem w pliku",
                tickvals = y_axis_values,
                ticktext = sprintf("%.0f%%", y_axis_values * 100),
                tickformat = "%"),  # Dodanie formatu procentowego do osi Y
-             plot_bgcolor = "#232323",  # Kolor tła wykresu
-             paper_bgcolor = "#232323",
+             plot_bgcolor = kolor_tla,  # Kolor tła wykresu
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              xaxis = list(scaleanchor = "y", scaleratio = 1),  # Ustawienie skali osi X
              grid = list(
@@ -777,6 +784,27 @@ server <- function(input, output, session) {
   output$MATLABWykres3 <- renderPlotly({
     p <- plot_ly()
     
+    
+    malgosia_matlab_filtered <-  malgosia_matlab %>% 
+      filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
+      summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.)
+                / (sum(Liczba.wierszy) - sum(Liczba.pustych.linii))) %>% 
+      mutate(Imie = "Małgosia")
+    
+    
+    
+    p <- add_bars(p,
+                  data = malgosia_matlab_filtered,
+                  x = ~Imie,
+                  y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
+                  marker = list(color = "#1F77B4"),
+                  name = "Małgosia",
+                  opacity = 0.7
+    )
+    
+    
+    # (analogiczne bloki dla innych autorów)
+    
 
       mikolaj_matlab_filtered <-  mikolaj_matlab %>% 
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
@@ -789,7 +817,7 @@ server <- function(input, output, session) {
                     data = mikolaj_matlab_filtered,
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                    marker = list(color = "#1F77B4"),
+                    marker = list(color = "#FF7F0E"),
                     name = "Mikołaj",
                     opacity = 0.7
       )
@@ -806,31 +834,10 @@ server <- function(input, output, session) {
                     data = sebastian_matlab_filtered,
                     x = ~Imie,
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                    marker = list(color = "#FF7F0E"),
+                    marker = list(color = "#2C9B2C"),
                     name = "Sebastian",
                     opacity = 0.7
       )
-    
-    
-      malgosia_matlab_filtered <-  malgosia_matlab %>% 
-        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
-        summarise(Srednia_liczba_znakow_w_niepustym_wierszu = sum(Liczba.znaków.)
-                  / (sum(Liczba.wierszy) - sum(Liczba.pustych.linii))) %>% 
-        mutate(Imie = "Małgosia")
-      
-      
-      
-      p <- add_bars(p,
-                    data = malgosia_matlab_filtered,
-                    x = ~Imie,
-                    y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                    marker = list(color = "#2C9B2C"),
-                    name = "Małgosia",
-                    opacity = 0.7
-      )
-    
-    
-    # (analogiczne bloki dla innych autorów)
     
 
     
@@ -838,8 +845,8 @@ server <- function(input, output, session) {
       layout(title = "Liczba znaków w niepustym wierszu", 
              yaxis = list(title = "Średnia liczba znaków w niepustym wierszu"), 
              xaxis = list(title = "Autor"),
-             plot_bgcolor = "#232323",  # Kolor tła wykresu
-             paper_bgcolor = "#232323",
+             plot_bgcolor = kolor_tla,  # Kolor tła wykresu
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              grid = list(
                gridwidth = 5,  # Grubość siatki
@@ -853,6 +860,24 @@ server <- function(input, output, session) {
   output$MATLABWykres4 <- renderPlotly({
     p_boxplot <- plot_ly()
     
+    if ("Małgosia" %in% input$matlab4) {
+      malgosia_matlab_filtered <- malgosia_matlab %>%
+        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])%>% 
+        mutate( przelicznik  = Laczna.dlugosc.komentarzy / Liczba.wierszy) %>% 
+        filter(przelicznik < 0.5) %>% 
+        mutate(Imie = "Małgosia")
+      
+      p_boxplot <- add_trace(p_boxplot,
+                             data = malgosia_matlab_filtered,
+                             type = "box",
+                             x = ~Imie,
+                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
+                             name = "Małgosia",
+                             boxmean = TRUE,
+                             boxpoints = ""
+      )
+    }
+    
     if ("Mikołaj" %in% input$matlab4) {
       mikolaj_matlab_filtered <- mikolaj_matlab %>%
         filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2]) %>% 
@@ -862,7 +887,7 @@ server <- function(input, output, session) {
                              data = mikolaj_matlab_filtered,
                              type = "box",
                              x = ~Imie,
-                             y = ~Laczna.dlugosc.komentarzy * 100/ Liczba.wierszy,
+                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
                              name = "Mikołaj",
                              boxmean = TRUE,
                              boxpoints = ""
@@ -878,7 +903,7 @@ server <- function(input, output, session) {
                              data = sebastian_matlab_filtered,
                              type = "box",
                              x = ~Imie,
-                             y = ~Laczna.dlugosc.komentarzy * 100 / Liczba.wierszy,
+                             y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
                              name = "Sebastian",
                              hovertemplate = "Value: %{y}<extra></extra>",
                              boxmean = TRUE,
@@ -886,30 +911,18 @@ server <- function(input, output, session) {
       )
     }
     
-    if ("Małgosia" %in% input$matlab4) {
-      malgosia_matlab_filtered <- malgosia_matlab %>%
-        filter(Data.modyfikacji >= input$data[1], Data.modyfikacji <= input$data[2])%>% 
-        mutate( przelicznik  = Laczna.dlugosc.komentarzy / Liczba.wierszy) %>% 
-        filter(przelicznik < 0.5) %>% 
-        mutate(Imie = "Małgosia")
-      
-      p_boxplot <- add_trace(p_boxplot,
-                             data = malgosia_matlab_filtered,
-                             type = "box",
-                             x = ~Imie,
-                             y = ~Laczna.dlugosc.komentarzy * 100/ Liczba.wierszy,
-                             name = "Małgosia",
-                             boxmean = TRUE,
-                             boxpoints = ""
-      )
-    }
     
+    y_axis_values <- seq(0, 1, 0.1)
     p_boxplot %>%
       layout(title = "Jaką część pliku stanowią komentarze?",
              xaxis = list(title = "Autor"),
-             yaxis = list(title = "Stosunek długości komenatrzy do długości pliku"),
-             plot_bgcolor = "#232323",
-             paper_bgcolor = "#232323",
+             yaxis = list(
+               title = "Stosunek długości komentarzy do długości pliku",
+               tickvals = y_axis_values,
+               ticktext = sprintf("%.0f%%", y_axis_values * 100),
+               tickformat = "%"),  # Dodanie formatu procentowego do osi Y
+             plot_bgcolor = kolor_tla,
+             paper_bgcolor = kolor_tla,
              font = list(color = "white"),
              aspectratio = list(x = 1, y = 1),
              xaxis2 = list(domain = c(0.8, 1), anchor = "y2"),
@@ -941,16 +954,16 @@ server <- function(input, output, session) {
                                   "lipcu", "sierpniu", "wrześniu", "październiku", "listopadzie", "grudniu"
                                 )[as.numeric(substr(Data.modyfikacji, 6, 7))],
                                 " w ", substr(Data.modyfikacji, 1, 4), " roku",
-                                "\nu ", c("Sebastiana", "Mikołaja", "Małgosi"
-                                )[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))],
+                                "\nu ", c( "Małgosi", "Mikołaja", "Sebastiana"
+                                )[match(Imie, c("Małgosia", "Mikołaj", "Sebastian"))],
                                 ": ", liczba_w_miesiacu,
                                 "\nLiczba stworzonych plików\nw ", Data.modyfikacji,
                                 ": ", liczba),
             textposition = "none",
-            colors = kolory_java,
+            colors = c("#2C9B2C", "#FF7F0E", "#1F77B4"),
             xperiod = "M1", xperiodalignment = "middle"
     ) %>%
-      layout(barmode = 'stack',
+      layout(barmode = 'group',
              title = "Tworzenie plików .m w czasie",
              xaxis = list(fixedrange = TRUE,
                           title = "Data"),
@@ -978,16 +991,16 @@ server <- function(input, output, session) {
   ### podsumowanie -> wykres numer 1--------------------------------------------
   output$Podsumowanie_wykres1 <- renderPlotly({
     
-    df <- podsumowanie_wykres1
-    df$year <- as.integer(df$year)
-    df$month <- as.integer(df$month)
-    df$data <- as.Date(paste(df$year, "-", df$month, "-01", sep = ""), format = "%Y-%m-%d")
-    df <- df %>% 
+    df_podsumowanie <- podsumowanie_wykres1
+    df_podsumowanie$year <- as.integer(df_podsumowanie$year)
+    df_podsumowanie$month <- as.integer(df_podsumowanie$month)
+    df_podsumowanie$data <- as.Date(paste(df_podsumowanie$year, "-", df_podsumowanie$month, "-01", sep = ""), format = "%Y-%m-%d")
+    df_podsumowanie <- df_podsumowanie %>% 
       arrange(month) %>% 
       arrange(year) %>% 
       filter(data >= input$data[1] & data <= input$data[2]) %>% 
       filter(Imie == input$podsumowanie_11)
-    df <- df %>% 
+    df_podsumowanie <- df_podsumowanie %>% 
       mutate( nn = 
                 case_when(
                   Rozszerzenie == "docx" ~ n,
@@ -997,28 +1010,28 @@ server <- function(input, output, session) {
                   TRUE ~ n
                 )
       )
-    df <- df[complete.cases(df[, "nn"]), ]
+    df_podsumowanie <- df_podsumowanie[complete.cases(df_podsumowanie[, "nn"]), ]
     
-    df1 <- df %>% 
+    df1 <- df_podsumowanie %>% 
       filter(Rozszerzenie == "java")
     
-    df2 <- df %>% 
+    df2 <- df_podsumowanie %>% 
       filter(Rozszerzenie == "docx")
     
-    df3 <- df %>% 
+    df3 <- df_podsumowanie %>% 
       filter(Rozszerzenie == "m")
     
     w <- plot_ly()
     w %>% 
-      add_trace(x = df1$data, y = df1$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[2]), color = "java", hoverinfo = "none")%>% 
+    add_trace(x = df1$data, y = df1$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[2]), showlegend = FALSE,  hoverinfo = "none") %>% 
       add_trace(x = c(df1$data, rev(df1$data)), y = c(df1$nn, rep(min(df1$nn), length(df1$nn))),
-                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[5], showlegend = FALSE, hoverinfo = "none") %>% 
-      add_trace(x = df2$data, y = df2$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[1]), color = "docx", hoverinfo = "none") %>% 
+                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[5], name = ".java", hoverinfo = "none") %>% 
+      add_trace(x = df2$data, y = df2$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[1]), showlegend = FALSE, hoverinfo = "none") %>% 
       add_trace(x = c(df2$data, rev(df2$data)), y = c(df2$nn, rep(min(df2$nn), length(df2$nn))),
-                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[4], showlegend = FALSE, hoverinfo = "none") %>% 
-      add_trace(x = df3$data, y = df3$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[3]), color = "m", hoverinfo = "none") %>% 
+                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[4], name = ".docx", hoverinfo = "none") %>% 
+      add_trace(x = df3$data, y = df3$nn, type = 'scatter', mode = 'lines', line = list(color = kolory_ogolny[3]), showlegend = FALSE, hoverinfo = "none") %>% 
       add_trace(x = c(df3$data, rev(df3$data)), y = c(df3$nn, rep(min(df3$nn), length(df3$nn))),
-                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[6], showlegend = FALSE, hoverinfo = "none") %>% 
+                fill = 'toself', type = 'scatter', mode = 'none', fillcolor = kolory_ogolny[6],  name = ".m", hoverinfo = "none") %>% 
       layout(
         font = list(family = "FuturaMedium", color = "white", size = 14),
         title = list(text = "Tworzenie Plików o Danym Rozszerzeniu", font = list(size = 22)),
@@ -1029,7 +1042,7 @@ server <- function(input, output, session) {
         paper_bgcolor = "rgba(0,0,0,0)"
       ) %>% 
       config(displayModeBar = FALSE,
-            locale = 'pl') 
+             locale = 'pl') 
     
   })
   
@@ -1052,8 +1065,9 @@ server <- function(input, output, session) {
       parents = ~"",
       values = ~n,
       type = "treemap",
+      colors = c(kolory_ogolny[4], kolory_ogolny[5], kolory_ogolny[6]),
       marker = list(
-        colors = c(kolory_ogolny[1], kolory_ogolny[2], kolory_ogolny[3]),
+        colors = c(kolory_ogolny[4], kolory_ogolny[5], kolory_ogolny[6]),
         line = list(width = 1, color = "white")
       ),
       hoverinfo = 'text',
@@ -1064,13 +1078,11 @@ server <- function(input, output, session) {
         font = list(family = "FuturaMedium", color = "white", size = 14),
         title = list(text = "Jak Rozkładają Się Pliki na Naszych Komputerach?", font = list(size = 22)),
         margin = list(t = 40),
-        treemapcolorway = c(kolory_ogolny[1], kolory_ogolny[2], kolory_ogolny[3]),
         plot_bgcolor = "rgba(0,0,0,0)",
         paper_bgcolor = "rgba(0,0,0,0)"
       ) %>% 
       config(displayModeBar = FALSE,
              locale = 'pl') 
-    
   })
   
   
@@ -1132,7 +1144,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "#c0cae8", ";",
       "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 40px;",
       "text-align: justify;"
@@ -1149,7 +1161,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "#c0cae8", ";",
       "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1166,7 +1178,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "#c0cae8", ";",
       "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 40px;",
       "text-align: justify;"
@@ -1180,16 +1192,16 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
     )
-    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
+    text <- "Wykres po lewej dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
     to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
-    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
+    ukazują znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
     w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
     i wynoszą około 35 procent."
     div(style = text_style, HTML(text))
@@ -1200,18 +1212,17 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
     )
-    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
-    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
-    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
-    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
-    i wynoszą około 35 procent."
+    text <- "Podczas analizy naszych plików przyjrzeliśmy się również temu, w jaki sposób zapisujemy matematyczne i logiczne operatory.
+    Część programistów otacza takie symbole w kodzie dwiema spacjami, to znaczy zamiast 2+4 pisze 2 + 4. Inni piszą je zawsze razem lub też nie zwracają na to żadnej uwagi.
+    Postanowiliśmy sprawdzić, do której kategorii zalicza się każdy z nas. W tym celu zliczyliśmy znaki dodawania, odejmowania, dzielenia i mnożenia, znaki równości, wszystkie typy znaków nierówności, a także operatory koniunkcji i alternatywy.
+    Następnie wyliczyliśmy, jaka część z nich w poszczególnych plikach jest otoczona spacjami. Okazało się, że w przypadku Mikołaja i Małgosi wartości średnie są bardzo zbliżone i wynoszą 75%, u Sebastiana ta wartość jest trochę mniejsza i wynosi około 62%"
     div(style = text_style, HTML(text))
   })
   
@@ -1220,18 +1231,17 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
     )
-    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
-    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
-    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
-    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
-    i wynoszą około 35 procent."
+    text <- "Dobrą praktyką pisania kodu w Matlabie jest również stawianie średników na końcu linii, aby zapobiec wypisywaniu na konsolę niepotrzebnych informacji.
+    Napisaliśmy specjalny algorytm pozwalający oszacować liczbę wierszy, które powinny kończyć się średnikiem. Nie zlicza on pustych czy zakomentowanych linii 
+    ani tych zaczynających się od słów kluczowych if, else, for, end, function, itp. Nie uwzględniane są również wiersze zakończone trzema kropkami. Dla każdego pliku policzyliśmy, jaki procent wierszy, które powinny sie kończyć średnikiem,
+    jest tak rzeczywiście zakończony. Okazuje się, że każdy z nas posiada pliki w 100% procentach zgodne z tymi zasadami, zaś mediana waha się od 75% u Małgosi do 95% u Mikołaja."
     div(style = text_style, HTML(text))
   })
   
@@ -1240,18 +1250,35 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", "black", ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolor_tla, ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
     )
-    text <- "Wykres po lewej dotyczy dotyczy tego, jaką część plików o rozszerzeniu .m poświęcamy komentarzom. Badaliśmy
-    to zjawisko, zliczając liczbę zakomentowanych wierszy w danym pliku i dzieląc ją przez łączną liczbę wierszy. Wyniki 
-    ukazają znaczne różnice między nami - okazuje się, że u Sebastiana zdarzają się pliki zakomentowane
-    w ponad 80 procentach, u Małgosi wartość maksymalna to 40 procent. Co ciekawe, jeżeli chodzi o średnią i medianę, są one największe u Mikołaja
-    i wynoszą około 35 procent."
+    text <- "Aby móc lepiej przyjrzeć się jakości pisanego przez nas kodu, zadaliśmy sobie również pytanie, jak dużo kodu piszemy w jednej linii,
+    co ma niewątpliwy wpływ na jego czytelnością. Rekomendowana maksymalna liczba znanym w jednym wierszu w Matlabie wynosi 75 znaków. Okazuje się, że
+    nikt z nas nie ma tendencji do jej notorycznego przekraczania. Najwięcej znaków na linię pisze średnio Mikołaj - około 41, zaś najmniej Małgosia - około 34."
+    div(style = text_style, HTML(text))
+  })
+  
+  output$tekst_matlab_5 <- renderUI({
+    
+    text_style <- paste0(
+      "font-family: '", "FuturaMedium", "';",
+      "font-size: ", 18, "px;",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolor_tla, ";",
+      "padding: 10px;",
+      "margin-top: 70px;",
+      "text-align: justify;"
+    )
+    text <- "Pierwszy wykres pozwala prześledzić liczbę plików .m tworzonych przez poszczególne osoby w danych miesiącach.
+    Domyślnie wykres wygenerowany jest dla całej naszej grupy, można jednak, kilkając na legendę, wybrać słupki dotyczące poszczególnych osób.
+    Jeżdżąc kursorem wzdłuż kolumny wyświetla się w dolnej części opisu informacja o ilości utworzonych plików z podziałem na dni.
+    Matlab to dość nowe dla nas środowisko obliczeniowe, z którego zaczęliśmy korzystać dopiero w październiku 2023"
     div(style = text_style, HTML(text))
   })
 
@@ -1273,7 +1300,7 @@ server <- function(input, output, session) {
           ,successFontColor = "#434C5E"
           ,warningFontColor = "#434C5E"
           ,dangerFontColor = "#434C5E"
-          ,bodyBackColor = "#232323" 
+          ,bodyBackColor = kolor_tla
           
         ### header
         ,logoBackColor = "#151515" 
@@ -1288,7 +1315,15 @@ server <- function(input, output, session) {
         ,headerBoxShadowSize = "0px 0px 0px"
         
         ### sidebar
-        ,sidebarBackColor = "#151515"
+        ,sidebarBackColor = cssGradientThreeColors(
+          direction = "down"
+          ,colorStart = "#151515"
+            ,colorMiddle = "#151515"
+            ,colorEnd = kolor_tla
+          ,colorStartPos = 0
+          ,colorMiddlePos = 50
+          ,colorEndPos = 100
+        )
           ,sidebarPadding = 0
         
         ,sidebarMenuBackColor = "transparent"
@@ -1322,17 +1357,17 @@ server <- function(input, output, session) {
         ,sidebarTabRadiusHover = "20px"
         
         ### boxes
-        ,boxBackColor = "#232323" 
+        ,boxBackColor = kolor_tla
           ,boxBorderRadius = 5
         ,boxShadowSize = "0px 0px 0px"
         ,boxShadowColor = ""
         ,boxTitleSize = 18
-        ,boxDefaultColor = "#232323"
-          ,boxPrimaryColor = "#232323"
-          ,boxInfoColor = "#232323"
-          ,boxSuccessColor = "#232323"
-          ,boxWarningColor = "#232323"
-          ,boxDangerColor = "#232323"
+        ,boxDefaultColor = kolor_tla
+          ,boxPrimaryColor = kolor_tla
+          ,boxInfoColor = kolor_tla
+          ,boxSuccessColor = kolor_tla
+          ,boxWarningColor = kolor_tla
+          ,boxDangerColor = kolor_tla
           
         ,tabBoxTabColor = "#151515"
           ,tabBoxTabTextSize = 16
@@ -1349,7 +1384,7 @@ server <- function(input, output, session) {
           ,buttonBorderRadius = 5
         
         ,buttonBackColorHover = "#151515"
-          ,buttonTextColorHover = "#232323"
+          ,buttonTextColorHover = kolor_tla
           ,buttonBorderColorHover = "#2E3440"
           
         ,textboxBackColor = "#151515" 
@@ -1376,7 +1411,7 @@ server <- function(input, output, session) {
           ,successFontColor = "#434C5E"
           ,warningFontColor = "#434C5E"
           ,dangerFontColor = "#434C5E"
-          ,bodyBackColor = "#232323" 
+          ,bodyBackColor = kolor_tla 
           
         ### header
         ,logoBackColor = "#151515" 
@@ -1391,7 +1426,15 @@ server <- function(input, output, session) {
         ,headerBoxShadowSize = "0px 0px 0px"
         
         ### sidebar
-        ,sidebarBackColor = "#151515"
+        ,sidebarBackColor = cssGradientThreeColors(
+          direction = "down"
+          ,colorStart = "#151515"
+            ,colorMiddle = "#151515"
+            ,colorEnd = kolor_tla
+          ,colorStartPos = 0
+          ,colorMiddlePos = 50
+          ,colorEndPos = 100
+        )
           ,sidebarPadding = 0
         
         ,sidebarMenuBackColor = "transparent"
@@ -1425,17 +1468,17 @@ server <- function(input, output, session) {
         ,sidebarTabRadiusHover = "20px"
         
         ### boxes
-        ,boxBackColor = "#232323" 
-          ,boxBorderRadius = 5
+        ,boxBackColor = kolor_tla
+        ,boxBorderRadius = 5
         ,boxShadowSize = "0px 0px 0px"
         ,boxShadowColor = ""
         ,boxTitleSize = 18
-        ,boxDefaultColor = "#232323"
-          ,boxPrimaryColor = "#232323"
-          ,boxInfoColor = "#232323"
-          ,boxSuccessColor = "#232323"
-          ,boxWarningColor = "#232323"
-          ,boxDangerColor = "#232323"
+        ,boxDefaultColor = kolor_tla
+        ,boxPrimaryColor = kolor_tla
+        ,boxInfoColor = kolor_tla
+        ,boxSuccessColor = kolor_tla
+        ,boxWarningColor = kolor_tla
+        ,boxDangerColor = kolor_tla
           
         ,tabBoxTabColor = "#151515"
           ,tabBoxTabTextSize = 16
@@ -1452,7 +1495,7 @@ server <- function(input, output, session) {
           ,buttonBorderRadius = 5
         
         ,buttonBackColorHover = "#151515"
-          ,buttonTextColorHover = "#232323"
+          ,buttonTextColorHover = kolor_tla
           ,buttonBorderColorHover = "#2E3440"
           
         ,textboxBackColor = "#151515" 
@@ -1479,7 +1522,7 @@ server <- function(input, output, session) {
           ,successFontColor = "#434C5E"
           ,warningFontColor = "#434C5E"
           ,dangerFontColor = "#434C5E"
-          ,bodyBackColor = "#232323" 
+          ,bodyBackColor = kolor_tla
           
         ### header
         ,logoBackColor = "#151515" 
@@ -1494,7 +1537,15 @@ server <- function(input, output, session) {
         ,headerBoxShadowSize = "0px 0px 0px"
         
         ### sidebar
-        ,sidebarBackColor = "#151515"
+        ,sidebarBackColor = cssGradientThreeColors(
+          direction = "down"
+          ,colorStart = "#151515"
+            ,colorMiddle = "#151515"
+            ,colorEnd = kolor_tla
+          ,colorStartPos = 0
+          ,colorMiddlePos = 50
+          ,colorEndPos = 100
+        )
           ,sidebarPadding = 0
         
         ,sidebarMenuBackColor = "transparent"
@@ -1528,17 +1579,17 @@ server <- function(input, output, session) {
         ,sidebarTabRadiusHover = "20px"
         
         ### boxes
-        ,boxBackColor = "#232323" 
-          ,boxBorderRadius = 5
+        ,boxBackColor = kolor_tla
+        ,boxBorderRadius = 5
         ,boxShadowSize = "0px 0px 0px"
         ,boxShadowColor = ""
         ,boxTitleSize = 18
-        ,boxDefaultColor = "#232323"
-          ,boxPrimaryColor = "#232323"
-          ,boxInfoColor = "#232323"
-          ,boxSuccessColor = "#232323"
-          ,boxWarningColor = "#232323"
-          ,boxDangerColor = "#232323"
+        ,boxDefaultColor = kolor_tla
+        ,boxPrimaryColor = kolor_tla
+        ,boxInfoColor = kolor_tla
+        ,boxSuccessColor = kolor_tla
+        ,boxWarningColor = kolor_tla
+        ,boxDangerColor = kolor_tla
           
         ,tabBoxTabColor = "#151515"
           ,tabBoxTabTextSize = 16
@@ -1555,7 +1606,7 @@ server <- function(input, output, session) {
           ,buttonBorderRadius = 5
         
         ,buttonBackColorHover = "#151515"
-          ,buttonTextColorHover = "#232323"
+          ,buttonTextColorHover = kolor_tla
           ,buttonBorderColorHover = "#2E3440"
           
         ,textboxBackColor = "#151515" 
@@ -1574,7 +1625,7 @@ server <- function(input, output, session) {
     return(theme_default)
   })
   
-  # styl wybranych komponentów !WORK IN PROGRESS!----
+  # styl wybranych komponentów----
   output$style_css <- renderUI({
     # word page style----
     if(input$menu=='Word')
@@ -1639,6 +1690,9 @@ server <- function(input, output, session) {
     .nwm-czemu-to-dziala .selectize-input, .selectize-control.single .selectize-input.input-active {
     border-color: #41A5EE;
     background: #151515;
+    }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #41A5EE;
     }
     
     /* fixed sidebar and header */
@@ -1717,6 +1771,9 @@ server <- function(input, output, session) {
     border-color: #03a1fc;
     background: #151515;
     }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #03a1fc;
+    }
     
     /* fixed sidebar and header */
     .sidebar {
@@ -1794,6 +1851,9 @@ server <- function(input, output, session) {
     border-color: #fcf647;
     background: #151515;
     }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #fcf647;
+    }
     
     /* fixed sidebar and header */
     .sidebar {
@@ -1870,6 +1930,9 @@ server <- function(input, output, session) {
     border-color: #47fcf6;
     background: #151515;
     }
+    .selectize-control.multi .selectize-input>div.active {
+    background: #47fcf6;
+    }
     
     /* fixed sidebar and header */
     .sidebar {
@@ -1938,32 +2001,41 @@ app_ui <- dashboardPage(
       tabItem(
         tabName = "Ogólny",
         fluidRow(
-          column(width = 8,
-                 wellPanel(
-                   style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-                   uiOutput("tekst_ogolny")
-                 ))
+          box(
+            title = tags$p(icon("home"),"MyFiles",
+                           style = "font-size: 45px; margin-top: 60px; margin-left: 500px; text-align: center;"),
+            width = 12,  # Dostosuj szerokość pudełka według potrzeb
+            solidHeader = TRUE,
+          )
         ),
         fluidRow(
+          column(width = 12,
+                 wellPanel(
+                   style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+                   withSpinner(uiOutput("tekst_ogolny"))
+                 ))
+        ),
+        fluidRow(style = "margin-left: 10px",
           column(width = 8,
-                 selectInput("podsumowanie_11", "Wybierz Imię", zmienne),
-                 plotlyOutput("Podsumowanie_wykres1")
+                 selectInput("podsumowanie_11", "Wybierz osobę", zmienne),
+                 
+                 withSpinner(plotlyOutput("Podsumowanie_wykres1"))
                  ),
           column(width = 4,
                  wellPanel(
                    style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-                   uiOutput("tekst_podsumowanie_1")
+                   withSpinner(uiOutput("tekst_podsumowanie_1"))
                  ))
         ),
-        fluidRow(
+        fluidRow(style = "margin-left: -10px",
           column(width = 8,
-                 selectInput("podsumowanie_2", "Wybierz Imię", zmienne),
-                 plotlyOutput("Podsumowanie_wykres2")
+                 selectInput("podsumowanie_2", "Wybierz osobę", zmienne),
+                 withSpinner(plotlyOutput("Podsumowanie_wykres2"))
                  ),
           column(width = 4,
                  wellPanel(
                    style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-                   uiOutput("tekst_podsumowanie_2")
+                   withSpinner(uiOutput("tekst_podsumowanie_2"))
                  ))
           )
       ),
@@ -1976,21 +2048,23 @@ app_ui <- dashboardPage(
       #-------------------------------------------------------------------------
       tabItem(
         tabName = "Java",
-        fluidRow(style = "margin-top: 30px;",
-                 box(
-                   title = tags$p(icon("java"),"Java",
-                                  style = "font-size: 200%;")
-                 )
+        fluidRow(
+          box(
+            title = tags$p(icon("java"),"Java",
+                           style = "font-size: 45px; margin-top: 60px; margin-left: 500px; text-align: center;"),
+            width = 12,  # Dostosuj szerokość pudełka według potrzeb
+            solidHeader = TRUE,
+          )
         ),
         fluidRow(
           style = "margin-bottom: 80px;",
           column(width = 9,
-                 plotlyOutput("JavaWykres1")
+                 withSpinner(plotlyOutput("JavaWykres1"))
           ),
           column(width = 3,
                  wellPanel(
                    style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-                   uiOutput("JavaWykres10")
+                   withSpinner(uiOutput("JavaWykres10"))
                    )
                  )
         # ),
@@ -2008,10 +2082,10 @@ app_ui <- dashboardPage(
         fluidRow(
           style = "margin-bottom: 80px;",
           column(width = 6,
-                 plotlyOutput("JavaWykres2")
+                 withSpinner(plotlyOutput("JavaWykres2"))
           ),
           column(width = 6,
-                 plotlyOutput("JavaWykres3")
+                 withSpinner(plotlyOutput("JavaWykres3"))
           )
         ),
         fluidRow(
@@ -2020,7 +2094,7 @@ app_ui <- dashboardPage(
                  box(
                    title = tags$p("Najdłuższy wyraz:",
                                   style = "font-size: 125%; text-align: left;color: #FFFFFF;"),
-                   htmlOutput("JavaWykres6"),
+                   withSpinner(htmlOutput("JavaWykres6")),
                    width = 12
                  )
           ),
@@ -2036,7 +2110,7 @@ app_ui <- dashboardPage(
                                                  placeholder = 'Wpisz wyraz',
                                                  plugins = list('restore_on_backspace'))
                    ),
-                   htmlOutput("JavaWykres7"),
+                   withSpinner(htmlOutput("JavaWykres7")),
                    width = 12
                  )
           )
@@ -2057,10 +2131,10 @@ app_ui <- dashboardPage(
                  )
           ),
           column(width = 4.5,
-                 valueBoxOutput('JavaWykres8')
+                 withSpinner(valueBoxOutput('JavaWykres8'))
           ),
           column(width = 4.5,
-                 valueBoxOutput('JavaWykres9')
+                 withSpinner(valueBoxOutput('JavaWykres9'))
           )
         )
       ),
@@ -2073,19 +2147,25 @@ app_ui <- dashboardPage(
       #-------------------------------------------------------------------------
       tabItem(
         tabName = "Word",
-        fluidRow(style = "margin-bottom: 20px; margin-left: 20px;",
-                 box(title = "Word")),
         fluidRow(
-          style = "margin-bottom: 80px; margin-top: 40px;",
+          box(
+            title = tags$p(icon("file-word"),"Word",
+                           style = "font-size: 45px; margin-top: 60px; margin-left: 500px; text-align: center;"),
+            width = 12,  # Dostosuj szerokość pudełka według potrzeb
+            solidHeader = TRUE,
+          )
+        ),
+        fluidRow(
+          style = "margin-bottom: 80px, margin-left: 10px",
           column(
             width = 8,
-            plotlyOutput("wykres1_1")
+            withSpinner(plotlyOutput("wykres1_1"))
           ),
           column(
             width = 4,
             wellPanel(
               style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-              uiOutput("tekst_word_1")
+              withSpinner(uiOutput("tekst_word_1"))
             )
           )
           
@@ -2096,15 +2176,15 @@ app_ui <- dashboardPage(
             width = 4,
             wellPanel(
               style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-              uiOutput("tekst_word_2")
+              withSpinner(uiOutput("tekst_word_2"))
             )
           ),
           column(
             width = 8,
             selectInput("zmienna",
-                        "Wybierz Imię",
+                        "Wybierz osobę",
                         zmienne),
-            plotlyOutput("wykres2", height = "500px")
+            withSpinner(plotlyOutput("wykres2", height = "500px"))
           )
           
         ),
@@ -2112,13 +2192,13 @@ app_ui <- dashboardPage(
           style = "margin-bottom: 40px; margin-top: 40px;",
           column(
             width = 8,
-            plotlyOutput("wykres3")
+            withSpinner(plotlyOutput("wykres3"))
           ),
           column(
             width = 4,
             wellPanel(
               style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-              uiOutput("tekst_word_3")
+              withSpinner(uiOutput("tekst_word_3"))
             )
           )
           
@@ -2133,93 +2213,113 @@ app_ui <- dashboardPage(
       #-------------------------------------------------------------------------
       tabItem(
       tabName = "MATLAB",
-      fluidRow(style = "margin-left: 500px;",
-               box(title = h4("Matlab", style = "font-size: 45px; margin-top: 60px"),
-                   width = 12,  # Dostosuj szerokość pudełka według potrzeb
-                   solidHeader = TRUE,
-                   style = "font-size: 200px; margin: auto;"
-               )),
       fluidRow(
-            column( width = 8, style = "margin-bottom: 80px; margin-left: 20px; margin-top: 60 px",
-            selectInput(
-              inputId = "matlab5",
-              label = "Wybierz imię",
-              choices = c("Mikołaj", "Małgosia", "Sebastian"),
-              selected = c("Mikołaj", "Małgosia", "Sebastian"),
-              multiple = TRUE
-            ),
-            plotlyOutput("MATLABWykres5")
-        ))
-      ,
-      fluidRow(
-        style = "margin-bottom: 80px;",
+        box(
+          title = tags$p(icon("calculator"),"Matlab",
+                         style = "font-size: 45px; margin-top: 60px; margin-left: 480px; text-align: center;"),
+          width = 12,  # Dostosuj szerokość pudełka według potrzeb
+          solidHeader = TRUE,
+        )
+      ),
+      fluidRow(column(width = 12, style = "margin-left: 400px; text-align: center",
+                      selectInput(
+                        
+                        inputId = "matlab5",
+                        label = "Wybierz osobę",
+                        choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                        selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                        multiple = TRUE
+                      ))),
+      fluidRow( 
         column(
-          width = 8,
-          selectInput(
-            inputId = "matlab4",
-            label = "Wybierz imię",
-            choices = c("Mikołaj", "Małgosia", "Sebastian"),
-            selected = c("Mikołaj", "Małgosia", "Sebastian"),
-            multiple = TRUE
-          ),
-          plotlyOutput("MATLABWykres4")
-        ),
-        column(
-          width = 4,
+          width = 5,
           wellPanel(
             style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-            uiOutput("tekst_matlab_1")
-          )
-        )),
-        fluidRow( 
-          style = "margin-bottom: 80px; margin-left: 20px;",
-          column(
-            width = 4,
-            wellPanel(
-              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-              uiOutput("tekst_matlab_2")
-            )
-          ),
-          column(
-              width = 8,
-                 selectInput(
-                   inputId = "matlab1",
-                   label = "Wybierz imię",
-                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
-                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
-                   multiple = TRUE
-                 ),
-                 plotlyOutput("MATLABWykres1")
-          )),
-        fluidRow(
-          column(width = 6, style = "margin-bottom: 80px; margin-left: 20px;",
-                 selectInput(
-                   inputId = "matlab2",
-                   label = "Wybierz imię",
-                   choices = c("Mikołaj", "Małgosia", "Sebastian"),
-                   selected = c("Mikołaj", "Małgosia", "Sebastian"),
-                   multiple = TRUE
-                 ),
-                 plotlyOutput("MATLABWykres2")
-          ),
-          column(
-            width = 4,
-            wellPanel(
-              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-              uiOutput("tekst_matlab_3")
-            )
+            withSpinner(uiOutput("tekst_matlab_5"))
           )
         ),
-        fluidRow(
+            column(width = 7,
+                    style = "text-align: center; align: center;",
+            withSpinner(plotlyOutput("MATLABWykres5"))
+        ))
+      ,
+      fluidRow(column(width = 12, style = "margin-left: 400px; margin-top: 20px; text-align: center",
+                      selectInput(
+                        inputId = "matlab4",
+                        label = "Wybierz osobę",
+                        choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                        selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                        multiple = TRUE
+                      ))),
+      fluidRow(style = "margin-left: 10px",
+        column(
+          width = 7,
+          withSpinner(plotlyOutput("MATLABWykres4"))
+        ),
+        column(
+          width = 5,
+          wellPanel(
+            style = " background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+            style = "margin-top: -50px;",
+            withSpinner(uiOutput("tekst_matlab_1"))
+          )
+        )),
+      fluidRow(column(width = 12, style = "margin-left: 400px; margin-top: 20px; text-align: center",
+                      selectInput(
+                        inputId = "matlab1",
+                        label = "Wybierz osobę",
+                        choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                        selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                        multiple = TRUE
+                      ))),
+        fluidRow( 
           column(
-            width = 4,
+            width = 5,
             wellPanel(
               style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
-              uiOutput("tekst_matlab_4")
+              style = "margin-top: -70px",
+              withSpinner(uiOutput("tekst_matlab_2"))
             )
           ),
-          column(width = 6,
-                 plotlyOutput("MATLABWykres3")
+          column(
+              width = 7,
+              style = "text-align: center; align: center;",
+                 withSpinner(plotlyOutput("MATLABWykres1"))
+          )),
+      fluidRow(column(width = 12, style = "margin-left: 400px; margin-top: 20px; text-align: center",
+                      selectInput(
+                        inputId = "matlab2",
+                        label = "Wybierz osobę",
+                        choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                        selected = c("Mikołaj", "Małgosia", "Sebastian"),
+                        multiple = TRUE
+                      ))),
+      fluidRow(
+        style = "margin-bottom: 80px; margin-left: 10px",
+        column(width = 7,
+               style = "text-align: center; align: center;",
+               withSpinner(plotlyOutput("MATLABWykres2")),
+        ),
+        column(
+          width = 5,
+          wellPanel(
+            style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+            style = "margin-top: -70px",
+            withSpinner(uiOutput("tekst_matlab_3"))
+          )
+        )
+      ),
+        fluidRow(
+          column(
+            width = 5,
+            style = "margin-top: -50px",
+            wellPanel(
+              style = "background-color: rgba(255, 255, 255, 0.0); border: 2px solid rgba(0, 0, 0, 0);",
+              withSpinner(uiOutput("tekst_matlab_4"))
+            )
+          ),
+          column(width = 7,
+              withSpinner(plotlyOutput("MATLABWykres3"))
           )
         )
 
@@ -2228,7 +2328,7 @@ app_ui <- dashboardPage(
       # Koniec panelu MATLAB
       #-------------------------------------------------------------------------
       
-    ),
+    )
   )
 )
 
