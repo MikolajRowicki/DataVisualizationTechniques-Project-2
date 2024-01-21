@@ -46,7 +46,7 @@ kolory_java <- c('#5382a1', '#f89820', '#fc0703', '#DD4B39', '#1666de', '#03a1fc
 malgosia_word <- read.csv("Malgosia-word.csv")
 malgosia_word <- malgosia_word %>%
   mutate(Imie = ifelse(Imie == "Malgosia", "Małgosia", Imie))
-sebastian_word <- read.csv("Sebastian-word.csv")
+sebastian_word <- read.csv("Sebastian-word-nowe.csv")
 
 mikolaj_word <- read.csv("Mikolaj-word.csv")
 mikolaj_word <- mikolaj_word %>%
