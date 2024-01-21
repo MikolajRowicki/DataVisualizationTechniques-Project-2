@@ -1162,7 +1162,7 @@ server <- function(input, output, session) {
       "text-align: justify;"
     )
     text <- "Pierwszy wykres prezentuje ilość utworzonych plików przez każdą osobę z naszej grupy. Dane dotyczą liczby plików stworzonych w poszczególnych miesiącach i latach. Przy najeżdżaniu kursorem na konkretną kolumnę możliwe jest uzyskanie szczegółowych informacji na temat ilości utworzonych plików w poszczególnych dniach.
-            Zauważalne jest, że Mikołaj regularnie korzysta z programu Word przez wiele lat. Natomiast Sebastian i Małgosia tworzyli pliki głownie w latach 2019 - 2021."
+            Zauważalne jest, że Mikołaj i Sebastian regularnie korzystają z programu Word przez wiele lat. Natomiast Małgosia tworzyła pliki głownie w latach 2020 - 2021."
     div(style = text_style, HTML(text))
   })
   # output$tekst_word_2----
