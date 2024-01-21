@@ -52,8 +52,8 @@ mikolaj_word <- read.csv("Mikolaj-word.csv")
 mikolaj_word <- mikolaj_word %>%
   mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 word <- rbind(malgosia_word, mikolaj_word, sebastian_word)
-zmienne <- c("Mikołaj", "Sebastian", "Małgosia")
-kolory_word <- c("#7780f8", "#0a2051", "#39bacc", "#78dfd0", "#2929b3")
+zmienne <- c("Sebastian", "Mikołaj", "Małgosia")
+kolory_word <- c("#47bbfa", "#3562fd", "#95e7eb", "#78dfd0", "#2929b3")
 
 # matlab
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
@@ -256,15 +256,17 @@ server <- function(input, output, session) {
             xperiod="M1", xperiodalignment="middle"
     ) %>%
       layout(barmode = 'group',
-             title = "Tworzenie plików .java w czasie",
+             font = list(family = "FuturaMedium", color = "white", size = 14),
+             title = list(text = "Tworzenie plików .java w czasie", font = list(size = 22)),
              xaxis = list(fixedrange = TRUE,
-                          title = "Data"),
+                          title = list(text = "Data", font = list(size = 18))),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba utworzonych plików",
+                        title = list(text = "Liczba utworzonych plików", font = list(size = 18)),
                         gridcolor = "grey"),
              plot_bgcolor = "rgba(0,0,0,0)",
              paper_bgcolor = "rgba(0,0,0,0)",
-             font = list(color = "white")) %>%
+             margin = list(t = 40)
+             ) %>%
       config(displayModeBar = FALSE,
              locale = 'pl') 
   })
@@ -296,12 +298,14 @@ server <- function(input, output, session) {
                 marker = list(color = kolory_java[4])
       ) %>%
       layout(barmode = 'group',
-             title = "Średnia liczba komentarzy na plik",
+             font = list(family = "FuturaMedium", color = "white", size = 14),
+             title = list(text = "Średnia liczba komentarzy na plik", font = list(size = 22)),
              xaxis = list(fixedrange = TRUE,
-                          title = "Osoba"),
+                          title = list(text = "Osoba", font = list(size = 18))),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba komentarzy",
-                        gridcolor = "grey"),
+                        title = list(text = "Liczba komentarzy", font = list(size = 18)),
+                        gridcolor = "grey"
+                        ),
              legend = list(
                itemclick = FALSE,
                itemdoubleclick = FALSE,
@@ -309,7 +313,7 @@ server <- function(input, output, session) {
              ),
              plot_bgcolor = "rgba(0,0,0,0)",
              paper_bgcolor = "rgba(0,0,0,0)",
-             font = list(color = "white")
+             margin = list(t = 40)
       ) %>%
       config(displayModeBar = FALSE)
   })
@@ -345,11 +349,13 @@ server <- function(input, output, session) {
                 marker = list(color = kolory_java[4])
       ) %>%
       layout(barmode = 'group',
-             title = "Średnia liczba znaków na komentarz",
+             font = list(family = "FuturaMedium", color = "white", size = 14),
+             title = list(text = "Średnia liczba znaków na komentarz", font = list(size = 22)),
              xaxis = list(fixedrange = TRUE,
-                          title = "Osoba"),
+                          title = list(text = "Osoba", font = list(size = 18))
+                          ),
              yaxis=list(fixedrange=TRUE,
-                        title = "Liczba znaków",
+                        title = list(text = "Liczba komentarzy", font = list(size = 18)),
                         gridcolor = "grey"),
              legend = list(
                itemclick = FALSE,
@@ -358,7 +364,7 @@ server <- function(input, output, session) {
              ),
              plot_bgcolor = "rgba(0,0,0,0)",
              paper_bgcolor = "rgba(0,0,0,0)",
-             font = list(color = "white")
+             margin = list(t = 40)
       ) %>%
       config(displayModeBar = FALSE)
   })
@@ -439,7 +445,7 @@ server <- function(input, output, session) {
                       mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))]) %>%
                       filter(Imie %in% input$JavaSelectInput1) %>% summarise(ilosc_znakow = sum(Liczba_znaków)) %>% pull(),
                     style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
-             tags$p("znaków napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
+             tags$p("znaków napisanych w sumie", style = "font-size: 125%; font-family: 'FuturaMedium'; text-align: center;color: #FFFFFF;"), 
              color = "red")    
   })
   # Wykres 9 -------------------------------------------------------------------
@@ -448,7 +454,7 @@ server <- function(input, output, session) {
                       mutate(Imie = c("Sebastian", "Mikołaj", "Małgosia")[match(Imie, c("Sebastian", "Mikołaj", "Małgosia"))]) %>%
                       filter(Imie %in% input$JavaSelectInput1) %>% summarise(ilosc_znakow = sum(Liczba_linii)) %>% pull(),
                     style = "font-size: 175%; text-align: center;color: #FFFFFF;"),
-             tags$p("linijek napisanych w sumie", style = "font-size: 125%; text-align: center;color: #FFFFFF;"), 
+             tags$p("linijek napisanych w sumie", style = "font-size: 125%; font-family: 'FuturaMedium'; text-align: center;color: #FFFFFF;"), 
              color = "red")    
   })
   # Wykres 10 ------------------------------------------------------------------
@@ -456,10 +462,10 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 15, "px;",
+      "font-size: ", 18, "px;",
       "color: ", "white", ";",
-      "background-color:", "#DD4B39", ";",
-      "border:", "#fc0703", ";",
+      "background-color:", kolor_tla, ";",
+      "border: 2px solid ", "#fc0703", ";",
       "padding: 10px;",
       "margin-top: 10px;",
       "text-align: justify;"
@@ -534,7 +540,7 @@ server <- function(input, output, session) {
     } else if (input$zmienna == "Małgosia") {
       kolor <- kolory_word[3]
     }else if (input$zmienna == "Sebastian") {
-      kolor <- kolory_word[3]
+      kolor <- kolory_word[1]
     }
     
     
@@ -673,17 +679,18 @@ server <- function(input, output, session) {
     }
     
     p %>% 
-      layout(title = title, 
-             xaxis = list(title = "Autor"), 
+      layout(font = list(family = "FuturaMedium", color = "white", size = 14),
+            title = list(text = title, font = list(size = 22)), 
+             xaxis = list(title =list(text = "Autor", font = list(size = 18))), 
              y_axis_values <- seq(0, 1, 0.1),
              yaxis = list(
-               title = "Udział w pliku operatorów zapisanych ze spacjami wokół",
+               title = list(text = "Udział w pliku operatorów zapisanych ze spacjami wokół", font = list(size = 18)),
                tickvals = y_axis_values,
                ticktext = sprintf("%.0f%%", y_axis_values * 100),
                tickformat = "%"),  # Dodanie formatu procentowego do osi Y
              plot_bgcolor = kolor_tla,  # Kolor tła wykresu
              paper_bgcolor = kolor_tla,
-             font = list(color = "white"),
+             margin = list(t = 40),
              aspectratio = list(x = 1, y = 1)  # Ustawienie stosunku osi X do Y
       )
   })
@@ -760,17 +767,18 @@ server <- function(input, output, session) {
     }
     y_axis_values <- seq(0, 1, 0.1)
     p %>% 
-      layout(title = title, 
-             xaxis = list(title = "Autor"),
+      layout(font = list(family = "FuturaMedium", color = "white", size = 14),
+            title = list(text = title, font = list(size = 22)), 
+             xaxis = list(title = list(text = "Autor", font = list(size = 18))),
              y_axis_values <- seq(0, 1, 0.1),
              yaxis = list(
-               title = "Udział wierszy zakończonych średnikiem w pliku",
+               title = list(text = "Udział wierszy zakończonych średnikiem w pliku", font = list(size = 18)),
                tickvals = y_axis_values,
                ticktext = sprintf("%.0f%%", y_axis_values * 100),
                tickformat = "%"),  # Dodanie formatu procentowego do osi Y
              plot_bgcolor = kolor_tla,  # Kolor tła wykresu
              paper_bgcolor = kolor_tla,
-             font = list(color = "white"),
+             margin = list(t = 40),
              xaxis = list(scaleanchor = "y", scaleratio = 1),  # Ustawienie skali osi X
              grid = list(
                gridwidth = 5,  # Grubość siatki
@@ -842,12 +850,13 @@ server <- function(input, output, session) {
 
     
     p %>% 
-      layout(title = "Liczba znaków w niepustym wierszu", 
-             yaxis = list(title = "Średnia liczba znaków w niepustym wierszu"), 
-             xaxis = list(title = "Autor"),
+      layout(font = list(family = "FuturaMedium", color = "white", size = 14),
+             title = list(text = "Liczba znaków w niepustym wierszu", font = list(size = 22)), 
+             yaxis = list(title = list(text = "Średnia liczba znaków w niepustym wierszu", font = list(size = 18))), 
+             xaxis = list(title = list(text = "Autor", font = list(size = 18))),
              plot_bgcolor = kolor_tla,  # Kolor tła wykresu
              paper_bgcolor = kolor_tla,
-             font = list(color = "white"),
+             margin = list(t = 40),
              grid = list(
                gridwidth = 5,  # Grubość siatki
                gridcolor = "white"  # Kolor siatki
@@ -914,16 +923,17 @@ server <- function(input, output, session) {
     
     y_axis_values <- seq(0, 1, 0.1)
     p_boxplot %>%
-      layout(title = "Jaką część pliku stanowią komentarze?",
-             xaxis = list(title = "Autor"),
+      layout(font = list(family = "FuturaMedium", color = "white", size = 14),
+            title = list(text = "Jaką część pliku stanowią komentarze?", font = list(size = 18)),
+             xaxis = list(title = list(text = "Autor", font = list(size = 18))),
              yaxis = list(
-               title = "Stosunek długości komentarzy do długości pliku",
+               title = list(text = "Stosunek długości komentarzy do długości pliku", font = list(size = 18)),
                tickvals = y_axis_values,
                ticktext = sprintf("%.0f%%", y_axis_values * 100),
                tickformat = "%"),  # Dodanie formatu procentowego do osi Y
              plot_bgcolor = kolor_tla,
              paper_bgcolor = kolor_tla,
-             font = list(color = "white"),
+             margin = list(t = 40),
              aspectratio = list(x = 1, y = 1),
              xaxis2 = list(domain = c(0.8, 1), anchor = "y2"),
              grid = list(gridwidth = 5, gridcolor = "white"),
@@ -964,20 +974,22 @@ server <- function(input, output, session) {
             xperiod = "M1", xperiodalignment = "middle"
     ) %>%
       layout(barmode = 'group',
-             title = "Tworzenie plików .m w czasie",
+             font = list(family = "FuturaMedium", color = "white", size = 14),
+             title = list(text = "Tworzenie plików .m w czasie", font = list(size = 22)),
              xaxis = list(fixedrange = TRUE,
-                          title = "Data"),
+                          title = list(text = "Data", font = list(size = 14))),
              yaxis = list(fixedrange = TRUE,
-                          title = "Liczba utworzonych plików",
+                          title = list(text = "Liczba utworzonych plików", font = list(size = 18)),
                           gridcolor = "grey"),
              legend = list(
                itemclick = FALSE,
                itemdoubleclick = FALSE,
                groupclick = FALSE
              ),
+             margin = list(t = 40),
              plot_bgcolor = "rgba(0,0,0,0)",
-             paper_bgcolor = "rgba(0,0,0,0)",
-             font = list(color = "white")) %>%
+             paper_bgcolor = "rgba(0,0,0,0)"
+             ) %>%
       config(displayModeBar = FALSE,
              locale = 'pl') 
   })
@@ -1075,7 +1087,7 @@ server <- function(input, output, session) {
       textposition = "none"
     ) %>%
       layout(
-        font = list(family = "FuturaMedium", color = "white", size = 14),
+        font = list(family = "FuturaMedium", color = "white", size = 20),
         title = list(text = "Jak Rozkładają Się Pliki na Naszych Komputerach?", font = list(size = 22)),
         margin = list(t = 40),
         plot_bgcolor = "rgba(0,0,0,0)",
@@ -1093,7 +1105,7 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 22, "px;",
-      "color: ", "#7ed987", ";",
+      "color: ", "#48e0ab", ";",
       "background-color: rgba(0, 0, 0, 0);",
       "border: rgba(0, 0, 0, 0);",
       "padding: 10px;",
@@ -1109,9 +1121,9 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#48e0ab", ";",
+      "color: ", "white", ";",
       "background-color: rgba(0, 0, 0, 0);",
-      "border: rgba(0, 0, 0, 0);",
+      "border: 2px solid ", "#48e0ab", ";",
       "margin-top: 70px;",
       "padding: 10px;"
     )
@@ -1125,9 +1137,9 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#48e0ab", ";",
+      "color: ", "white", ";",
       "background-color: rgba(0, 0, 0, 0);",
-      "border: rgba(0, 0, 0, 0);",
+      "border: 2px solid ", "#48e0ab", ";",
       "margin-top: 60px;",
       "padding: 10px;"
     )
@@ -1142,9 +1154,9 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolory_word[5], ";",
       "padding: 10px;",
       "margin-top: 40px;",
       "text-align: justify;"
@@ -1159,9 +1171,9 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolory_word[5], ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1176,9 +1188,9 @@ server <- function(input, output, session) {
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
       "font-size: ", 18, "px;",
-      "color: ", "#c0cae8", ";",
-      "background-color: ", "#2949a9", ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "color: ", "white", ";",
+      "background-color: ", kolor_tla, ";",
+      "border: 2px solid ", kolory_word[5], ";",
       "padding: 10px;",
       "margin-top: 40px;",
       "text-align: justify;"
@@ -1194,7 +1206,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "border: 2px solid ", "#ed9242", ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1214,7 +1226,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "border: 2px solid ", "#ed9242", ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1233,7 +1245,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "border: 2px solid ", "#ed9242", ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1252,7 +1264,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "border: 2px solid ", "#ed9242", ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1270,7 +1282,7 @@ server <- function(input, output, session) {
       "font-size: ", 18, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolor_tla, ";",
+      "border: 2px solid ", "#ed9242", ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
