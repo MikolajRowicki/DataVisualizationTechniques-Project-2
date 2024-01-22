@@ -70,44 +70,120 @@ def stworz_licznik_wyrazow_java(tekst_z_pliku):
     for wyraz in tekst_z_pliku.split():
         licznik_wyrazow[wyraz] += 1
     licznik = Counter()
-    licznik["private"] = licznik_wyrazow["private"]
-    licznik["public"] = licznik_wyrazow["public"]
-    licznik["protected"] = licznik_wyrazow["protected"]
+
     licznik["abstract"] = licznik_wyrazow["abstract"]
-    licznik["final"] = licznik_wyrazow["final"]
-    licznik["static"] = licznik_wyrazow["static"]
-    licznik["default"] = licznik_wyrazow["default"]
-    licznik["void"] = licznik_wyrazow["void"]
-
-    licznik["byte"] = licznik_wyrazow["abstract"]
-    licznik["short"] = licznik_wyrazow["short"]
-    licznik["int"] = licznik_wyrazow["int"]
-    licznik["long"] = licznik_wyrazow["long"]
-    licznik["float"] = licznik_wyrazow["float"]
-    licznik["double"] = licznik_wyrazow["double"]
+    licznik["assert"] = licznik_wyrazow["assert"]
     licznik["boolean"] = licznik_wyrazow["boolean"]
+    licznik["break"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("break", wyraz):
+            licznik["break"] += licznik_wyrazow[wyraz]
+    licznik["byte"] = licznik_wyrazow["byte"]
+    licznik["case"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("case", wyraz):
+            licznik["case"] += licznik_wyrazow[wyraz]
+    licznik["catch"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("catch", wyraz):
+            licznik["catch"] += licznik_wyrazow[wyraz]
     licznik["char"] = licznik_wyrazow["char"]
-    licznik["String"] = licznik_wyrazow["String"]
-
     licznik["class"] = licznik_wyrazow["class"]
+    licznik["continue"] = licznik_wyrazow["continue"]
+    licznik["default"] = licznik_wyrazow["default"]
+    licznik["do"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("do", wyraz):
+            licznik["do"] += licznik_wyrazow[wyraz]
+    licznik["double"] = licznik_wyrazow["double"]
+    licznik["else"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("else", wyraz):
+            licznik["else"] += licznik_wyrazow[wyraz]
     licznik["enum"] = licznik_wyrazow["enum"]
-    licznik["interface"] = licznik_wyrazow["interface"]
-    licznik["annotation"] = licznik_wyrazow["annotation"]
-
     licznik["extends"] = licznik_wyrazow["extends"]
-    licznik["new"] = licznik_wyrazow["new"]
-
+    licznik["final"] = licznik_wyrazow["final"]
+    licznik["finally"] = licznik_wyrazow["finally"]
+    licznik["for"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("for", wyraz):
+            licznik["for"] += licznik_wyrazow[wyraz]
     licznik["if"] = 0
     for wyraz in licznik_wyrazow:
         if re.search("if", wyraz):
             licznik["if"] += licznik_wyrazow[wyraz]
-    licznik["else"] = licznik_wyrazow["else"]
+    licznik["implements"] = licznik_wyrazow["implements"]
+    licznik["import"] = licznik_wyrazow["import"]
+    licznik["instanceof"] = licznik_wyrazow["instanceof"]
+    licznik["int"] = licznik_wyrazow["int"]
+    licznik["interface"] = licznik_wyrazow["interface"]
+    licznik["long"] = licznik_wyrazow["long"]
+    licznik["native"] = licznik_wyrazow["native"]
+    licznik["new"] = licznik_wyrazow["new"]
+    licznik["package"] = licznik_wyrazow["package"]
+    licznik["private"] = licznik_wyrazow["private"]
+    licznik["protected"] = licznik_wyrazow["protected"]
+    licznik["public"] = licznik_wyrazow["public"]
     licznik["return"] = licznik_wyrazow["return"]
+    licznik["short"] = licznik_wyrazow["short"]
+    licznik["static"] = licznik_wyrazow["static"]
+    licznik["super"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("super", wyraz):
+            licznik["super"] += licznik_wyrazow[wyraz]
+    licznik["switch"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("switch", wyraz):
+            licznik["switch"] += licznik_wyrazow[wyraz]
+    licznik["synchronized"] = licznik_wyrazow["synchronized"]
+    licznik["this"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("this", wyraz):
+            licznik["this"] += licznik_wyrazow[wyraz]
     licznik["throw"] = licznik_wyrazow["throw"]
     licznik["throws"] = licznik_wyrazow["throws"]
-    licznik["import"] = licznik_wyrazow["import"]
-    licznik["catch"] = licznik_wyrazow["catch"]
-    licznik["package"] = licznik_wyrazow["package"]
+    licznik["transient"] = licznik_wyrazow["transient"]
+    licznik["try"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("try", wyraz):
+            licznik["try"] += licznik_wyrazow[wyraz]
+    licznik["void"] = licznik_wyrazow["void"]
+    licznik["volatile"] = licznik_wyrazow["volatile"]
+    licznik["while"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("while", wyraz):
+            licznik["while"] += licznik_wyrazow[wyraz]
+    licznik["exports"] = licznik_wyrazow["exports"]
+    licznik["module"] = licznik_wyrazow["module"]
+    licznik["non-sealed"] = licznik_wyrazow["non-sealed"]
+    licznik["open"] = licznik_wyrazow["open"]
+    licznik["opens"] = licznik_wyrazow["opens"]
+    licznik["permits"] = licznik_wyrazow["permits"]
+    licznik["provides"] = licznik_wyrazow["provides"]
+    licznik["record"] = licznik_wyrazow["record"]
+    licznik["requires"] = licznik_wyrazow["requires"]
+    licznik["sealed"] = licznik_wyrazow["sealed"]
+    licznik["to"] = licznik_wyrazow["to"]
+    licznik["transitive"] = licznik_wyrazow["transitive"]
+    licznik["uses"] = licznik_wyrazow["uses"]
+    licznik["var"] = licznik_wyrazow["var"]
+    licznik["with"] = licznik_wyrazow["with"]
+    licznik["yield"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("yield", wyraz):
+            licznik["yield"] += licznik_wyrazow[wyraz]
+    licznik["true"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("true", wyraz):
+            licznik["true"] += licznik_wyrazow[wyraz]
+    licznik["false"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("false", wyraz):
+            licznik["false"] += licznik_wyrazow[wyraz]
+    licznik["null"] = 0
+    for wyraz in licznik_wyrazow:
+        if re.search("null", wyraz):
+            licznik["null"] += licznik_wyrazow[wyraz]
 
     return licznik
 
@@ -187,8 +263,9 @@ def main():
     # # Ścieżki, z których korzysta program
     # # To należy zmienić
     sciezka_do_folderu_z_plikami_java = 'C:/Users/Sebastian/Desktop/Semestr 3/Zaawansowane programowanie obiektowe i funkcyjne/Laboratorium'
+    # sciezka_do_folderu_z_plikami_java = 'C:/Users/Sebastian/Desktop/STUDIA PW/Semestr 2/Programowanie obiektowe/Laboratorium/PO/MyRepos'
     sciezka_do_miejsca_zapisu_plikow = 'C:/Users/Sebastian/Desktop/Semestr 3/Techniki wizualizacji danych/Projekt/PRO_2/skrypt_java'
-    imie = 'Sebastian'
+    imie = 'Test2'
     # # ----------------------------------------------------------------------
     # # Tworzy listę ścieżek do wszystkich plików od podanej ścieżki, mających dane rozszerzenie
     sciezki_do_plikow = list(pathlib.Path(sciezka_do_folderu_z_plikami_java).rglob('*.java'))
@@ -205,12 +282,13 @@ def main():
                               "Liczba_linii": zlicz_linie(tekst_z_pliku),
                               "Liczba_wierszy": zlicz_wyrazy(tekst_z_pliku),
                               "Liczba_znaków": zlicz_znaki(tekst_z_pliku)},
-                             **stworz_licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze(tekst_z_pliku),
+                             # **stworz_licznik_mniejszeLubRowne_wiekszeLubRowne_mniejsze_wieksze(tekst_z_pliku),
                              **stworz_licznik_wyrazow_java(tekst_z_pliku),
                              **stworz_statystyki_komentarzy(tekst_z_pliku),
-                             **stworz_statystyki_cudzyslowow(tekst_z_pliku),
+                             # **stworz_statystyki_cudzyslowow(tekst_z_pliku),
                              **{"Najdluzszy_wyraz": znajdz_najdluzszy_wyraz(tekst_z_pliku)},
-                             **stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku)))
+                             # **stworz_licznik_ilosci_linii_odstepu(tekst_z_pliku)
+                             ))
         df = pd.DataFrame(data)
         df.to_csv(f"{sciezka_do_miejsca_zapisu_plikow}/{imie}_java.csv", sep=',')
     # # ----------------------------------------------------------------------
