@@ -1087,7 +1087,7 @@ server <- function(input, output, session) {
 
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: rgba(0, 0, 0, 0);",
       "border: 2px solid ", "#48e0ab", ";",
@@ -1103,7 +1103,7 @@ server <- function(input, output, session) {
 
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: rgba(0, 0, 0, 0);",
       "border: 2px solid ", "#48e0ab", ";",
@@ -1120,7 +1120,7 @@ server <- function(input, output, session) {
 
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", kolory_word[5], ";",
@@ -1137,7 +1137,7 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", kolory_word[5], ";",
@@ -1154,7 +1154,7 @@ server <- function(input, output, session) {
 
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ",15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", kolory_word[5], ";",
@@ -1170,7 +1170,7 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", "#ed9242", ";",
@@ -1190,7 +1190,7 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", "#ed9242", ";",
@@ -1209,7 +1209,7 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", "#ed9242", ";",
@@ -1228,7 +1228,7 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", "#ed9242", ";",
@@ -1246,7 +1246,7 @@ server <- function(input, output, session) {
     
     text_style <- paste0(
       "font-family: '", "FuturaMedium", "';",
-      "font-size: ", 18, "px;",
+      "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
       "border: 2px solid ", "#ed9242", ";",
@@ -1673,6 +1673,9 @@ server <- function(input, output, session) {
     .selectize-control.multi .selectize-input>div.active {
     background: #41A5EE;
     }
+    .selectize-dropdown, .selectize-input, .selectize-input input {
+    color: #ffffff;
+    }
     
     /* fixed sidebar and header */
     .sidebar {
@@ -1751,6 +1754,7 @@ server <- function(input, output, session) {
     background: #151515;
     }
     .selectize-control.multi .selectize-input>div.active {
+    color: #000000;
     background: #03a1fc;
     }
     
@@ -1831,7 +1835,11 @@ server <- function(input, output, session) {
     background: #151515;
     }
     .selectize-control.multi .selectize-input>div.active {
+    color: #000000;
     background: #fcf647;
+    }
+    .selectize-dropdown, .selectize-input, .selectize-input input {
+    color: #ffffff;
     }
     
     /* fixed sidebar and header */
@@ -1848,15 +1856,15 @@ server <- function(input, output, session) {
                            ")))
     # home page style----
     return(tags$style(HTML("
-      
+
     /* sliders */
     .js-irs-0 {
     max-width: 215px;
-    } 
+    }
     .irs--shiny .irs-bar {
     border-top-color: #48e0ab;
     border-bottom-color: #48e0ab;
-    } 
+    }
     .irs--shiny .irs-bar-edge {
     border-color: #48e0ab;
     }
@@ -1874,7 +1882,7 @@ server <- function(input, output, session) {
     color: #000000;
     background-color: #48e0ab;
     }
-    
+
     /* dropdown menus */
     .selectize-dropdown .selected {
     background-color: #48e0ab;
@@ -1912,7 +1920,10 @@ server <- function(input, output, session) {
     .selectize-control.multi .selectize-input>div.active {
     background: #47fcf6;
     }
-    
+    .selectize-dropdown, .selectize-input, .selectize-input input {
+    color: #ffffff;
+    }
+
     /* fixed sidebar and header */
     .sidebar {
     position: fixed;
