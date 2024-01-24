@@ -28,7 +28,7 @@ df <- df1
 df <- bind_rows(df1, df2, df3)
 df[is.na(df)] <- 0
 df <- df[,-1]
-df_temp <- df[!duplicated(df), ]
+df <- df[!duplicated(df), ]
 df$Data_ostatniej_modefikacji <- as.Date(substr(df$Data_ostatniej_modefikacji,1,10))
 colnames(df)[which(names(df) == "break.")] <- "break"
 colnames(df)[which(names(df) == "else.")] <- "else"
@@ -1968,8 +1968,8 @@ app_ui <- dashboardPage(
       inputId = "data",
       label = "Ustaw przedział czasu",
       min = min(as.Date(word$Data.utworzenia.pliku)),
-      max = as.Date("2024-01-23"),
-      value = c(as.Date(min(as.Date("2021-01-01"))), as.Date("2024-01-23"))
+      max = as.Date("2024-01-31"),
+      value = c(as.Date(min(as.Date("2021-01-01"))), as.Date("2024-01-31"))
     ),
     width = 250
   ),
