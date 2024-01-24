@@ -8,7 +8,7 @@ To see the app click the link below:
 **[here]((https://rowickim.shinyapps.io/MyFiles/))**.
 
 <div align="center">
-  <img src="screen/Dashboard.png" width="600"/>
+  <img src="screen/Dashboard.png" width="900"/>
 </div>
 
 Authors: [@MalgorzataMokwa](https://github.com/malgosiam2), [@SebstianPergala](https://github.com/Sebislaw) and [@MikolajRowicki](https://github.com/MikolajRowicki).
