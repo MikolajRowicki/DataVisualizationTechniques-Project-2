@@ -4,14 +4,14 @@ Data visualisation dashboard for Data Visualization Techniques course in the sec
 
 The project includes a detailed analysis of the .m, .docx and .java files created by the project authors. The graphs created show the distribution of the creation of these files over time, as well as the typical issues for each extension. The application was written in R using the packages shiny, dplyr and plotly (mainly).
 
+Authors: [@MalgorzataMokwa](https://github.com/malgosiam2), [@SebstianPergala](https://github.com/Sebislaw) and [@MikolajRowicki](https://github.com/MikolajRowicki).
+
 To see the app click the link below:
-**[here]((https://rowickim.shinyapps.io/MyFiles/))**.
+**[here](https://rowickim.shinyapps.io/MyFiles/)**.
 
 <div align="center">
   <img src="screen/Dashboard.png" width="900"/>
 </div>
-
-Authors: [@MalgorzataMokwa](https://github.com/malgosiam2), [@SebstianPergala](https://github.com/Sebislaw) and [@MikolajRowicki](https://github.com/MikolajRowicki).
 
 ## Selected statistics
 
