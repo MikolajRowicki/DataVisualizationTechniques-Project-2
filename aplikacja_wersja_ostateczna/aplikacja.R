@@ -396,6 +396,9 @@ server <- function(input, output, session) {
   })
   # Wykres 7 -------------------------------------------------------------------
   output$JavaWykres7 <- renderUI({
+    validate(
+      need(input$txtIn %in% java_keyword_list, "Proszę podać poprawny wraz")
+    )
     df_tmp <- df %>% filter(Data_ostatniej_modefikacji >= input$data[1], Data_ostatniej_modefikacji <= input$data[2], input$txtIn %in% java_keyword_list)
     Mikolaj_df_tmp <- df_tmp %>% filter(Imie == "Mikołaj")
     Sebastian_df_tmp <- df_tmp %>% filter(Imie == "Sebastian")
@@ -1688,6 +1691,8 @@ server <- function(input, output, session) {
     position: fixed;
     width:100%;
     }
+    .shiny-output-error { visibility: hidden; },
+    .shiny-output-error:before { visibility: hidden; }
                            ")))
     # java page style----
     if(input$menu=='Java')
@@ -1769,6 +1774,8 @@ server <- function(input, output, session) {
     position: fixed;
     width:100%;
     }
+    .shiny-output-error { visibility: hidden; },
+    .shiny-output-error:before { visibility: hidden; }
                            ")))
     # matlab page style----
     if(input$menu=='MATLAB')
@@ -1853,6 +1860,8 @@ server <- function(input, output, session) {
     position: fixed;
     width:100%;
     }
+    .shiny-output-error { visibility: hidden; },
+    .shiny-output-error:before { visibility: hidden; }
                            ")))
     # home page style----
     return(tags$style(HTML("
@@ -1935,6 +1944,8 @@ server <- function(input, output, session) {
     position: fixed;
     width:100%;
     }
+    .shiny-output-error { visibility: hidden; },
+    .shiny-output-error:before { visibility: hidden; }
                            ")))
   })
 }
