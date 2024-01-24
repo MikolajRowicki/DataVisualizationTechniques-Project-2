@@ -50,7 +50,7 @@ mikolaj_word <- mikolaj_word %>%
   mutate(Imie = ifelse(Imie == "Mikolaj", "Mikołaj", Imie))
 word <- rbind(malgosia_word, mikolaj_word, sebastian_word)
 zmienne <- c("Sebastian", "Mikołaj", "Małgosia")
-kolory_word <- c("#47bbfa", "#3562fd", "#95e7eb", "#78dfd0", "#2929b3")
+kolory_word <- c("#47bbfa", "#78dfd0", "#2929b3")
 
 # matlab
 mikolaj_matlab <- read.csv("Mikolaj_matlab.csv")
@@ -441,8 +441,8 @@ server <- function(input, output, session) {
                      .java w czasie. Klikając na legendę można wybać osoby, do których
                       dane będą się odnosić. Po najechaniu na słupek można
                      zobaczyć dokładną liczbę utworzonych plików w wybranym miesiącu. Dodatkowo przesuwając
-                     kurosr wzdłuż kolumny w dolnej części opisu wyświetli się informacja
-                     o ilości utworzonych plików z podziałem na dni."
+                     kursor wzdłuż kolumny w dolnej części opisu wyświetli się informacja
+                     o liczbie utworzonych plików z podziałem na dni."
     div(style = text_style, HTML(text))
   })
 
@@ -478,7 +478,7 @@ server <- function(input, output, session) {
                                 "\nLiczba stworzonych plików\nw ", Data.utworzenia.pliku,
                                 ": ", n),
             textposition = "none",
-            colors =  kolory_word,
+            colors =  c(kolory_word[3], kolory_word[2], kolory_word[1]),
             xperiod="M1", xperiodalignment="middle"
     ) %>%
       layout(barmode = 'group',
@@ -531,7 +531,7 @@ server <- function(input, output, session) {
         font = list(family = "FuturaMedium", color = "white", size = 14),
         title = list(text = "Interpunkcja - word", font = list(size = 22)),
         xaxis = list(title = list(text= "Znaki Interpunkcjne", font = list(size = 18))),
-        yaxis = list(title = list(text= "Ilość", font = list(size = 18))),
+        yaxis = list(title = list(text= "Liczba", font = list(size = 18))),
         showlegend = FALSE,
         margin = list(t = 40),
         plot_bgcolor = "rgba(0,0,0,0)",
@@ -552,7 +552,7 @@ server <- function(input, output, session) {
       filter(Data.utworzenia.pliku >= input$data[1], Data.utworzenia.pliku <= input$data[2]) %>% 
       select(Ilosc.kropek, Ilosc.słow., Ilosc.przecinkow, Imie)
     plot_ly(data = df_word3 %>% 
-            filter(Ilosc.kropek <= 500),
+            filter(Ilosc.kropek <= 200),
             x = ~Ilosc.kropek,
             y = ~Ilosc.przecinkow,
             type = 'scatter',
@@ -565,8 +565,8 @@ server <- function(input, output, session) {
       layout(
         font = list(family = "FuturaMedium", color = "white", size = 14),
         title = list(text = "Zależność Między Kropkami i Przecinkami", font = list(size = 22)),
-        xaxis = list(title = list(text= "Ilość Kropek", font = list(size = 18))),
-        yaxis = list(title = list(text= "Ilość Przecinków", font = list(size = 18))),
+        xaxis = list(title = list(text= "Liczba Kropek", font = list(size = 18))),
+        yaxis = list(title = list(text= "Liczba Przecinków", font = list(size = 18))),
         showlegend = list(show = TRUE),
         margin = list(t = 40),
         plot_bgcolor = "rgba(0,0,0,0)",
@@ -772,7 +772,6 @@ server <- function(input, output, session) {
                   data = malgosia_matlab_filtered,
                   x = ~Imie,
                   y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
-                  marker = list(color = "#1F77B4"),
                   name = "Małgosia",
                   opacity = 0.7
     )
@@ -849,6 +848,7 @@ server <- function(input, output, session) {
                              x = ~Imie,
                              y = ~Laczna.dlugosc.komentarzy / Liczba.wierszy,
                              name = "Małgosia",
+                             marker = list(color = "#6E8CB4"),
                              boxmean = TRUE,
                              boxpoints = ""
       )
@@ -1015,7 +1015,7 @@ server <- function(input, output, session) {
         font = list(family = "FuturaMedium", color = "white", size = 14),
         title = list(text = "Tworzenie Plików o Danym Rozszerzeniu", font = list(size = 22)),
         xaxis = list(title = list(text= "Czas", font = list(size = 18))),
-        yaxis = list(title = list(text= "Ilość Utworzonych Plików", font = list(size = 18))),
+        yaxis = list(title = list(text= "Liczba Utworzonych Plików", font = list(size = 18))),
         margin = list(t = 40),
         plot_bgcolor = "rgba(0,0,0,0)",
         paper_bgcolor = "rgba(0,0,0,0)"
@@ -1079,7 +1079,7 @@ server <- function(input, output, session) {
       "margin-top: 10px;",
       "text-align: justify;"
     )
-    text <- "Witamy na stronie domowej! Tutaj znajdziesz szczegółowe informacje dotyczące tworzonych przez nas plików. Aby uzyskać bardziej precyzyjne dane, skorzystaj z suwaka po prawej stronie i wybierz interesujący Cię przedział czasowy."
+    text <- "Cześć, tu Małgosia, Mikołaj i Sebastian. Witamy na stronie domowej! Tutaj znajdziesz szczegółowe informacje dotyczące tworzonych przez nas plików. Aby uzyskać bardziej precyzyjne dane, skorzystaj z suwaka po lewej stronie i wybierz interesujący Cię przedział czasowy."
     div(style = text_style, HTML(text))
   })
   # output$tekst_podsumowanie_1----
@@ -1094,7 +1094,7 @@ server <- function(input, output, session) {
       "margin-top: 70px;",
       "padding: 10px;"
     )
-    text <- "Na wykresie obserwujemy ilość plików utworzonych przez nas z podziałem na różne rozszerzenia. Po wyborze konkretnej osoby możliwe jest prześledzenie historii tworzenia plików przez daną osobę. Wyraźnie widać, kiedy zaczęliśmy intensywnie tworzyć pliki z rozszerzeniem Matlab i Java.
+    text <- "Na wykresie obserwujemy liczbę plików utworzonych przez nas z podziałem na różne rozszerzenia. Po wyborze konkretnej osoby możliwe jest prześledzenie historii tworzenia plików przez daną osobę. Wyraźnie widać, kiedy zaczęliśmy intensywnie tworzyć pliki z rozszerzeniem Matlab i Java.
     W kolejnych zakładkach dostępne są bardziej szczegółowe dane dotyczące tworzenia plików dla każdego z rozszerzeń, co pozwala na dokładniejszą analizę."
     div(style = text_style, HTML(text))
   })
@@ -1110,7 +1110,7 @@ server <- function(input, output, session) {
       "margin-top: 60px;",
       "padding: 10px;"
     )
-    text <- "Na wykresie porównujemy ilość plików z różnymi rozszerzeniami, umożliwiając identyfikację dominującego formatu plików. Po najechaniu na konkretne pole wykresu uzyskujemy informację o procentowym udziale plików z danym rozszerzeniem. Zauważalne jest, że u Małgosi przeważają pliki Java, podczas gdy u Sebastiana utrzymane są najbardziej zrównoważone proporcje między różnymi formatami plików."
+    text <- "Na wykresie porównujemy liczbę plików z różnymi rozszerzeniami, umożliwiając identyfikację dominującego formatu plików. Po najechaniu na konkretne pole wykresu uzyskujemy informację o procentowym udziale plików z danym rozszerzeniem. Zauważalne jest, że u Małgosi przeważają pliki Java, podczas gdy u Sebastiana utrzymane są najbardziej zrównoważone proporcje między różnymi formatami plików."
     div(style = text_style, HTML(text))
   })
 
@@ -1123,12 +1123,12 @@ server <- function(input, output, session) {
       "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolory_word[5], ";",
+      "border: 2px solid ", kolory_word[3], ";",
       "padding: 10px;",
       "margin-top: 40px;",
       "text-align: justify;"
     )
-    text <- "Pierwszy wykres prezentuje ilość utworzonych plików przez każdą osobę z naszej grupy. Dane dotyczą liczby plików stworzonych w poszczególnych miesiącach i latach. Przy najeżdżaniu kursorem na konkretną kolumnę możliwe jest uzyskanie szczegółowych informacji na temat ilości utworzonych plików w poszczególnych dniach.
+    text <- "Pierwszy wykres prezentuje liczbę utworzonych plików przez każdą osobę z naszej grupy. Dane dotyczą liczby plików stworzonych w poszczególnych miesiącach i latach. Przy najeżdżaniu kursorem na konkretną kolumnę możliwe jest uzyskanie szczegółowych informacji na temat liczby utworzonych plików w poszczególnych dniach.
             Zauważalne jest, że Mikołaj i Sebastian regularnie korzystają z programu Word przez wiele lat. Natomiast Małgosia tworzyła pliki głownie w latach 2020 - 2021."
     div(style = text_style, HTML(text))
   })
@@ -1140,7 +1140,7 @@ server <- function(input, output, session) {
       "font-size: ", 15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolory_word[5], ";",
+      "border: 2px solid ", kolory_word[3], ";",
       "padding: 10px;",
       "margin-top: 70px;",
       "text-align: justify;"
@@ -1157,7 +1157,7 @@ server <- function(input, output, session) {
       "font-size: ",15, "px;",
       "color: ", "white", ";",
       "background-color: ", kolor_tla, ";",
-      "border: 2px solid ", kolory_word[5], ";",
+      "border: 2px solid ", kolory_word[3], ";",
       "padding: 10px;",
       "margin-top: 40px;",
       "text-align: justify;"
@@ -1256,7 +1256,7 @@ server <- function(input, output, session) {
     )
     text <- "Pierwszy wykres pozwala prześledzić liczbę plików .m tworzonych przez poszczególne osoby w danych miesiącach.
     Domyślnie wykres wygenerowany jest dla całej naszej grupy, można jednak, kilkając na legendę, wybrać słupki dotyczące poszczególnych osób.
-    Jeżdżąc kursorem wzdłuż kolumny wyświetla się w dolnej części opisu informacja o ilości utworzonych plików z podziałem na dni.
+    Jeżdżąc kursorem wzdłuż kolumny wyświetla się w dolnej części opisu informacja o liczbie utworzonych plików z podziałem na dni.
     Matlab to dość nowe dla nas środowisko obliczeniowe, z którego zaczęliśmy korzystać dopiero w październiku 2023"
     div(style = text_style, HTML(text))
   })
@@ -1948,7 +1948,7 @@ app_ui <- dashboardPage(
   # Panel zarządzania
   #-----------------------------------------------------------------------------
   dashboardHeader(
-    title = "Prototyp",
+    title = "MyFiles",
     titleWidth = 250
     ),
   dashboardSidebar(
@@ -1969,7 +1969,7 @@ app_ui <- dashboardPage(
       label = "Ustaw przedział czasu",
       min = min(as.Date(word$Data.utworzenia.pliku)),
       max = as.Date("2024-01-23"),
-      value = c(as.Date(min(as.Date(df$Data_ostatniej_modefikacji))), as.Date("2024-01-23"))
+      value = c(as.Date(min(as.Date("2021-01-01"))), as.Date("2024-01-23"))
     ),
     width = 250
   ),
@@ -2005,9 +2005,16 @@ app_ui <- dashboardPage(
                    withSpinner(uiOutput("tekst_ogolny"))
                  ))
         ),
-        fluidRow(style = "margin-left: 10px",
-          column(width = 8,
-                 selectInput("podsumowanie_11", "Wybierz osobę", zmienne),
+        fluidRow(column(width = 12, style = "margin-left: 400px; margin-top: 20px; text-align: center",
+                        selectInput(
+                          inputId = "podsumowanie_11",
+                          label = "Wybierz osobę",
+                          choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                          selected = zmienne,
+                          multiple = FALSE
+                        ))),
+        fluidRow(style = "margin-left: 10px; margin-top: 40px",
+          column(width = 8,style="text-align: center",
                  
                  withSpinner(plotlyOutput("Podsumowanie_wykres1"))
                  ),
@@ -2017,9 +2024,16 @@ app_ui <- dashboardPage(
                    withSpinner(uiOutput("tekst_podsumowanie_1"))
                  ))
         ),
+        fluidRow(column(width = 12, style = "margin-left: 400px; margin-top: 20px; text-align: center",
+                        selectInput(
+                          inputId = "podsumowanie_2",
+                          label = "Wybierz osobę",
+                          choices = c("Mikołaj", "Małgosia", "Sebastian"),
+                          selected = zmienne,
+                          multiple = FALSE
+                        ))),
         fluidRow(style = "margin-left: -10px",
-          column(width = 8,
-                 selectInput("podsumowanie_2", "Wybierz osobę", zmienne),
+          column(width = 8, style="text-align: center",
                  withSpinner(plotlyOutput("Podsumowanie_wykres2"))
                  ),
           column(width = 4,
@@ -2057,17 +2071,6 @@ app_ui <- dashboardPage(
                    withSpinner(uiOutput("JavaWykres10"))
                    )
                  )
-        # ),
-        # fluidRow(
-          # column(width = 4,
-          #        box(style = "margin-bottom: 20px; margin-left: 10px; margin-top: 150 px",
-          #            "    Wykres przedstawia liczbę utworzonych plików z rozszerzeniem
-          #            .java w czasie. Klikając na legendę można wybać osoby, do których
-          #             dane będą się odnosić. Po najechaniu na słupek w danym kolorze można
-          #            zobaczyć dokładną liczbę utworzonych plików w wybranym miesiącu. Dodatkowo
-          #            jeżdżąc kursorem wzdłuż kolumny wyświetla się w dolnej części opisu informacja
-          #            o ilości utworzonych plików z podziałem na dni.")
-          #        )
         ),
         fluidRow(
           style = "margin-bottom: 80px;",
@@ -2146,8 +2149,7 @@ app_ui <- dashboardPage(
           )
         ),
         fluidRow(
-          style = "margin-bottom: 80px, margin-left: 10px",
-          column(
+          column(style = "margin-bottom: 80px",
             width = 8,
             withSpinner(plotlyOutput("wykres1_1"))
           ),
@@ -2161,7 +2163,7 @@ app_ui <- dashboardPage(
           
         ),
         fluidRow(
-          style = "margin-bottom: 40px; margin-top: 40px;",
+          style = "margin-bottom: 40px; margin-top: 40px; margin-left: 10px",
           column(
             width = 4,
             wellPanel(
@@ -2170,7 +2172,7 @@ app_ui <- dashboardPage(
             )
           ),
           column(
-            width = 8,
+            width = 8,  style="text-align: center",
             selectInput("zmienna",
                         "Wybierz osobę",
                         zmienne),
@@ -2179,7 +2181,7 @@ app_ui <- dashboardPage(
           
         ),
         fluidRow(
-          style = "margin-bottom: 40px; margin-top: 40px;",
+          style = "margin-bottom: 40px; margin-top: 40px; margin-left: 20px",
           column(
             width = 8,
             withSpinner(plotlyOutput("wykres3"))
