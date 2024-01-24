@@ -1,0 +1,13 @@
+name: MyFiles
+title: MyFiles
+username:
+account: rowickim
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11014855
+bundleId: 8178183
+url: https://rowickim.shinyapps.io/MyFiles/
+when: 1706088586.64278
+lastSyncTime: 1706088586.64281
+asMultiple: FALSE
+asStatic: FALSE

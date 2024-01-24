@@ -1,0 +1,13 @@
+name: aplikacja_wersja_ostateczna
+title: aplikacja_wersja_ostateczna
+username:
+account: rowickim
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11014615
+bundleId: 8178032
+url: https://rowickim.shinyapps.io/aplikacja_wersja_ostateczna/
+when: 1706085342.36768
+lastSyncTime: 1706085342.36771
+asMultiple: FALSE
+asStatic: FALSE
