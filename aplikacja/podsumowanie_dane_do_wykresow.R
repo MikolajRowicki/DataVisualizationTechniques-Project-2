@@ -13,8 +13,6 @@ matlab2 <- read.csv("Sebastian_matlab.csv")
 matlab3 <- read.csv("Mikolaj_matlab.csv")
 
 java1 <- read.csv("Sebastian_java.csv")
-java2 <- read.csv("Sebastian2_java.csv")
-java4 <- read.csv("Sebastian3_java.csv")
 java3 <- read.csv("Mikolaj_java.csv")
 java5 <- read.csv("Malgosia_java.csv")
 
@@ -33,17 +31,7 @@ java1 <- java1 %>%
   mutate(data = Data_ostatniej_modefikacji) %>% 
   select(Imie, data, Rozszerzenie)
 
-java2 <- java2 %>% 
-  mutate(Imie = "Sebastian") %>% 
-  mutate(data = Data_ostatniej_modefikacji) %>% 
-  select(Imie, data, Rozszerzenie)
-
 java3 <- java3 %>% 
-  mutate(data = Data_ostatniej_modefikacji) %>% 
-  select(Imie, data, Rozszerzenie)
-
-java4 <- java4 %>% 
-  mutate(Imie = "Sebastian") %>% 
   mutate(data = Data_ostatniej_modefikacji) %>% 
   select(Imie, data, Rozszerzenie)
 
@@ -51,9 +39,9 @@ java5 <- java5 %>%
   mutate(data = Data_ostatniej_modefikacji) %>% 
   select(Imie, data, Rozszerzenie)
 
-java <- rbind(java1, java2, java3, java4, java5)
+java <- rbind(java1, java3, java5)
 x <- rbind(java, matlab, word)
-###write.csv(x, "ogolny_wykres2.csv")
+write.csv(x, "ogolny_wykres2.csv")
 x$month <- as.integer(substring(x$data, 6, 7))
 x$year <- as.integer(substring(x$data, 1, 4))
 x$month <- sprintf("%d", x$month)
