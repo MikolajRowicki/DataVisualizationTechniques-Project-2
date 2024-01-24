@@ -1,34 +1,41 @@
-# DataVisualizationTechniques-Project-2
-Second project for Data Visualization Techniques course for Data Science studies 
+# MyFiles (Projekt JA)
 
-## Wybrane statystyki
+Data visualisation dashboard for Data Visualization Techniques course in the second year of Data Science studies at the Warsaw University of Technology.
+
+The project includes a detailed analysis of the .m, .docx and .java files created by the project authors. The graphs created show the distribution of the creation of these files over time, as well as the typical issues for each extension. The application was written in R using the packages shiny, dplyr and plotly (mainly).
+
+To see the app click the link below:
+**[here]((https://rowickim.shinyapps.io/MyFiles/))**.
+
+<div align="center">
+  <img src="screen/Dashboard.png" width="600"/>
+</div>
+
+Authors: [@MalgorzataMokwa](https://github.com/malgosiam2), [@SebstianPergala](https://github.com/Sebislaw) and [@MikolajRowicki](https://github.com/MikolajRowicki).
+
+## Selected statistics
+
+### General
+- breakdown of file creation over time
+- quantitative distribution of files with particular extensions on our computers
 
 ### Java
-- nazwa pliku, data utworzenia, ostatniej modefiakcji
-- liczba linii, wyrazów, znaków
-- zliczanie operatorów porządku
-- zliczanie wyrazów charakterystycznych dla javy
-- ilość linii odstępu
-- komentarze
-- cudzysłowy
-- najdłuższy wyraz
+- creation date
+- average number of comments per file
+- average number of characters per comment
+- java-specific word count
+- longest word
+- counting characters and lines written in total
 
 ### Word
-- ilość słów w tekście
-- data powstania pliku
-- analiza interpunkcji: ilość poszczególnych znaków interpunkcyjnych
-- najdłuższy wyraz w tekście
-- określenie średniej złożonosci zdań jako stosunek ilości przecinków do ilości zdań
+- date of file creation
+- punctuation analysis: number of individual punctuation marks
+- determining the average complexity of sentences as a function of the number of full stops and commas
 
 ### Matlab
-- liczba znaków w pliku
-- liczba wierszy
-- łączna liczba wierszy przeznaczonych na komentarze
-- liczba pustych linii
-- najdłuższe słowo
-- długość pierwszego komentarza
-- średnia liczba znaków w wierszu
-- liczba wierszy zakończonych średnikiem
-- liczba wierszy, które powinny kończyć się średnikiem
-- liczba wierszy, których długość przekracza limit
-- cześtość występowania poszczególnych operatorów i konwencje ich zapisu "+", "-"
+- date of file creation
+- proportion of comments in the file
+- frequency of occurrence of individual mathematical and logical operators and their notation conventions
+- the number of lines ending in a semicolon
+- the number of lines which should end with a semicolon
+- average number of characters in a non-empty line
