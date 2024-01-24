@@ -1948,7 +1948,7 @@ app_ui <- dashboardPage(
   # Panel zarządzania
   #-----------------------------------------------------------------------------
   dashboardHeader(
-    title = "Prototyp",
+    title = "MyFiles",
     titleWidth = 250
     ),
   dashboardSidebar(
