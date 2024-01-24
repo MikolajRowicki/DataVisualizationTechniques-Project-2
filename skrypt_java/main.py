@@ -262,10 +262,10 @@ def main():
     # # ----------------------------------------------------------------------
     # # Ścieżki, z których korzysta program
     # # To należy zmienić
-    sciezka_do_folderu_z_plikami_java = 'C:/Users/Sebastian/Desktop/Semestr 3/Zaawansowane programowanie obiektowe i funkcyjne/Laboratorium'
+    sciezka_do_folderu_z_plikami_java = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java/data'
     # sciezka_do_folderu_z_plikami_java = 'C:/Users/Sebastian/Desktop/STUDIA PW/Semestr 2/Programowanie obiektowe/Laboratorium/PO/MyRepos'
-    sciezka_do_miejsca_zapisu_plikow = 'C:/Users/Sebastian/Desktop/Semestr 3/Techniki wizualizacji danych/Projekt/PRO_2/skrypt_java'
-    imie = 'Test2'
+    sciezka_do_miejsca_zapisu_plikow = 'C:/Semestr 3/TWD/Projekt 2/DataVisualizationTechniques-Project-2/skrypt_java'
+    imie = 'Mikolaj'
     # # ----------------------------------------------------------------------
     # # Tworzy listę ścieżek do wszystkich plików od podanej ścieżki, mających dane rozszerzenie
     sciezki_do_plikow = list(pathlib.Path(sciezka_do_folderu_z_plikami_java).rglob('*.java'))

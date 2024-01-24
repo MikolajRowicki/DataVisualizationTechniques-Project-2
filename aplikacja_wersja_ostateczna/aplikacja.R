@@ -654,7 +654,7 @@ server <- function(input, output, session) {
              xaxis = list(title =list(text = "Autor", font = list(size = 18))), 
              y_axis_values <- seq(0, 1, 0.1),
              yaxis = list(
-               title = list(text = "Udział w pliku operatorów zapisanych ze spacjami wokół", font = list(size = 18)),
+               title = list(text = "Udział operatorów zapisanych ze spacjami wokół", font = list(size = 18)),
                tickvals = y_axis_values,
                ticktext = sprintf("%.0f%%", y_axis_values * 100),
                tickformat = "%"),  # Dodanie formatu procentowego do osi Y
@@ -776,7 +776,7 @@ server <- function(input, output, session) {
                   x = ~Imie,
                   y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
                   name = "Małgosia",
-                  opacity = 0.7
+                  opacity = 0.85
     )
     
     
@@ -796,7 +796,7 @@ server <- function(input, output, session) {
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
                     marker = list(color = "#FF7F0E"),
                     name = "Mikołaj",
-                    opacity = 0.7
+                    opacity = 0.85
       )
 
     
@@ -813,7 +813,7 @@ server <- function(input, output, session) {
                     y = ~Srednia_liczba_znakow_w_niepustym_wierszu,
                     marker = list(color = "#2C9B2C"),
                     name = "Sebastian",
-                    opacity = 0.7
+                    opacity = 0.85
       )
     
 
@@ -940,8 +940,9 @@ server <- function(input, output, session) {
                                 "\nLiczba stworzonych plików\nw ", Data.modyfikacji,
                                 ": ", liczba),
             textposition = "none",
-            colors = c("#2C9B2C", "#FF7F0E", "#1F77B4"),
-            xperiod = "M1", xperiodalignment = "middle"
+            colors = c("#1F77B4", "#FF7F0E", "#2C9B2C"),
+            xperiod = "M1", xperiodalignment = "middle",
+            opacity = 0.85
     ) %>%
       layout(barmode = 'group',
              font = list(family = "FuturaMedium", color = "white", size = 14),
@@ -1148,7 +1149,7 @@ server <- function(input, output, session) {
       "margin-top: 70px;",
       "text-align: justify;"
     )
-    text <- "Na wykresie po prawej stronie dostępne są informacje dotyczące najczęściej używanych znaków interpunkcyjnych. Dane obejmują okres czasu wybrany za pomocą suwaka umieszczonego w pasku po prawej stronie. Warto zauważyć, że wśród najpopularniejszych znaków interpunkcyjnych dominują przede wszystkim kropki i przecinki. Kategoria 'pozostałe' obejmuje znaki takie jak wielokropki, średniki i cudzysłowia.
+    text <- "Na wykresie po prawej stronie dostępne są informacje dotyczące najczęściej używanych znaków interpunkcyjnych. Dane obejmują okres czasu wybrany za pomocą suwaka umieszczonego w pasku po lewej stronie. Warto zauważyć, że wśród najpopularniejszych znaków interpunkcyjnych dominują przede wszystkim kropki i przecinki. Kategoria 'pozostałe' obejmuje znaki takie jak wielokropki, średniki i cudzysłowia.
             Analizując okres od 2017 do 2023 roku, zauważamy, że u Małgosi i Mikołaja najwięcej używanych jest przecinków, natomiast u Sebastiana przeważają kropki."
     div(style = text_style, HTML(text))
   })
@@ -1240,7 +1241,7 @@ server <- function(input, output, session) {
       "text-align: justify;"
     )
     text <- "Aby móc lepiej przyjrzeć się jakości pisanego przez nas kodu, zadaliśmy sobie również pytanie, jak dużo kodu piszemy w jednej linii,
-    co ma niewątpliwy wpływ na jego czytelnością. Rekomendowana maksymalna liczba znanym w jednym wierszu w Matlabie wynosi 75 znaków. Okazuje się, że
+    co ma niewątpliwy wpływ na jego czytelność. Rekomendowana maksymalna liczba znanym w jednym wierszu w Matlabie wynosi 75 znaków. Okazuje się, że
     nikt z nas nie ma tendencji do jej notorycznego przekraczania. Najwięcej znaków na linię pisze średnio Mikołaj - około 41, zaś najmniej Małgosia - około 34."
     div(style = text_style, HTML(text))
   })
